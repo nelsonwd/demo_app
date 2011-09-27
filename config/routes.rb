@@ -1,4 +1,10 @@
 DemoApp::Application.routes.draw do
+  get "pages/blast"
+
+  get "pages/data"
+
+  get "pages/about"
+
   resources :microposts
 
   resources :users

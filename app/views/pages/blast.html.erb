@@ -1,0 +1,148 @@
+<table id="options" cellspacing=15px width=800>
+<tr>
+<td>
+<form action="run_blast.php" method="post" name="starttblastnoptions" id="starttblastnoptions" onSubmit='return isFormValid(this);'>
+<span id="step">1.</span> Enter your query sequence(s) in FASTA format: <br>
+<textarea name="in_querysequence" id="in_querysequence" cols="50" rows="5"></textarea><br>
+</td>
+<td>
+<span id="step">3.</span><br>
+Select genome dataset listed below to BLAST the query sequence(s) against:<br><br>
+<%= image_tag("checkall_button.gif", :alt => "check all button", :onClick=>"checkAll()") %>
+<%= image_tag("checknull_button.gif", :alt => "uncheck all button", :onClick=>"unCheckAll()") %>
+</td>
+</tr>
+
+<tr>
+<td>
+<span id="step">2.</span> Customise BLAST options:<br>
+<li>
+BLAST program
+<select name="blastprogramchoice" id="blastprogramchoice" class="bton">
+      	<option value="blastn_mega">blastn-megablast (highly similar sequences, NCBI default)</option>
+	<option value="blastn_dcmega">blastn-dc-megablast (more dissimilar sequences)</option>
+ 	<option value="blastn_bn">blastn-traditional (somewhat similar sequences)</option>
+	<option value="blastn_bnshort">blastn-short (optimized for seq <50 bases)</option>
+      	<option value="tblastn">tblastn</option>
+      	<option value="tblastx">tblastx</option>
+        </select>
+</li>
+<br><br>
+<li>E-value cutoff
+<select name="expectvalue" id="expectvalue" class="bton">
+      <option value="e-10">1&times;10-10</option>
+      <option value="e-5">1&times;10-5</option>
+      <option value="e-4">1&times;10-4</option>
+      <option value="e-3">1&times;10-3</option>
+      <option value="e-2">0.01</option>
+      <option value="e-1">0.10</option>
+      <option value="1">1.00</option>
+      <option value="10">10.0</option>
+    </select>
+</li>
+<br><br>
+<li>Output format (tabular format is recommended for large query set):
+<select name="output_format" id="output_format" class="bton">
+      <option value="0">0: Pairwise (default)</option>
+      <option value="6">6: Tabular (no comment lines)</option>
+      <option value="7">7: Tabular (with comment lines)</option>
+    </select>
+</li>
+</ul>
+</td>
+
+<td>
+<span id="step">4.</span> Click to submit and run BLAST:<br>
+<input type="submit" name="manydonesearch" value="SUBMIT" class="bton">
+</td>
+</tr>
+</table>
+
+<table id="bigTable">
+<tr>
+<td id="genomeTab">
+<h1>
+<a href"#" onClick="ChAll('green_algae'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('green_algae'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Green Algae</h1>
+
+<div id="green_algae">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="chlorophyta">Chlorophyta</li>
+</ul>
+
+</td>
+
+<td id="genomeTab">
+
+<h1>
+<a href"#" onClick="ChAll('alveolata'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('alveolata'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Alveolata</h1>
+
+<div id="alveolata">
+<h2>
+<a href"#" onClick="ChAll('dinophyceae'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('dinophyceae'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Dinophyceae
+</h2>
+
+<div id="dinophyceae">
+<h3>
+<a href"#" onClick="ChAll('symbiodinium'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('symbiodinium'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Symbiodinium
+
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="symb1.2" checked>symb1.2 assembly</li>
+<li><input type="checkbox" name="ch_genom[]" value="kb8">kb8 assembly</li>
+<li><input type="checkbox" name="ch_genom[]" value="mf105">mf105 assembly</li>
+</ul>
+</h3>
+<h3>
+
+<input type="checkbox" name="ch_genom[]" value="other_dinophyceae">Other Dinophyceae
+
+
+
+<h2>
+<input type="checkbox" name="ch_genom[]" value="other_alveolata">Other Alveolata
+</h2>
+
+<td id="genomeTab">
+
+<h1>
+<a href"#" onClick="ChAll('cnidaria'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('cnidaria'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+Cnidaria</h1>
+
+<div id="cnidaria">
+<ul>
+<li>
+<a href"#" onClick="ChAll('anthozoa'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('anthozoa'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+Anthozoa</li>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="aiptasia_pallida">Aiptasia pallida</li>
+<li><input type="checkbox" name="ch_genom[]" value="acropora">Acropora</li>
+<li><input type="checkbox" name="ch_genom[]" value="nematostella">Nematostella</li>
+</ul>
+<li><input type="checkbox" name="ch_genom[]" value="other_onidaria">Other Cnidaria</li>
+</ul>
+</div>
+
+
+<h1>
+<a href"#" onClick="ChAll('cyanobacteria'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('cyanobacteria'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+Cyanobacteria</h1>
+
+<div id="cyanobacteria">
+<ul>
+</ul>
+</div>
+
+</td>
+</tr>
+</table>
+

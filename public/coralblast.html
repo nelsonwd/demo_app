@@ -1,0 +1,345 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>Symbiodinium | BLAST</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="keywords" content="SymbiBLAST, Symbiodinium, genome project, EST">
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="nori_styles.css" type="text/css">
+<script type="text/javascript" src="nori_menu.js"></script>
+
+</head>
+<body onLoad="fieldfocus()">
+
+<div id="main">
+<img src="images/coralheader.png">
+<ul id="navo">
+ <li><a href="blast.php">BLAST</a></li>
+ <li><a href="datainfo.php">Data</a></li>
+ <li><a href="about.php">About</a></li>
+ <li><a href="http://porphyra.pbworks.com/" target="_blank">Wiki</a></li>
+ <li><img src="images/spacer.gif" width="210px" height="3"></li>
+ <li id="logout"><a href="logout.php">Logout</a></li>
+</ul>
+
+
+<table id="options" cellspacing=15px width=800>
+<tr>
+<td>
+<form action="run_blast.php" method="post" name="starttblastnoptions" id="starttblastnoptions" onSubmit='return isFormValid(this);'>
+<span id="step">1.</span> Enter your query sequence(s) in FASTA format: <br>
+<textarea name="in_querysequence" id="in_querysequence" cols="50" rows="5"></textarea><br>
+</td>
+<td>
+<span id="step">3.</span><br>
+Select genome dataset listed below to BLAST the query sequence(s) against:<br><br>
+<img src="images/checkall_button.gif" onClick="checkAll()">
+<img src="images/checknull_button.gif" onClick="unCheckAll()">
+</td>
+</tr>
+
+<tr>
+<td>
+<span id="step">2.</span> Customise BLAST options:<br>
+<li>
+BLAST program
+<select name="blastprogramchoice" id="blastprogramchoice" class="bton">
+      	<option value="blastn_mega">blastn-megablast (highly similar sequences, NCBI default)</option>
+	<option value="blastn_dcmega">blastn-dc-megablast (more dissimilar sequences)</option>
+ 	<option value="blastn_bn">blastn-traditional (somewhat similar sequences)</option>
+	<option value="blastn_bnshort">blastn-short (optimized for seq <50 bases)</option>
+      	<option value="tblastn">tblastn</option>
+      	<option value="tblastx">tblastx</option>
+        </select>
+</li>
+<br><br>
+<li>E-value cutoff
+<select name="expectvalue" id="expectvalue" class="bton">
+      <option value="e-10">1&times;10-10</option>
+      <option value="e-5">1&times;10-5</option>
+      <option value="e-4">1&times;10-4</option>
+      <option value="e-3">1&times;10-3</option>
+      <option value="e-2">0.01</option>
+      <option value="e-1">0.10</option>
+      <option value="1">1.00</option>
+      <option value="10">10.0</option>
+    </select>
+</li>
+<br><br>
+<li>Output format (tabular format is recommended for large query set):
+<select name="output_format" id="output_format" class="bton">
+      <option value="0">0: Pairwise (default)</option>
+      <option value="6">6: Tabular (no comment lines)</option>
+      <option value="7">7: Tabular (with comment lines)</option>
+    </select>
+</li>
+</ul>
+</td>
+
+<td>
+<span id="step">4.</span> Click to submit and run BLAST:<br>
+<input type="submit" name="manydonesearch" value="SUBMIT" class="bton">
+</td>
+</tr>
+<tr>
+<td colspan=2><br>
+<span id="important">IMPORTANT:</span> Please remember to LOGOUT of your session when you are done (link at top-right corner).
+</td>
+</tr>
+</table>
+
+<table id="bigTable">
+<tr>
+<td id="genomeTab">
+<h1>
+<a href"#" onClick="ChAll('chromalveolata'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('chromalveolata'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Chlorophyta</h1>
+
+<div id="alveolate">
+<h2>
+<a href"#" onClick="ChAll('alveolata'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('alveolata'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+
+Alveolata</h2>
+
+<h3>
+<a href"#" onClick="ChAll('dinoflagellates'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('dinoflagellates'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Dinoflagellates</h3>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Alexandrium_tamarense">Alexandrium tamarense</li>
+<li><input type="checkbox" name="ch_genom[]" value="Amphidinium_carterae">Amphidinium carterae</li>
+<li><input type="checkbox" name="ch_genom[]" value="Heterocapsa_triquetra">Heterocapsa triquetra</li>
+<li><input type="checkbox" name="ch_genom[]" value="Karenia_brevis">Karenia brevis</li>
+
+<li><input type="checkbox" name="ch_genom[]" value="Karlodinium_micrum">Karlodinium micrum</li>
+<li><input type="checkbox" name="ch_genom[]" value="Lingulodinium_polyedrum">Lingulodinium polyedrum</li>
+</ul>
+
+<h3>
+<a href"#" onClick="ChAll('apicomplexa'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('apicomplexa'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Apicomplexa</h3>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Plasmodium_falciparum">Plasmodium falciparum</li>
+<li><input type="checkbox" name="ch_genom[]" value="Cryptosporidium_hominis">Cryptosporidium hominis</li>
+</ul>
+
+<h3>
+<a href"#" onClick="ChAll('ciliates'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('ciliates'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Ciliates</h3>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Paramecium_tetraurelia">Paramecium tetraurelia</li>
+<li><input type="checkbox" name="ch_genom[]" value="Tetrahymena_thermophila">Tetrahymena thermophila</li>
+</ul>
+</div>
+
+<div id="chromista">
+<h2>
+<a href"#" onClick="ChAll('chromista'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+
+<a href"#" onClick="unChAll('chromista'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Chromista</h2>
+
+<h3>
+<a href"#" onClick="ChAll('cryptophyta'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('cryptophyta'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Cryptophyta</h3>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Goniomonas_pacifica">Goniomonas pacifica</li>
+<li><input type="checkbox" name="ch_genom[]" value="Guillardia_theta">Guillardia theta</li>
+<li><input type="checkbox" name="ch_genom[]" value="Rhodomonas_salina">Rhodomonas salina</li>
+</ul>
+
+<h3>
+<a href"#" onClick="ChAll('haptophyta'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('haptophyta'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Haptophyta</h3>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Emiliania_huxleyi">Emiliania huxleyi</li>
+<li><input type="checkbox" name="ch_genom[]" value="Isochrysis_galbana_CCMP1323">Isochrysis galbana CCMP1323</li>
+<li><input type="checkbox" name="ch_genom[]" value="Pavlova_lutheri">Pavlova lutheri</li>
+</ul>
+
+<h3>
+<a href"#" onClick="ChAll('stramenopiles'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+
+<a href"#" onClick="unChAll('stramenopiles'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Stramenopiles</h3>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Blastocystis_hominis">Blastocystis hominis</li>
+</ul>
+<h4>Diatoms</h4>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Phaeodactylum_tricornutum">Phaeodactylum tricornutum</li>
+<li><input type="checkbox" name="ch_genom[]" value="Thalassiosira_pseudonana">Thalassiosira pseudonana</li>
+</ul>
+<h4>Oomycetes</h4>
+
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Phytophthora_ramorum">Phytophthora ramorum</li>
+<li><input type="checkbox" name="ch_genom[]" value="Phytophthora_sojae">Phytophthora sojae</li>
+</ul>
+</div>
+
+</td>
+
+<td id="genomeTab">
+
+<h1>
+<a href"#" onClick="ChAll('plantae'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('plantae'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Plantae</h1>
+
+<div id="reds">
+<h2>
+<a href"#" onClick="ChAll('reds'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('reds'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Reds</h2>
+
+<h3>
+<a href"#" onClick="ChAll('porphyra'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('porphyra'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Porphyra <font color="#FF0000">9/25/10</font> [<a href="datainfo.php">?</a>]</h3>
+
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Porphyra_purpurea_NRv2" checked>purpurea NRv2</li>
+<li><input type="checkbox" name="ch_genom[]" value="Porphyra_purpurea_CGAGv2">purpurea Blade CGAGv2</li>
+<li><input type="checkbox" name="ch_genom[]" value="Porphyra_purpurea_CGAHv2">purpurea Conchocelis CGAHv2</li>
+<li><input type="checkbox" name="ch_genom[]" value="Porphyra_umbilicalis_NRv2" checked>umbilicalis NRv2</li>
+<li><input type="checkbox" name="ch_genom[]" value="Porphyra_umbilicalis_CFSPv2">umbilicalis AsxLoLight CFSPv2</li>
+<li><input type="checkbox" name="ch_genom[]" value="Porphyra_umbilicalis_CFSSv2">umbilicalis VegLoLight CFSSv2</li>
+<li><input type="checkbox" name="ch_genom[]" value="Porphyra_umbilicalis_CFSTv2">umbilicalis VegHiLight CFSTv2</li>
+<li><input type="checkbox" name="ch_genom[]" value="Porphyra_umbilicalis_CFSUv2">umbilicalis Olio CFSUv2</li>
+</ul>
+
+<h3>
+<a href"#" onClick="ChAll('bangiophyceae'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('bangiophyceae'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Other Bangiophyceae</h3>
+
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Cyanidioschyzon_merolae">Cyanidioschyzon merolae</li>
+<li><input type="checkbox" name="ch_genom[]" value="Galdieria_sulphuraria">Galdieria sulphuraria</li>
+<li><input type="checkbox" name="ch_genom[]" value="Bangiophyceae_CDS">Other Bangiophyceae CDS</li>
+<li><input type="checkbox" name="ch_genom[]" value="Bangiophyceae_EST">Other Bangiophyceae EST</li>
+</ul>
+
+<h3>
+<a href"#" onClick="ChAll('florideophyceae'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('florideophyceae'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Florideophyceae</h3>
+
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Florideophyceae_CDS">Florideophyceae CDS</li>
+<li><input type="checkbox" name="ch_genom[]" value="Florideophyceae_EST">Florideophyceae EST</li>
+</ul>
+
+<h3>
+<a href"#" onClick="ChAll('rhodophytes_other'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('rhodophytes_other'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Other Rhodophytes</h3>
+
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Rhodophyte_others">Other Rhodophytes</li>
+</ul>
+
+</div>
+
+<div id="glauco">
+<h2>
+<a href"#" onClick="ChAll('glaucophytes'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('glaucophytes'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Glaucophytes</h2>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Glaucocystis_nostochinearum">Glaucocystis nostochinearum</li>
+
+<li><input type="checkbox" name="ch_genom[]" value="Cyanophora_paradoxa">Cyanophora paradoxa</li>
+</ul>
+</div>
+
+<div id="green">
+<h2>
+<a href"#" onClick="ChAll('greens'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('greens'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Greens</h2>
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Arabidopsis_thaliana">Arabidopsis thaliana</li>
+<li><input type="checkbox" name="ch_genom[]" value="Chlamydomonas_reinhardtii">Chlamydomonas reinhardtii</li>
+<li><input type="checkbox" name="ch_genom[]" value="Helicosporidium_sp">Helicosporidium sp.</li>
+<li><input type="checkbox" name="ch_genom[]" value="Micromonas_spp">Micromonas spp.</li>
+<li><input type="checkbox" name="ch_genom[]" value="Mesostigma_viride">Mesostigma viride</li>
+<li><input type="checkbox" name="ch_genom[]" value="Ostreococcus_spp">Osterococcus spp.</li>
+<li><input type="checkbox" name="ch_genom[]" value="Physcomitrella_patens">Physcomitrella patens</li>
+<li><input type="checkbox" name="ch_genom[]" value="Scenedesmus_obliquus">Scenedesmus obliquus</li>
+<li><input type="checkbox" name="ch_genom[]" value="Volvox_carteri">Volvox cateri</li>
+
+</ul>
+</div>
+
+</td>
+
+<td id="genomeTab">
+
+<h1>
+<a href"#" onClick="ChAll('excavates'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+
+<a href"#" onClick="unChAll('excavates'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Excavates</h1>
+
+<div id="excavate">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Euglena_gracilis">Euglena gracilis</li>
+<li><input type="checkbox" name="ch_genom[]" value="Giardia_lamblia">Giardia lamblia</li>
+<li><input type="checkbox" name="ch_genom[]" value="Jakoba_bahamensis">Jakoba bahamensis</li>
+<li><input type="checkbox" name="ch_genom[]" value="Jakoba_libera">Jakoba libera</li>
+<li><input type="checkbox" name="ch_genom[]" value="Malawimonas_californiana">Malawimonas californiana</li>
+<li><input type="checkbox" name="ch_genom[]" value="Malawimonas_jakobiformis">Malawimonas jakobiformis</li>
+<li><input type="checkbox" name="ch_genom[]" value="Reclinomonas_americana">Reclinomonas americana</li>
+</ul>
+</div>
+
+
+<h1>
+<a href"#" onClick="ChAll('rhizaria'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('rhizaria'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Rhizaria</h1>
+
+<div id="rhizaria">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Bigelowiella_natans">Bigelowiella natans</li>
+<li><input type="checkbox" name="ch_genom[]" value="Reticulomyxa_filosa">Reticulomyxa filosa</li>
+<li><input type="checkbox" name="ch_genom[]" value="Foraminifers">Foraminifers</li>
+</ul>
+</div>
+
+<h1>
+<a href"#" onClick="ChAll('amoebozoa'); return false;"><img src="images/checkbox_checked.jpg" border="0"></a>
+<a href"#" onClick="unChAll('amoebozoa'); return false;"><img src="images/checkbox_UNchecked.jpg" border="0"></a>
+Amoebozoa</h1>
+<div id="amoebozoa">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="Acanthamoeba_castellanii">Acanthamoeba castellanii</li>
+<li><input type="checkbox" name="ch_genom[]" value="Dictyostelium_discoideum">Dictyostelium discoideum</li>
+<li><input type="checkbox" name="ch_genom[]" value="Entamoeba_hystolitica">Entamoeba hystolitica</li>
+<li><input type="checkbox" name="ch_genom[]" value="Hartmannella_vermiformis">Hartmannella vermiformis</li>
+<li><input type="checkbox" name="ch_genom[]" value="Mastigamoeba_balamuthi">Mastigamoeba balamuthi</li>
+</ul>
+</div>
+
+</td>
+</tr>
+</table>
+
+<div id="footer_inline">
+<hr>
+&copy;2009-2010 Porphyra Genome Project RCN and Bhattacharya Group at Rutgers University. The access, use and/or publication of results using the <i>Porphyra umbilicalis</i> EST dataset without permission from the Porphyra RCN Steering Committee is strictly prohibited. If you have technical issues, please contact CX at chancx@rci.rutgers.edu.
+</div>
+
+
+</body>
+</html>
+
