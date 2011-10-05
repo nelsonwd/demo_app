@@ -1,7 +1,7 @@
 <table id="options" cellspacing=15px width=800>
 <tr>
 <td>
-<form action="run_blast.php" method="post" name="starttblastnoptions" id="starttblastnoptions" onSubmit='return isFormValid(this);'>
+<form action="submit" method="post" name="starttblastnoptions" id="starttblastnoptions" onSubmit='return isFormValid(this);'>
 <span id="step">1.</span> Enter your query sequence(s) in FASTA format: <br>
 <textarea name="in_querysequence" id="in_querysequence" cols="50" rows="5"></textarea><br>
 </td>
@@ -23,19 +23,19 @@ BLAST program
 	<option value="blastn_dcmega">blastn-dc-megablast (more dissimilar sequences)</option>
  	<option value="blastn_bn">blastn-traditional (somewhat similar sequences)</option>
 	<option value="blastn_bnshort">blastn-short (optimized for seq <50 bases)</option>
-      	<option value="tblastn">tblastn</option>
-      	<option value="tblastx">tblastx</option>
+      	<option value="tblastn">tblastn (protein against 6-frame nucleotide</option>
+      	<option value="tblastx">tblastx (6-frame nucleotide against 6-frame nucleotide)</option>
         </select>
 </li>
 <br><br>
 <li>E-value cutoff
 <select name="expectvalue" id="expectvalue" class="bton">
-      <option value="e-10">1&times;10-10</option>
-      <option value="e-5">1&times;10-5</option>
-      <option value="e-4">1&times;10-4</option>
-      <option value="e-3">1&times;10-3</option>
-      <option value="e-2">0.01</option>
-      <option value="e-1">0.10</option>
+      <option value="1e-10">1&times;10-10</option>
+      <option value="1e-5">1&times;10-5</option>
+      <option value="1e-4">1&times;10-4</option>
+      <option value="1e-3">1&times;10-3</option>
+      <option value="1e-2">0.01</option>
+      <option value="1e-1">0.10</option>
       <option value="1">1.00</option>
       <option value="10">10.0</option>
     </select>
@@ -94,8 +94,8 @@ Dinophyceae
 Symbiodinium
 
 <ul>
-<li><input type="checkbox" name="ch_genom[]" value="symb1.2" checked>symb1.2 assembly</li>
-<li><input type="checkbox" name="ch_genom[]" value="kb8">kb8 assembly</li>
+<li><input type="checkbox" name="ch_genom[]" value="symb1_2" checked>symb1.2 assembly</li>
+<li><input type="checkbox" name="ch_genom[]" value="kb82">kb8 assembly</li>
 <li><input type="checkbox" name="ch_genom[]" value="mf105">mf105 assembly</li>
 </ul>
 </h3>

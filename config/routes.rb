@@ -1,4 +1,14 @@
 DemoApp::Application.routes.draw do
+  match '/submit', :to => 'blast#submit'
+#  get "blast/submit"
+
+  match '/wait', :to => 'blast#wait'
+#  get "blast/wait"
+
+  match '/result', :to => 'blast#result'
+
+#  get "blast/result"
+
   get "pages/blast"
 
   get "pages/data"

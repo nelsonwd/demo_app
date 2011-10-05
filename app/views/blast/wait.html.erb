@@ -1,0 +1,15 @@
+<div id="header">
+  <div class="spacer">&nbsp;</div>    
+    <span class="logo">BLAST Result</span>   
+  </div>
+    
+  <p><strong>Your job is being processed 
+  <%for i in 1..@loadcount%>
+    <%=image_tag("progressdot.png", :alt => "...")%>
+  <%end%>
+  </strong></p>
+  <p>Please wait here to watch the progress of your job.</p>
+  <p>This page will update itself automatically until search is done.</p>
+  <META HTTP-EQUIV="refresh" content="2;URL=wait?timestamp=<%=@timestamp%>&loadcount=<%=@loadcount%>&output_format=<%=@output_format%>">
+  <META HTTP-EQUIV="expires" CONTENT="now">
+</div>
