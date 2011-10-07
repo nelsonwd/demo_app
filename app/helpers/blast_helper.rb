@@ -27,6 +27,8 @@ module BlastHelper
 
       file.close
       table_string
+    elsif @output_format == "error"
+      render :file => "tmp/#{@timestamp}_error.txt", :template => 'layouts/application'
     else
       render :file => "tmp/#{@timestamp}_result.txt", :template => 'layouts/application'
     end
