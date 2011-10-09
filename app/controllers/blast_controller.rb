@@ -10,6 +10,7 @@ class BlastController < ApplicationController
     @ch_genom = params[:ch_genom]
     @db_list = @ch_genom.join(" ")
     @local_filename = "tmp/#{@timestamp}_query.fa"
+    logger.fatal `pwd`
     redirect_to wait_path(:timestamp => @timestamp, :loadcount => 0, :output_format => @output_format)
     File.open(@local_filename, 'w') {|f| f.write(params[:in_querysequence]) }
     if @task == 'blastn'
