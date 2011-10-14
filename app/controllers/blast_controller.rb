@@ -8,17 +8,23 @@ class BlastController < ApplicationController
     @expectvalue = params[:expectvalue]
     @output_format = params[:output_format]
     @ch_genom = params[:ch_genom]
+    @max_hits = params[:max_hits]
     @db_list = @ch_genom.join(" ")
     @local_filename = "#{Rails.root}/tmp/#{@timestamp}_query.fa"
+    @options = ""  
+
     redirect_to wait_path(:timestamp => @timestamp, :loadcount => 0, :output_format => @output_format)
     File.open(@local_filename, 'w') {|f| f.write(params[:in_querysequence]) }
+
     if @task == 'blastn'
-      @blast_cmd = "blastn -query #{Rails.root}/tmp/#{@timestamp}_query.fa -db \\\"#{@db_list}\\\" -task blastn -evalue #{@expectvalue} -num_alignments 20 -num_descriptions 20 -html -outfmt #{@output_format} -out #{Rails.root}/tmp/#{@timestamp}_working.txt 2>#{Rails.root}/tmp/#{@timestamp}_error.txt"
+      @program = "blastn"
+      @options = "-task blastn" 
     elsif @task == 'tblastn'
-      @blast_cmd = "tblastn -query #{Rails.root}/tmp/#{@timestamp}_query.fa -db \\\"#{@db_list}\\\" -evalue #{@expectvalue} -num_alignments 20 -num_descriptions 20 -html -outfmt #{@output_format} -out #{Rails.root}/tmp/#{@timestamp}_working.txt 2>#{Rails.root}/tmp/#{@timestamp}_error.txt"
+      @program = "tblastn"
     elsif @task == 'tblastx'
-      @blast_cmd = "tblastx -query #{Rails.root}/tmp/#{@timestamp}_query.fa -db \\\"#{@db_list}\\\" -evalue #{@expectvalue} -num_alignments 20 -num_descriptions 20 -html -outfmt #{@output_format} -out #{Rails.root}/tmp/#{@timestamp}_working.txt 2>#{Rails.root}/tmp/#{@timestamp}_error.txt"
+      @program = "tblastx"
     end
+    @blast_cmd = "#{@program} -query #{Rails.root}/tmp/#{@timestamp}_query.fa -db \\\"#{@db_list}\\\" #{@options} -evalue #{@expectvalue} -num_alignments #{@max_hits} -num_descriptions #{@max_hits} -html -outfmt #{@output_format} -out #{Rails.root}/tmp/#{@timestamp}_working.txt 2>#{Rails.root}/tmp/#{@timestamp}_error.txt"
     scriptCmd =  "#{Rails.root}/lib/tasks/blast.rb \"#{@blast_cmd}\" #{Rails.root}/tmp/#{@timestamp} &"
     logger.debug scriptCmd
     system(scriptCmd);

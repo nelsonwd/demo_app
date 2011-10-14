@@ -24,8 +24,8 @@ BLAST program
       	<option value="tblastx">tblastx (6-frame nucleotide against 6-frame nucleotide)</option>
         </select>
 </li>
-<br><br>
-<li>E-value cutoff
+<br>
+<li>E-value cutoff<br>
 <select name="expectvalue" id="expectvalue" class="bton">
       <option value="1e-10">1&times;10-10</option>
       <option value="1e-5">1&times;10-5</option>
@@ -37,8 +37,19 @@ BLAST program
       <option value="10">10.0</option>
     </select>
 </li>
-<br><br>
-<li>Output format (tabular format is recommended for large query set):
+<br>
+<li>Max number of results<br>
+<select name="max_hits" id="max_hits" class="bton">
+      <option value="1">1</option>
+      <option value="10">10</option>
+      <option value="50" selected >50</option>
+      <option value="250">100</option>
+      <option value="500">500</option>
+      <option value="1000">1000</option>
+    </select>
+</li>
+<br>
+<li>Output format<br>
 <select name="output_format" id="output_format" class="bton">
       <option value="0">0: Pairwise (default)</option>
       <option value="6">6: Tabular (no comment lines)</option>
