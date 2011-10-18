@@ -23,9 +23,9 @@ td {
 select {
    margin-left: 5px;
 }
-pre {
+/*pre {
    margin-left: 15px;
-}
+}*/
 #content {
    background-color: #fff;
    background: url("images/nori_head.jpg");
@@ -61,9 +61,9 @@ pre {
    list-style: none;
    display: block;
    padding: 3px 24px;
-   text-transform: uppercase;
+   /*text-transform: uppercase;*/
    font: bold 2.0em Arial, sans-serif;
-   color: #7BFF00;
+   color: #0F990F;
    border-right: 0px solid #ccc; 
    text-decoration: none;
 
@@ -88,13 +88,13 @@ pre {
    padding: 3px 24px;
    text-transform: uppercase;
    font: bold 0.8em Arial, sans-serif;
-   color: #7BFF00;
+   color: #0F990F;
    border-right: 0px solid #ccc; 
    text-decoration: none;
 }
 #navo li a:hover {
    color: #F4FFEA;
-   background: #7BFF00;
+   background: #0F990F;
 }
 #important {
    color: #FF0000;
@@ -252,7 +252,7 @@ pre {
 }
 
 #step {
-   color: #630B0B;
+   color: #A61C00;
    font-size:2em;
    font-style:italic;font-weight:bold;
    padding-right:5px;
