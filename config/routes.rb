@@ -1,4 +1,5 @@
 DemoApp::Application.routes.draw do
+
   match '/submit', :to => 'blast#submit'
 #  get "blast/submit"
 
@@ -11,14 +12,18 @@ DemoApp::Application.routes.draw do
 
   get "pages/blast"
 
-  get "pages/data"
+#  get "pages/data"
 
   get "pages/about"
 
+  get "blast_dbs/fastasearch"  
+  match '/fastasearch', :to => 'blast_dbs#fastasearch'  
   resources :microposts
 
   resources :users
-    
+
+  resources :blast_dbs
+
   root :to => 'pages#blast'
 
   # The priority is based upon order of creation:

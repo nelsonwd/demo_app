@@ -1,0 +1,61 @@
+<%= form_for(@blast_db) do |f| %>
+  <% if @blast_db.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@blast_db.errors.count, "error") %> prohibited this blast_db from being saved:</h2>
+
+      <ul>
+      <% @blast_db.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :display_name %><br />
+    <%= f.text_field :display_name %>
+  </div>
+  <div class="field">
+    <%= f.label :blast_index_name %><br />
+    <%= f.text_field :blast_index_name %>
+  </div>
+  <div class="field">
+    <%= f.label :file_name %><br />
+    <%= f.text_field :file_name %>
+  </div>
+  <div class="field">
+    <%= f.label :organism_name %><br />
+    <%= f.text_field :organism_name %>
+  </div>
+  <div class="field">
+    <%= f.label :taxonomy_id %><br />
+    <%= f.text_field :taxonomy_id %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :data_type %><br />
+    <%= f.text_field :data_type %>
+  </div>
+  <div class="field">
+    <%= f.label :num_seqs %><br />
+    <%= f.text_field :num_seqs %>
+  </div>
+  <div class="field">
+    <%= f.label :url %><br />
+    <%= f.text_field :url %>
+  </div>
+  <div class="field">
+    <%= f.label :image %><br />
+    <%= f.text_field :image %>
+  </div>
+  <div class="field">
+    <%= f.label :parent %><br />
+    <%= f.text_field :parent %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

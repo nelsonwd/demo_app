@@ -10,7 +10,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110919131636) do
+ActiveRecord::Schema.define(:version => 20111014232205) do
+
+  create_table "blast_dbs", :force => true do |t|
+    t.string   "display_name"
+    t.string   "blast_index_name"
+    t.string   "file_name"
+    t.string   "organism_name"
+    t.integer  "taxonomy_id"
+    t.string   "description"
+    t.string   "data_type"
+    t.integer  "num_seqs"
+    t.string   "url"
+    t.string   "image"
+    t.integer  "parent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "microposts", :force => true do |t|
     t.string   "content"

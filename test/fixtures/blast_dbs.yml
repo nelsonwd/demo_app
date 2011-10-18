@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  display_name: MyString
+  blast_index_name: MyString
+  file_name: MyString
+  organism_name: MyString
+  taxonomy_id: 1
+  description: MyString
+  data_type: MyString
+  num_seqs: 1
+  url: MyString
+  image: MyString
+  parent: 1
+
+two:
+  display_name: MyString
+  blast_index_name: MyString
+  file_name: MyString
+  organism_name: MyString
+  taxonomy_id: 1
+  description: MyString
+  data_type: MyString
+  num_seqs: 1
+  url: MyString
+  image: MyString
+  parent: 1

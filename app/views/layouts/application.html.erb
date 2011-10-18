@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Symbiodinum</title>
+  <title><%= title %></title>
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :all %>
   <%= csrf_meta_tag %>
@@ -10,14 +10,16 @@
 <body onLoad="fieldfocus()">
   <div id="main">
   <%= image_tag("coralheader.png", :alt => "SymbiBLAST") %>
-  <span id="title" >Symbiodinium</span>
+  <span id="title" ><%= title %></span>
   <ul id="navo">
    <li><a href="/">BLAST</a></li>
-   <li><a href=# >Data</a></li>
-   <li><a href=# >About</a></li>
+   <li><a href="/blast_dbs" >Data</a></li>
+   <li><a href="pages/about" >About</a></li>
   </ul>
+  <br>
 
 <%= yield %>
+  </div>
 <!--<%= debug(params) if Rails.env.development? %> -->
 </body>
 </html>

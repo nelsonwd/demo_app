@@ -42,6 +42,7 @@ class BlastController < ApplicationController
   end
 
   def result
+    @title = "Blast Results"
     @timestamp = params[:timestamp]
     @output_format = params[:output_format]
     #@mystring = 'The file did not load?'

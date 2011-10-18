@@ -1,0 +1,35 @@
+
+<table cellspacing="10">
+<br>
+  <tr>
+    <th></th>
+    <th>Database Name</th>
+    <th>Data type</th>
+    <th>Num seqs</th>
+    <th>Date created<th>
+    <th>Links</th>
+  </tr>
+
+<% @blast_dbs.each do |blast_db| %>
+  <tr>
+    <td><%= link_to image_tag( blast_db.image, :alt => "image", :size => "24x24"), blast_db, :title => "Go to database detail page" %></td>
+    <td><%= link_to  blast_db.display_name, blast_db %></td>
+    <td align="center"><%= blast_db.data_type %></td>
+    <td align="center"><%= blast_db.num_seqs %></td>
+    <td align="center" ><%= blast_db.created_at %><?td>
+    <td><%= link_to image_tag("fasta.jpg", :alt => "FASTA", :size => "24x18"), "fasta/#{blast_db.file_name}", :title => "Download FASTA file", :target => "_blank" %>
+    <%if blast_db.url.empty? %>
+      <%= link_to image_tag("url.jpg", :alt => "URL", :size => "24x18"),blast_db, :target => "_blank", :title => "Go to database source" %>
+    <%else%>
+      <%= link_to image_tag("url.jpg", :alt => "URL", :size => "24x18"),blast_db.url, :target => "_blank", :title => "Go to database source" %>
+    <%end%>
+    <%= link_to image_tag("taxonomy.jpg", :alt => "TAXONOMY", :size => "24x18"), "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=#{blast_db.taxonomy_id}&lvl=3&lin=f&keep=1&srchmode=1&unlock", :title => "Go to taxonomy browser" %></td>
+    <!--<td><%= link_to 'Edit', edit_blast_db_path(blast_db) %></td>
+    <td><%= link_to 'Destroy', blast_db, :confirm => 'Are you sure?', :method => :delete %></td>-->
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Blast db', new_blast_db_path %>

@@ -1,11 +1,10 @@
 class PagesController < ApplicationController
   def blast
-  end
-
-  def data
+    @title = "Blast Search"
   end
 
   def about
+    @title = "About"
   end
 
 end
