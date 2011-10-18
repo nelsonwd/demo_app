@@ -1,9 +1,11 @@
 <table id="options" cellspacing=15px width=800>
 <tr>
 <td>
-<form action="submit" method="post" name="starttblastnoptions" id="starttblastnoptions" onSubmit='return isFormValid(this);'>
-<span id="step">1.</span> Enter your query sequence(s) in FASTA format: <br>
+<%= form_tag({:controller => "blast", :action => :submit}, :multipart => true, :onsubmit => 'return isFormValid(this);',:id => "starttblastnoptions", :name => "starttblastnoptions") do %>
+<!--<form action="submit" method="post" name="starttblastnoptions" id="starttblastnoptions" onSubmit='return isFormValid(this);'> -->
+<span id="step">1.</span> Enter your query sequence(s) in FASTA format or upload file: <br>
 <textarea name="in_querysequence" id="in_querysequence" cols="50" rows="5"></textarea><br>
+<%= file_field_tag :query_file %>
 </td>
 <td>
 <span id="step">3.</span><br>
@@ -153,4 +155,5 @@ Cyanobacteria</h1>
 </td>
 </tr>
 </table>
+<%end%>
 

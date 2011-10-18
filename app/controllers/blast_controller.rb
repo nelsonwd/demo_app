@@ -10,12 +10,16 @@ class BlastController < ApplicationController
     @ch_genom = params[:ch_genom]
     @max_hits = params[:max_hits]
     @db_list = @ch_genom.join(" ")
+    @upload_io = params[:query_file]
     @local_filename = "#{Rails.root}/tmp/#{@timestamp}_query.fa"
     @options = ""  
 
     redirect_to wait_path(:timestamp => @timestamp, :loadcount => 0, :output_format => @output_format)
-    File.open(@local_filename, 'w') {|f| f.write(params[:in_querysequence]) }
-
+    if @upload_io == nil
+      File.open(@local_filename, 'w') {|f| f.write(params[:in_querysequence]) }
+    else
+      File.open(@local_filename, 'w') {|f| f.write(@upload_io.read)}
+    end
     if @task == 'blastn'
       @program = "blastn"
       @options = "-task blastn" 

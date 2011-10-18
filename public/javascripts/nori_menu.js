@@ -1,9 +1,9 @@
 function isFormValid(formToValidate) {
         var formIsValid = true;
-     if (formToValidate.in_querysequence.value == "")
+     if (formToValidate.in_querysequence.value == "" && formToValidate.query_file.value == "")
       {
          formIsValid = false;
-         alert("Please enter a query sequence.");
+         alert("Please enter a query sequence or upload a file.");
       }
 
         var v_form=document.getElementById("starttblastnoptions");

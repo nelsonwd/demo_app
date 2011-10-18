@@ -2,8 +2,8 @@
 
 <%=form_tag "fastasearch", :method => "get" do  %>
   <%= hidden_field_tag(:file, @blast_db.file_name) %>
-  <%= label_tag(:query, "Enter a comma separated list of sequence accessions to download FASTA entries") %><br>
-  <%= text_area_tag(:query, "", :size => "60x2") %><br>
+  <%= label_tag(:query, "Enter a comma separated list of sequence identifiers to download FASTA entries (limited to 100 results)") %><br>
+  <%= text_area_tag(:query, "", :size => "80x2") %><br>
   <%= submit_tag("Search") %>
 <%end%>
 <p id="notice"><%= notice %></p>
