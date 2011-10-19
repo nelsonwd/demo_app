@@ -303,6 +303,7 @@ select {
    vertical-align: top;
    width: 259px;
    padding: 2px;
+   color: #000000;
 }
 #genomeTab h1, h2, h3 {
    font: bold 0.8em Arial, Verdana, sans-serif;
@@ -369,7 +370,7 @@ select {
    padding-bottom: 8px;
 }
 #green {
-   background: url(images/green.gif);
+   background: url(/images/green_algae.jpg);
    padding-top: 3px;
    padding-bottom: 15px;
 }
