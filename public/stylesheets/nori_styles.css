@@ -348,13 +348,13 @@ select {
 
 /* Background images for each taxon group in the table */
 
-#alveolate {
-   background: url(images/alveolate.gif);
+#alveolata {
+   background: url(/images/alveolata.jpg);
    padding-top: 3px;
    padding-bottom: 8px;
 }
-#chromista {
-   background: url(images/chromista.gif);
+#cnidaria {
+   background: url(/images/cnidaria.jpg);
    padding-top: 3px;
    padding-bottom: 15px;
 }

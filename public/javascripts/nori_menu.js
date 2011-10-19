@@ -48,31 +48,31 @@ var myform=document.getElementById("starttblastnoptions");
         }
         
         if (group=="alveolata") {
-                for (var m =15 ; m < 20; m++){
+                for (var m =15 ; m < 21; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="dinophyceae") {
-                for (var m = 15; m < 19; m++){
+                for (var m = 15; m < 20; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="symbiodinium") {
-                for (var m = 15; m < 18; m++){
+                for (var m = 15; m < 19; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="cnidaria") {
-                for (var m = 20; m < 24; m++){
+                for (var m = 21; m < 25; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="anthozoa") {
-                for (var m = 20; m < 23; m++){
+                for (var m = 21; m < 24; m++){
                 myform[m].checked = true;
                 }
         }
@@ -90,31 +90,31 @@ var myform=document.getElementById("starttblastnoptions");
         }
         
         if (group=="alveolata") {
-                for (var m = 15; m < 20; m++){
+                for (var m = 15; m < 21; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="dinophyceae") {
-                for (var m = 15; m < 19; m++){
+                for (var m = 15; m < 20; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="symbiodinium") {
-                for (var m = 15; m < 18; m++){
+                for (var m = 15; m < 19; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="cnidaria") {
-                for (var m = 20; m < 24; m++){
+                for (var m = 21; m < 25; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="anthozoa") {
-                for (var m = 20; m < 23; m++){
+                for (var m = 21; m < 24; m++){
                 myform[m].checked = false;
                 }
         }
