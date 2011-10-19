@@ -14,10 +14,10 @@
   <tr>
     <td><%= link_to image_tag( blast_db.image, :alt => "image", :size => "24x24"), blast_db, :title => "Go to database detail page" %></td>
     <td><%= link_to  blast_db.display_name, blast_db %></td>
-    <td align="center"><%= blast_db.data_type %></td>
-    <td align="center"><%= blast_db.num_seqs %></td>
-    <td align="center" ><%= blast_db.created_at %><?td>
-    <td><%= link_to image_tag("fasta.jpg", :alt => "FASTA", :size => "24x18"), "fasta/#{blast_db.file_name}", :title => "Download FASTA file", :target => "_blank" %>
+    <td align="center" ><%= blast_db.data_type %></td>
+    <td align="center" ><%= blast_db.num_seqs %></td>
+    <td align="center" ><%= blast_db.created_at %></td>
+    <td align="center" ><%= link_to image_tag("fasta.jpg", :alt => "FASTA", :size => "24x18"), "fasta/#{blast_db.file_name}", :title => "Download FASTA file", :target => "_blank" %>
     <%if blast_db.url.empty? %>
       <%= link_to image_tag("url.jpg", :alt => "URL", :size => "24x18"),blast_db, :target => "_blank", :title => "Go to database source" %>
     <%else%>
