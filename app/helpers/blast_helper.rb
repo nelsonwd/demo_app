@@ -1,7 +1,7 @@
 module BlastHelper
   def blastParse
     if @output_format == '6'
-      table_string = "<table border=1 ><tr><th></th><th title=\"The query sequence ID\">qId</th><th title=\"The subject sequence Id\" >sID</th><th title=\"Percentage of identical matches\" >%</th><th title=\"Alignment length\" >lgth</th><th title=\"Number of mismatches\" >err</th><th title=\"Number of gap openings\" >gap</th><th title=\"Start of alignment in query\" >qstart</th><th title=\"End of alignment in query\" >qend</th><th title=\"Start of alignment in subject\" >sstart</th><th title=\"End of alignment in subject\" >send</th><th title=\"Expect value\" >eval</th><th tilte=\"Bit score\" >bit</th></tr>"
+      table_string = "<table border=1 ><tr><th></th><th title=\"The query sequence ID\">qId</th><th title=\"The subject sequence Id\" >sID</th><th title=\"Percentage of identical matches\" >%</th><th title=\"Alignment length\" >lgth</th><th title=\"Number of mismatches\" >err</th><th title=\"Number of gap openings\" >gap</th><th title=\"Start of alignment in query\" >qstart</th><th title=\"End of alignment in query\" >qend</th><th title=\"Start of alignment in subject\" >sstart</th><th title=\"End of alignment in subject\" >send</th><th title=\"Expect value\" >eval</th><th title=\"Bit score\" >bit</th></tr>"
       file = File.new("#{Rails.root}/tmp/#{@timestamp}_result.txt", "r")
       while (line = file.gets)
         table_string += "<tr><td><input type=checkbox name=subject /></td>"
