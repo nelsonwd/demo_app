@@ -42,37 +42,37 @@ var group;
 var myform=document.getElementById("starttblastnoptions");
 
         if (group=="green_algae") {
-                for (var m = 0; m < 11; m++){
+                for (var m = 0; m < 12; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="alveolata") {
-                for (var m =11 ; m < 16; m++){
+                for (var m =12 ; m < 17; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="dinophyceae") {
-                for (var m = 11; m < 15; m++){
+                for (var m = 12; m < 16; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="symbiodinium") {
-                for (var m = 11; m < 14; m++){
+                for (var m = 12; m < 15; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="cnidaria") {
-                for (var m = 16; m < 20; m++){
+                for (var m = 17; m < 21; m++){
                 myform[m].checked = true;
                 }
         }
         
         if (group=="anthozoa") {
-                for (var m = 16; m < 19; m++){
+                for (var m = 17; m < 20; m++){
                 myform[m].checked = true;
                 }
         }
@@ -84,37 +84,37 @@ var group;
 var myform=document.getElementById("starttblastnoptions");
 
         if (group=="green_algae") {
-                for (var m = 0; m < 11; m++){
+                for (var m = 0; m < 12; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="alveolata") {
-                for (var m = 11; m < 16; m++){
+                for (var m = 12; m < 17; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="dinophyceae") {
-                for (var m = 11; m < 15; m++){
+                for (var m = 12; m < 16; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="symbiodinium") {
-                for (var m = 11; m < 14; m++){
+                for (var m = 12; m < 15; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="cnidaria") {
-                for (var m = 16; m < 20; m++){
+                for (var m = 17; m < 21; m++){
                 myform[m].checked = false;
                 }
         }
         
         if (group=="anthozoa") {
-                for (var m = 16; m < 19; m++){
+                for (var m = 17; m < 20; m++){
                 myform[m].checked = false;
                 }
         }
