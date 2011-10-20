@@ -349,12 +349,12 @@ select {
 /* Background images for each taxon group in the table */
 
 #alveolata {
-   background: url(/images/alveolata.jpg);
+   background: url(images/alveolata.jpg);
    padding-top: 3px;
    padding-bottom: 8px;
 }
 #cnidaria {
-   background: url(/images/cnidaria.jpg);
+   background: url(images/cnidaria.jpg);
    padding-top: 3px;
    padding-bottom: 15px;
 }
@@ -370,7 +370,7 @@ select {
    padding-bottom: 8px;
 }
 #green {
-   background: url(/images/green_algae.jpg);
+   background: url(images/green_algae.jpg);
    padding-top: 3px;
    padding-bottom: 15px;
 }
