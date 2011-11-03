@@ -1,4 +1,4 @@
-<table id="options" cellspacing=15px width=800>
+<table id="options" class="options" cellspacing=15px width=800>
 <tr>
 <td>
 <%= form_tag({:controller => "blast", :action => :submit}, :multipart => true, :onsubmit => 'return isFormValid(this);',:id => "starttblastnoptions", :name => "starttblastnoptions") do %>
@@ -84,6 +84,53 @@ Chlorophyta (green algae)</h1>
 <li><input type="checkbox" name="ch_genom[]" value="scenedesmus_obliquus">Scenedesmus obliquus</li>
 <li><input type="checkbox" name="ch_genom[]" value="volvox_carteri">Volvox carteri</li>
 </ul>
+<h1>
+<a href"#" onClick="ChAll('cryptophyta'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('cryptophyta'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Cryptophyta</h1>
+<div id="cryptophyta">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="goniomonas_pacifica" >Goniomonas pacifica</li>
+<li><input type="checkbox" name="ch_genom[]" value="guillardia_theta" >Guillardia theta</li>
+<li><input type="checkbox" name="ch_genom[]" value="rhodomonas_salina" >Rhodomonas salina</li>
+</ul>
+<h1>
+<a href"#" onClick="ChAll('haptophyceae'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('haptophyceae'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Haptophyceae</h1>
+<div id="haptophyceae">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="emiliania_huxleyi" >Emiliania huxleyi</li>
+<li><input type="checkbox" name="ch_genom[]" value="isochrysis_galbana" >Isochrysis galbana</li>
+<li><input type="checkbox" name="ch_genom[]" value="pavlova_lutheri" >Pavlova lutheri</li>
+</ul>
+<h1>
+<a href"#" onClick="ChAll('bacillariophyceae'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('bacillariophyceae'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Bacillariophyceae (diatoms)</h1>
+<div id="bacillariophyceae">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="phaeodactylum_tricornutum" >Phaeodactylum tricornutum</li>
+<li><input type="checkbox" name="ch_genom[]" value="thalassiosira_pseudonana" >Thalassiosira pseudonana</li>
+</ul>
+<h1>
+<a href"#" onClick="ChAll('oomycetes'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('oomycetes'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Oomycetes</h1>
+<div id="oomycetes">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="phytophthora_ramorum" >Phytophthora ramorum</li>
+<li><input type="checkbox" name="ch_genom[]" value="phytophthora_sojae" >Phytophthora sojae</li>
+</ul>
+<h1>
+<a href"#" onClick="ChAll('oomycetes'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('oomycetes'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Oomycetes</h1>
+<div id="oomycetes">
+<ul>
+<li><input type="checkbox" name="ch_genom[]" value="phytophthora_ramorum" >Phytophthora ramorum</li>
+<li><input type="checkbox" name="ch_genom[]" value="phytophthora_sojae" >Phytophthora sojae</li>
+</ul>
 </div>
 </td>
 
@@ -92,7 +139,7 @@ Chlorophyta (green algae)</h1>
 <h1>
 <a href"#" onClick="ChAll('alveolata'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
 <a href"#" onClick="unChAll('alveolata'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
-Alveolata (protists)</h1>
+Alveolata</h1>
 
 <div id="alveolata">
 <h2>
@@ -102,6 +149,14 @@ Dinophyceae (dinoflagellates)
 </h2>
 
 <div id="dinophyceae">
+<ul>
+  <li><input type="checkbox" name="ch_genom[]" value="alexandrium_tamarense" >Alexandrium tamarense</li>
+  <li><input type="checkbox" name="ch_genom[]" value="amphidinium_carterae" >Amphidinium carterae</li>
+  <li><input type="checkbox" name="ch_genom[]" value="heterocapsa_triquetra" >Heterocapsa triquetra</li>
+  <li><input type="checkbox" name="ch_genom[]" value="karenia_brevis" >Karenia brevis</li>
+  <li><input type="checkbox" name="ch_genom[]" value="karlodinium_micrum" >Karlodinium micrum</li>
+  <li><input type="checkbox" name="ch_genom[]" value="lingulodinium_polyedrum" >Lingulodinium polyedrum</li>
+</ul>
 <h3>
 <a href"#" onClick="ChAll('symbiodinium'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
 <a href"#" onClick="unChAll('symbiodinium'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
@@ -114,16 +169,29 @@ Symbiodinium
 <li><input type="checkbox" name="ch_genom[]" value="mf105">mf105 assembly</li>
 </ul>
 </h3>
-<h3>
-
+<ul>
 <input disabled type="checkbox" name="ch_genom[]" value="other_dinophyceae">Other Dinophyceae
+</ul>
 
+</div>
+<h2>
+<a href"#" onClick="ChAll('apicomplexa'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('apicomplexa'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Apicomplexa
+</h2>
 
+<div id="apicomplexa">
+<ul>
+  <li><input type="checkbox" name="ch_genom[]" value="plasmodium_falciparum" >Plasmodium falciparum</li>
+  <li><input type="checkbox" name="ch_genom[]" value="cryptosporidium_hominis" >Cryptosporidium hominis</li>
+  <li><input type="checkbox" name="ch_genom[]" value="other_apicomplexa" >Other apicomplexa</li>
+</ul>
+</div>
 
 <h2>
 <input disabled type="checkbox" name="ch_genom[]" value="other_alveolata">Other Alveolata
 </h2>
-
+</div>
 <td id="genomeTab">
 
 <h1>
@@ -148,12 +216,13 @@ Anthozoa</li>
 
 
 <h1>
-<a href"#" onClick="ChAll('cyanobacteria'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('cyanobacteria'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-Cyanobacteria</h1>
+<a href"#" onClick="ChAll('other'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="unChAll('other'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+Other</h1>
 
-<div id="cyanobacteria">
+<div id="other">
 <ul>
+<li><input type="checkbox" name="ch_genom[]" value="cyanobacteria">Cyanobacteria</li>
 </ul>
 </div>
 

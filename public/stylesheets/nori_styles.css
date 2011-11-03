@@ -26,6 +26,12 @@ select {
 /*pre {
    margin-left: 15px;
 }*/
+
+textarea {
+width: auto;
+height: auto;
+padding: auto;
+}
 #content {
    background-color: #fff;
    background: url("images/nori_head.jpg");

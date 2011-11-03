@@ -23,7 +23,7 @@
     <%else%>
       <%= link_to image_tag("url.jpg", :alt => "URL", :size => "24x18"),blast_db.url, :target => "_blank", :title => "Go to database source" %>
     <%end%>
-    <%= link_to image_tag("taxonomy.jpg", :alt => "TAXONOMY", :size => "24x18"), "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=#{blast_db.taxonomy_id}&lvl=3&lin=f&keep=1&srchmode=1&unlock", :title => "Go to taxonomy browser" %></td>
+    <%= link_to image_tag("taxonomy.jpg", :alt => "TAXONOMY", :size => "24x18"), "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=#{blast_db.taxonomy_id}&lvl=3&lin=f&keep=1&srchmode=1&unlock", :target => "_blank", :title => "Go to taxonomy browser" %></td>
     <!--<td><%= link_to 'Edit', edit_blast_db_path(blast_db) %></td>
     <td><%= link_to 'Destroy', blast_db, :confirm => 'Are you sure?', :method => :delete %></td>-->
   </tr>

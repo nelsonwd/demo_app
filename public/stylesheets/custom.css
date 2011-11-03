@@ -1,0 +1,269 @@
+.container {
+  width: 800px;
+}
+
+body {
+  background: #cff;
+}
+
+header {
+  padding-top: 20px;
+}
+
+textarea {
+  width: auto;
+  height: auto;
+  padding: auto;
+}
+
+header img {
+  padding: 1em;
+  background: #fff;
+}
+
+section {
+  margin-top: 1em;
+  font-size: 120%;
+  padding: 20px;
+  background: #fff;
+}
+
+section h1 {
+  font-size: 200%;
+}
+
+/* Links */
+
+a {
+  color: #09c;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #069;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #069;
+}
+
+/* Navigation */
+
+nav {
+  float: right;
+}
+
+nav {
+  background-color: white;
+  padding: 0 0.7em;
+  white-space: nowrap;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  list-style-type: none;
+  display: inline-block;
+  padding: 0.2em 0;
+}
+
+nav ul li a {
+  padding: 0 5px;
+  font-weight: bold;
+}
+
+nav ul li a:visited {
+  color: #09c;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Sign up button */
+
+a.signup_button {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  text-align: center;
+  width: 190px;
+  color: #fff;
+  background: #006400;
+  font-size: 150%;
+  font-weight: bold;
+  padding: 20px;
+}
+
+/* Round corners */
+
+.round {
+  -moz-border-radius:    10px;
+  -webkit-border-radius: 10px;
+  border-radius:         10px;
+}
+
+footer {
+  text-align: center;
+  margin-top: 10px;
+  width: 710px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer nav {
+  float: none;
+}
+
+/* User show page */
+
+table.profile {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+td.main {
+  width: 70%;
+  padding: 1em;
+}
+
+td.sidebar {
+  width: 30%;
+  padding: 1em;
+  vertical-align: top;
+  background: #ffc;
+}
+
+.profile img.gravatar {
+  border: 1px solid #999;
+  margin-bottom: -15px;
+}
+
+div.field, div.actions {
+  margin-bottom: 10px;
+}
+
+.field_with_errors {
+  margin-top: 10px;
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+.field_with_errors label {
+  color: #fff;
+}
+
+#error_explanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#error_explanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#error_explanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#error_explanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+#title {
+   width: 800px;
+   position: relative;
+   margin: -2.3em 0 1.0em 0;
+   left: 50px;
+   padding-top: 0px;
+   list-style: none;
+   display: block;
+   padding: 3px 24px;
+   /*text-transform: uppercase;*/
+   font: bold 2.0em Arial, sans-serif;
+   color: #06c;
+   border-right: 0px solid #ccc; 
+   text-decoration: none;
+}
+
+#options tbody td {
+background: #E5ECF9;
+}
+
+#bigTable {
+   margin-top: 0px;
+   margin-left: auto;
+   margin-right: auto;
+   background: url(images/porphyra_back.gif);
+   background-repeat: no-repeat;
+   background-position: bottom right;
+   text-align: left;
+}
+
+#genomeTab {
+   vertical-align: top;
+   width: 259px;
+   padding: 2px;
+   color: #000000;
+}
+#genomeTab h1, h2, h3 {
+   font: bold 0.8em Arial, Verdana, sans-serif;
+   margin-top: 3px;
+   padding: 2px;
+}
+
+#genomeTab h1 {
+   margin-left: 1px;
+   text-transform: uppercase;
+   background-color: #cecece;
+   margin-bottom:0;
+   margin-top: 6px;
+}
+#genomeTab h2 {
+   margin-left: 14px;
+   margin-bottom:3px;
+}
+#genomeTab h3 {
+   margin-left: 27px;
+   margin-bottom: 3px;
+}
+#genomeTab h4 {
+   font-style:italic;font-weight:bold;
+   font-family: Arial, Verdana, sans-serif;
+   font-size: 0.8em;
+   margin-bottom: 4px;
+   margin-top: 3px;
+   margin-left: 62px;
+   padding-top: 4px;
+   padding-bottom: 1px;
+}
+#genomeTab ul {
+   list-style: none;
+   margin-bottom: 0;
+   margin-top: 0;
+   font: italic 0.75em Arial, Verdana, sans-serif;
+   padding-bottom: 2px;
+}
+#genomeTab li {
+   padding:0px;   
+}
+
+

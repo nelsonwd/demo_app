@@ -9,6 +9,7 @@ class BlastController < ApplicationController
     @output_format = params[:output_format]
     @ch_genom = params[:ch_genom]
     @max_hits = params[:max_hits]
+    @ch_genom.map! {|db|"/blastdbs/" + db}
     @db_list = @ch_genom.join(" ")
     @upload_io = params[:query_file]
     @local_filename = "#{Rails.root}/tmp/#{@timestamp}_query.fa"
@@ -38,7 +39,7 @@ class BlastController < ApplicationController
     @loadcount = params[:loadcount].to_i + 1
     @timestamp = params[:timestamp]
     @output_format = params[:output_format]
-    if FileTest.exist?("#{Rails.root}/tmp/#{@timestamp}_result.txt")
+    if FileTest.size?("#{Rails.root}/tmp/#{@timestamp}_result.txt")
       redirect_to result_path(:timestamp => @timestamp, :output_format => @output_format)	
     elsif(FileTest.size?("#{Rails.root}/tmp/#{@timestamp}_error.txt"))
       redirect_to result_path(:timestamp => @timestamp, :output_format => "error")	

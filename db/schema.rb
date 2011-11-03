@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111014232205) do
+ActiveRecord::Schema.define(:version => 20111102215152) do
 
   create_table "blast_dbs", :force => true do |t|
     t.string   "display_name"
@@ -40,6 +40,12 @@ ActiveRecord::Schema.define(:version => 20111014232205) do
     t.string   "email"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "encrypted_password"
+    t.string   "salt"
+    t.boolean  "admin",              :default => false
+    t.boolean  "enabled",            :default => false
   end
+
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
 
 end

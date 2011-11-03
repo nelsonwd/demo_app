@@ -1,26 +1,30 @@
 DemoApp::Application.routes.draw do
+  get "sessions/new"
+
+
+  resources :users
+  resources :sessions, :only => [:new, :create, :destroy]
+
+  match '/signup', :to => 'users#new'
+  match '/signin',  :to => 'sessions#new'
+  match '/signout', :to => 'sessions#destroy'
 
   match '/submit', :to => 'blast#submit'
-#  get "blast/submit"
-
+  match '/about', :to => 'pages#about'
   match '/wait', :to => 'blast#wait'
-#  get "blast/wait"
 
   match '/result', :to => 'blast#result'
 
-#  get "blast/result"
-
   get "pages/blast"
-
-#  get "pages/data"
 
   get "pages/about"
 
   get "blast_dbs/fastasearch"  
   match '/fastasearch', :to => 'blast_dbs#fastasearch'  
+
+  get "users/new"
   resources :microposts
 
-  resources :users
 
   resources :blast_dbs
 
