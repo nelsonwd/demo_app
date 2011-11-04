@@ -37,48 +37,78 @@ for (i = 0; i < myform.length; i++)
         myform[i].checked = false ;
 }
 
-function ChAll(group) {
+function ChAll(group, isChecked) {
 var group;
 var myform=document.getElementById("starttblastnoptions");
 
         if (group=="green_algae") {
                 for (var m = 0; m < 15; m++){
-                myform[m].checked = true;
+                myform[m].checked = isChecked;
                 }
         }
         
+        if (group=="cryptophyta") {
+                for (var m =15 ; m < 18; m++){
+                myform[m].checked = isChecked;
+                }
+        }
+        
+        if (group=="haptophyceae") {
+                for (var m = 18; m < 21; m++){
+                myform[m].checked = isChecked;
+                }
+        }
+      
+        if (group=="bacillariophyceae") {
+                for (var m = 21; m < 23; m++){
+                myform[m].checked = isChecked;
+                }
+        }
+ 
+        if (group=="stramenopiles") {
+                for (var m = 23; m < 26; m++){
+                myform[m].checked = isChecked;
+                }
+        }
+
         if (group=="alveolata") {
-                for (var m =15 ; m < 21; m++){
-                myform[m].checked = true;
+                for (var m = 26; m < 39; m++){
+                myform[m].checked = isChecked;
                 }
         }
-        
+
         if (group=="dinophyceae") {
-                for (var m = 15; m < 20; m++){
-                myform[m].checked = true;
+                for (var m = 26; m < 36; m++){
+                myform[m].checked = isChecked;
+                }
+        }
+
+        if (group=="symbiodinium") {
+                for (var m = 32; m < 36; m++){
+                myform[m].checked = isChecked;
                 }
         }
         
-        if (group=="symbiodinium") {
-                for (var m = 15; m < 19; m++){
-                myform[m].checked = true;
+        if (group=="apicomplexa") {
+                for (var m = 36; m < 39; m++){
+                myform[m].checked = isChecked;
                 }
         }
         
         if (group=="cnidaria") {
-                for (var m = 21; m < 25; m++){
-                myform[m].checked = true;
+                for (var m = 39; m < 42; m++){
+                myform[m].checked = isChecked;
                 }
         }
         
-        if (group=="anthozoa") {
-                for (var m = 21; m < 24; m++){
-                myform[m].checked = true;
+        if (group=="other") {
+                for (var m = 42; m < 43; m++){
+                myform[m].checked = isChecked;
                 }
         }
 }
 
-
+/*
 function unChAll(group) {
 var group;
 var myform=document.getElementById("starttblastnoptions");
@@ -89,18 +119,24 @@ var myform=document.getElementById("starttblastnoptions");
                 }
         }
         
-        if (group=="alveolata") {
-                for (var m = 15; m < 21; m++){
+        if (group=="cryptophyta") {
+                for (var m = 15; m < 18; m++){
                 myform[m].checked = false;
                 }
         }
         
-        if (group=="dinophyceae") {
-                for (var m = 15; m < 20; m++){
+        if (group=="haptophyceae") {
+                for (var m = 18; m < 21; m++){
                 myform[m].checked = false;
                 }
         }
         
+        if (group=="bacillariophyceae") {
+                for (var m = 21; m < 23; m++){
+                myform[m].checked = false;
+                }
+        }
+
         if (group=="symbiodinium") {
                 for (var m = 15; m < 19; m++){
                 myform[m].checked = false;
@@ -119,7 +155,7 @@ var myform=document.getElementById("starttblastnoptions");
                 }
         }
         
-}
+}*/
 
 
 function newWindow(url) {

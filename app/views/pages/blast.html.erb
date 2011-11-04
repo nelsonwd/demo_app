@@ -3,31 +3,30 @@
 <td>
 <%= form_tag({:controller => "blast", :action => :submit}, :multipart => true, :onsubmit => 'return isFormValid(this);',:id => "starttblastnoptions", :name => "starttblastnoptions") do %>
 <!--<form action="submit" method="post" name="starttblastnoptions" id="starttblastnoptions" onSubmit='return isFormValid(this);'> -->
-<span id="step">1.</span> Enter your query sequence(s) in FASTA format or upload file: <br>
+<h2><span id="step">1.</span> Enter your query sequence(s) in FASTA format or upload file:</h2> 
 <textarea name="in_querysequence" id="in_querysequence" cols="50" rows="5"></textarea><br>
 <%= file_field_tag :query_file %>
 </td>
-<td>
-<span id="step">3.</span><br>
-Select genome dataset listed below to BLAST the query sequence(s) against:<br><br>
-<%= image_tag("checkall_button.gif", :alt => "check all button", :onClick=>"checkAll()") %>
-<%= image_tag("checknull_button.gif", :alt => "uncheck all button", :onClick=>"unCheckAll()") %>
+<td style="vertical-align:top;" >
+<h2><span id="step">3.</span>
+Select genome dataset listed below to BLAST the query sequence(s) against:<br></h2>
+<!--<%= image_tag("checkall_button.gif", :alt => "check all button", :onClick=>"checkAll()") %>-->
+<input type="button" name="checkall" value="Check All" class="bton" onClick='checkAll()' >
+<!--<%= image_tag("checknull_button.gif", :alt => "uncheck all button", :onClick=>"unCheckAll()") %>-->
+<input type="button" name="uncheckall" value="Uncheck All" class="bton" onClick='unCheckAll()' >
 </td>
 </tr>
 
 <tr>
 <td>
-<span id="step">2.</span> Customise BLAST options:<br>
-<li>
+<h2><span id="step">2.</span> Customise BLAST options:</h2>
 BLAST program
 <select name="blastprogramchoice" id="blastprogramchoice" class="bton">
       	<option value="blastn">blastn, nucleotide against nucleotide, NCBI default)</option>
       	<option value="tblastn">tblastn (protein against 6-frame nucleotide</option>
       	<option value="tblastx">tblastx (6-frame nucleotide against 6-frame nucleotide)</option>
         </select>
-</li>
-<br>
-<li>E-value cutoff<br>
+<br>E-value cutoff<br>
 <select name="expectvalue" id="expectvalue" class="bton">
       <option value="1e-10">1&times;10-10</option>
       <option value="1e-5">1&times;10-5</option>
@@ -38,9 +37,8 @@ BLAST program
       <option value="1">1.00</option>
       <option value="10">10.0</option>
     </select>
-</li>
-<br>
-<li>Max number of results<br>
+
+<br>Max number of results<br>
 <select name="max_hits" id="max_hits" class="bton">
       <option value="1">1</option>
       <option value="10">10</option>
@@ -49,20 +47,19 @@ BLAST program
       <option value="500">500</option>
       <option value="1000">1000</option>
     </select>
-</li>
-<br>
-<li>Output format<br>
+
+<br>Output format<br>
 <select name="output_format" id="output_format" class="bton">
       <option value="0">0: Pairwise (default)</option>
       <option value="6">6: Tabular (no comment lines)</option>
       <option value="7">7: Tabular (with comment lines)</option>
     </select>
-</li>
+
 </ul>
 </td>
 
-<td>
-<span id="step">4.</span> Click to submit and run BLAST:<br>
+<td style="vertical-align:top;">
+<h2><span id="step">4.</span> Click to submit and run BLAST:<br></h2>
 <input type="submit" name="manydonesearch" value="SUBMIT" class="bton">
 </td>
 </tr>
@@ -72,8 +69,8 @@ BLAST program
 <tr>
 <td id="genomeTab">
 <h1>
-<a href"#" onClick="ChAll('green_algae'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('green_algae'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('green_algae', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('green_algae', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
 Chlorophyta (green algae)</h1>
 <div id="green">
 <ul>
@@ -84,9 +81,10 @@ Chlorophyta (green algae)</h1>
 <li><input type="checkbox" name="ch_genom[]" value="scenedesmus_obliquus">Scenedesmus obliquus</li>
 <li><input type="checkbox" name="ch_genom[]" value="volvox_carteri">Volvox carteri</li>
 </ul>
+</div>
 <h1>
-<a href"#" onClick="ChAll('cryptophyta'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('cryptophyta'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('cryptophyta', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('cryptophyta', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
 Cryptophyta</h1>
 <div id="cryptophyta">
 <ul>
@@ -94,9 +92,10 @@ Cryptophyta</h1>
 <li><input type="checkbox" name="ch_genom[]" value="guillardia_theta" >Guillardia theta</li>
 <li><input type="checkbox" name="ch_genom[]" value="rhodomonas_salina" >Rhodomonas salina</li>
 </ul>
+</div>
 <h1>
-<a href"#" onClick="ChAll('haptophyceae'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('haptophyceae'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('haptophyceae', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('haptophyceae', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
 Haptophyceae</h1>
 <div id="haptophyceae">
 <ul>
@@ -104,47 +103,40 @@ Haptophyceae</h1>
 <li><input type="checkbox" name="ch_genom[]" value="isochrysis_galbana" >Isochrysis galbana</li>
 <li><input type="checkbox" name="ch_genom[]" value="pavlova_lutheri" >Pavlova lutheri</li>
 </ul>
+</div>
 <h1>
-<a href"#" onClick="ChAll('bacillariophyceae'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('bacillariophyceae'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('bacillariophyceae',true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('bacillariophyceae', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
 Bacillariophyceae (diatoms)</h1>
 <div id="bacillariophyceae">
 <ul>
 <li><input type="checkbox" name="ch_genom[]" value="phaeodactylum_tricornutum" >Phaeodactylum tricornutum</li>
 <li><input type="checkbox" name="ch_genom[]" value="thalassiosira_pseudonana" >Thalassiosira pseudonana</li>
 </ul>
+</div>
 <h1>
-<a href"#" onClick="ChAll('oomycetes'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('oomycetes'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
-Oomycetes</h1>
-<div id="oomycetes">
+<a href"#" onClick="ChAll('stramenopiles',true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('stramenopiles',false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+Stramenopiles</h1>
+<div id="sramenopiles">
 <ul>
-<li><input type="checkbox" name="ch_genom[]" value="phytophthora_ramorum" >Phytophthora ramorum</li>
-<li><input type="checkbox" name="ch_genom[]" value="phytophthora_sojae" >Phytophthora sojae</li>
-</ul>
-<h1>
-<a href"#" onClick="ChAll('oomycetes'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('oomycetes'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
-Oomycetes</h1>
-<div id="oomycetes">
-<ul>
+<li><input type="checkbox" name="ch_genom[]" value="blastocystis_hominis" >Blastocystis hominis</li>
 <li><input type="checkbox" name="ch_genom[]" value="phytophthora_ramorum" >Phytophthora ramorum</li>
 <li><input type="checkbox" name="ch_genom[]" value="phytophthora_sojae" >Phytophthora sojae</li>
 </ul>
 </div>
 </td>
-
 <td id="genomeTab">
 
 <h1>
-<a href"#" onClick="ChAll('alveolata'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('alveolata'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('alveolata', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('alveolata', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
 Alveolata</h1>
 
 <div id="alveolata">
 <h2>
-<a href"#" onClick="ChAll('dinophyceae'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('dinophyceae'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('dinophyceae', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('dinophyceae', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
 Dinophyceae (dinoflagellates)
 </h2>
 
@@ -158,25 +150,22 @@ Dinophyceae (dinoflagellates)
   <li><input type="checkbox" name="ch_genom[]" value="lingulodinium_polyedrum" >Lingulodinium polyedrum</li>
 </ul>
 <h3>
-<a href"#" onClick="ChAll('symbiodinium'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('symbiodinium'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('symbiodinium', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('symbiodinium', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
 Symbiodinium
-
+<div id='symbiodinium' >
 <ul>
 <li><input type="checkbox" name="ch_genom[]" value="symbiodinium" >Symbiodinium</li>
 <li><input type="checkbox" name="ch_genom[]" value="symb1_2" checked>symb1.2 assembly</li>
 <li><input type="checkbox" name="ch_genom[]" value="kb82">kb8 assembly</li>
 <li><input type="checkbox" name="ch_genom[]" value="mf105">mf105 assembly</li>
 </ul>
+</div>
 </h3>
-<ul>
-<input disabled type="checkbox" name="ch_genom[]" value="other_dinophyceae">Other Dinophyceae
-</ul>
-
 </div>
 <h2>
-<a href"#" onClick="ChAll('apicomplexa'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('apicomplexa'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('apicomplexa', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('apicomplexa', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "unchecked checkbox", :border=>"0") %></a>
 Apicomplexa
 </h2>
 
@@ -184,40 +173,28 @@ Apicomplexa
 <ul>
   <li><input type="checkbox" name="ch_genom[]" value="plasmodium_falciparum" >Plasmodium falciparum</li>
   <li><input type="checkbox" name="ch_genom[]" value="cryptosporidium_hominis" >Cryptosporidium hominis</li>
-  <li><input type="checkbox" name="ch_genom[]" value="other_apicomplexa" >Other apicomplexa</li>
 </ul>
 </div>
-
-<h2>
-<input disabled type="checkbox" name="ch_genom[]" value="other_alveolata">Other Alveolata
-</h2>
 </div>
+</td>
 <td id="genomeTab">
 
 <h1>
-<a href"#" onClick="ChAll('cnidaria'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('cnidaria'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('cnidaria', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('cnidaria', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
 Cnidaria</h1>
 
 <div id="cnidaria">
 <ul>
-<li>
-<a href"#" onClick="ChAll('anthozoa'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('anthozoa'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-Anthozoa</li>
-<ul>
 <li><input type="checkbox" name="ch_genom[]" value="aiptasia_pallida">Aiptasia pallida</li>
 <li><input type="checkbox" name="ch_genom[]" value="acropora">Acropora</li>
-<li><input disabled type="checkbox" name="ch_genom[]" value="nematostella">Nematostella</li>
-</ul>
-<li><input disabled type="checkbox" name="ch_genom[]" value="other_onidaria">Other Cnidaria</li>
+<li><input type="checkbox" name="ch_genom[]" value="nematostella">Nematostella</li>
 </ul>
 </div>
 
-
 <h1>
-<a href"#" onClick="ChAll('other'); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
-<a href"#" onClick="unChAll('other'); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('other', true); return false;"><%= image_tag("checkbox_checked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
+<a href"#" onClick="ChAll('other', false); return false;"><%= image_tag("checkbox_UNchecked.jpg", :alt => "checked checkbox", :border=>"0") %></a>
 Other</h1>
 
 <div id="other">
