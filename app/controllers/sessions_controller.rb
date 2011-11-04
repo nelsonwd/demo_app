@@ -7,8 +7,12 @@ class SessionsController < ApplicationController
   def create
     user = User.authenticate(params[:session][:email],
                              params[:session][:password])
-    if user.nil?
+    if user.nil? 
       flash.now[:error] = "Invalid email/password combination."
+      @title = "Sign in"
+      render 'new'
+    elsif !user.enabled?
+      flash.now[:error] = "You account has not been activated. Please contact the symbiodinium project for access."
       @title = "Sign in"
       render 'new'
     else

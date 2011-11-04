@@ -1,4 +1,6 @@
 class BlastDbsController < ApplicationController
+before_filter :authenticate
+before_filter :admin_user, :only => [:index, :new, :edit, :create, :update, :destroy ]
   # GET /blast_dbs
   # GET /blast_dbs.xml
   def index
@@ -118,5 +120,14 @@ class BlastDbsController < ApplicationController
       format.html { redirect_to(blast_dbs_url) }
       format.xml  { head :ok }
     end
+  end
+private
+
+  def authenticate
+    deny_access unless signed_in?
+  end
+
+  def admin_user
+    deny_access unless current_user.admin?
   end
 end
