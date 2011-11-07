@@ -9,13 +9,8 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>Display name:</b>
+  <b>Name:</b>
   <%= @blast_db.display_name %>
-</p>
-
-<p>
-  <b>Blast index name:</b>
-  <%= @blast_db.blast_index_name %>
 </p>
 
 <p>
@@ -53,16 +48,12 @@
   <%= @blast_db.url %>
 </p>
 
-<p>
-  <b>Image:</b>
-  <%= @blast_db.image %>
-</p>
-
 <!--<p>
   <b>Parent:</b>
   <%= @blast_db.parent %>
 </p>-->
 
-
+<% if current_user.admin? %>
 <%= link_to 'Edit', edit_blast_db_path(@blast_db) %> |
+i<% end %>
 <%= link_to 'Back', blast_dbs_path %>

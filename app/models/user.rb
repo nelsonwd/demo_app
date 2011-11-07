@@ -12,10 +12,11 @@ class User < ActiveRecord::Base
                     :format     => { :with => email_regex },
                     :uniqueness => { :case_sensitive => false }
 # Automatically create the virtual attribute 'password_confirmation'.
-  validates :password, :presence     => true,
-                       :confirmation => true,
-                       :length       => { :within => 6..40 }
+  #validates :password, :presence     => true,
+                      #:confirmation => true,
+                       #:length       => { :within => 6..40 }
 
+  validates :password,:confirmation => true
   before_save :encrypt_password
 
   # Return true if the user's password matches the submitted password.
@@ -37,8 +38,10 @@ class User < ActiveRecord::Base
   private
 
     def encrypt_password
-      self.salt = make_salt unless has_password?(password)
-      self.encrypted_password = encrypt(password)
+      if password != nil
+        self.salt = make_salt unless has_password?(password)
+        self.encrypted_password = encrypt(password)
+      end
     end
 
     def encrypt(string)

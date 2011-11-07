@@ -1,6 +1,6 @@
 class BlastDbsController < ApplicationController
 before_filter :authenticate
-before_filter :admin_user, :only => [:index, :new, :edit, :create, :update, :destroy ]
+before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
   # GET /blast_dbs
   # GET /blast_dbs.xml
   def index

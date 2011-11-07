@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-before_filter :authenticate, :only => [:index, :edit, :update]
-before_filter :correct_user, :only => [:edit, :update]
-before_filter :admin_user, :only => [:destroy]
+before_filter :authenticate, :except =>  [:show, :new, :create]
+before_filter :correct_user, :only => [:edit, :update ]
+before_filter :admin_user, :only => [:destroy, :index]
   def index
     @title = "All users"
     @users = User.all
@@ -23,9 +23,14 @@ before_filter :admin_user, :only => [:destroy]
   end
 
   def edit
-    @title = "Edit User"
+    if params[:pw] == "1"
+      @title = "Change Password"
+      render 'password'
+    else
+      @title = "Edit User"
+    end
   end
-
+ 
   def create
     @user = User.new(params[:user])
 

@@ -8,7 +8,7 @@ DemoApp::Application.routes.draw do
   match '/signup', :to => 'users#new'
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
-
+  match '/password', :to => 'users#password'
   match '/submit', :to => 'blast#submit'
   match '/about', :to => 'pages#about'
   match '/wait', :to => 'blast#wait'
@@ -21,7 +21,7 @@ DemoApp::Application.routes.draw do
 
   get "blast_dbs/fastasearch"  
   match '/fastasearch', :to => 'blast_dbs#fastasearch'  
-
+  get "users/password"
   get "users/new"
   resources :microposts
 
