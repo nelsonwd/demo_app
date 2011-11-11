@@ -42,67 +42,67 @@ var group;
 var myform=document.getElementById("starttblastnoptions");
 
         if (group=="green_algae") {
-                for (var m = 0; m < 15; m++){
+                for (var m = 0; m < 17; m++){
                 myform[m].checked = isChecked;
                 }
         }
         
         if (group=="cryptophyta") {
-                for (var m =15 ; m < 18; m++){
+                for (var m =17 ; m < 20; m++){
                 myform[m].checked = isChecked;
                 }
         }
         
         if (group=="haptophyceae") {
-                for (var m = 18; m < 21; m++){
+                for (var m = 20; m < 23; m++){
                 myform[m].checked = isChecked;
                 }
         }
       
         if (group=="bacillariophyceae") {
-                for (var m = 21; m < 23; m++){
+                for (var m = 23; m < 25; m++){
                 myform[m].checked = isChecked;
                 }
         }
  
         if (group=="stramenopiles") {
-                for (var m = 23; m < 26; m++){
+                for (var m = 25; m < 28; m++){
                 myform[m].checked = isChecked;
                 }
         }
 
         if (group=="alveolata") {
-                for (var m = 26; m < 39; m++){
+                for (var m = 28; m < 40; m++){
                 myform[m].checked = isChecked;
                 }
         }
 
         if (group=="dinophyceae") {
-                for (var m = 26; m < 36; m++){
+                for (var m = 28; m < 38; m++){
                 myform[m].checked = isChecked;
                 }
         }
 
         if (group=="symbiodinium") {
-                for (var m = 32; m < 36; m++){
+                for (var m = 34; m < 38; m++){
                 myform[m].checked = isChecked;
                 }
         }
         
         if (group=="apicomplexa") {
-                for (var m = 36; m < 39; m++){
+                for (var m = 38; m < 40; m++){
                 myform[m].checked = isChecked;
                 }
         }
         
         if (group=="cnidaria") {
-                for (var m = 39; m < 42; m++){
+                for (var m = 40; m < 43; m++){
                 myform[m].checked = isChecked;
                 }
         }
         
         if (group=="other") {
-                for (var m = 42; m < 43; m++){
+                for (var m = 43; m < 44; m++){
                 myform[m].checked = isChecked;
                 }
         }
