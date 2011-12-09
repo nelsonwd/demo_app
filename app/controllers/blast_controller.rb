@@ -6,7 +6,9 @@ class BlastController < ApplicationController
     @timestamp = Time.now.to_i
     @task = params[:blastprogramchoice]
     @expectvalue = params[:expectvalue]
-    @output_format = params[:output_format]
+# outfmt 5 is blast xml format
+    @output_format = 5
+    #@output_format = params[:output_format]
     @ch_genom = params[:ch_genom]
     @max_hits = params[:max_hits]
     @ch_genom.map! {|db|"/blastdbs/" + db}
