@@ -10,3 +10,5 @@ doc/
 .DS_Store
 Gemfile*
 /public/fasta/
+/public/image/tmp/
+/config/

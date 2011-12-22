@@ -17,8 +17,9 @@ class BlastResult
     report += "<div>Length=#{query_len}</div>"
     report += "\n" + ' '*70 + "Score" + ' '*5 + "E\n"
     report += "Sequences producing significant alignments:" + ' '*26 + "(Bits)  Value\n\n"
+    report += "<img src=\"/images/blastLegend.gif\" /><br>"
     @blast_hits.each do |bh|
-      report += bh.html_report
+      report += bh.html_report(@query_len)
     end
     report += "\n"
     @blast_hits.each do |bh|

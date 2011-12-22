@@ -1,5 +1,5 @@
-#require_relative 'blast_hsp'
 class BlastHit
+require_relative 'blast_graphic'
 
   attr_accessor :hit_num, :hit_def, :hit_name, :hit_annot, :hit_len, :hit_hsps
 
@@ -12,7 +12,8 @@ class BlastHit
     @hit_hsps = []
   end
 
-  def html_report
+  def html_report(query_len)
+    graphic = BlastGraphic.new(self, query_len)
     report = ""
     if @hit_def.size < 63 
       @hit_def[@hit_def.size] = ' '*(66 - @hit_def.size)
@@ -24,6 +25,8 @@ class BlastHit
     report += ' '*pad
     report += "<a href=\"\##{@hit_def.object_id}\">#{@hit_hsps.first.hsp_bit_score.round.to_s}</a> #{' '*4}"
     report += "%1.0E" % @hit_hsps.first.hsp_evalue
+    report += "\n"
+    report += graphic.draw_hit
     report += "\n"
     report
   end

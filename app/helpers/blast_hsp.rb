@@ -30,19 +30,6 @@ def initialize( hsp_num, hsp_bit_score, hsp_score, hsp_evalue, hsp_query_from,
   end
 
   def html_report
-    puts @hsp_num
-    puts @hsp_bit_score
-    puts @hsp_score
-    puts @hsp_evalue
-    puts @hsp_query_from
-    puts @hsp_query_to
-    puts @hsp_hit_from
-    puts @hsp_hit_to
-    puts @hsp_query_frame
-    puts @hsp_hit_frame
-    puts @hsp_identity
-    puts @hsp_positive
-    puts @hsp_gaps
     report = "\nScore = #{@hsp_bit_score.round} bits (#{@hsp_score}),  Expect = #{"%1.0E" % @hsp_evalue}\n"
     report += "Identities = #{@hsp_identity}/#{@hsp_align_len} (#{(@hsp_identity.to_f/@hsp_align_len.to_f*100.0).round}%),"
     report += " Gaps = #{@hsp_gaps}/#{@hsp_align_len} (#{(@hsp_gaps.to_f/@hsp_align_len.to_f*100.0).round}%)\n"
