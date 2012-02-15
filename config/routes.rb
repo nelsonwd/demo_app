@@ -1,4 +1,16 @@
 DemoApp::Application.routes.draw do
+  resources :gene_ontologies
+
+  resources :interpros
+
+  resources :annotation_sources
+
+  resources :annotations
+
+  resources :features
+
+  resources :sequences
+
   get "sessions/new"
 
 

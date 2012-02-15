@@ -38,5 +38,10 @@ module DemoApp
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+      
+      
+    $LOAD_PATH.unshift '/usr/local/rvm/gems/ruby-1.9.2-p290@rails3tutorial/gems/rmagick-2.13.1/lib/'
+    #require 'rvg/rvg'
+    require 'RMagick'
   end
 end
