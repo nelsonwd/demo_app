@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120119205214) do
+ActiveRecord::Schema.define(:version => 20120223184208) do
 
   create_table "annotation_sources", :force => true do |t|
     t.string   "name"
@@ -71,6 +71,15 @@ ActiveRecord::Schema.define(:version => 20120119205214) do
   end
 
   add_index "gene_ontologies", ["accession"], :name => "index_gene_ontologies_on_accession", :unique => true
+
+  create_table "gene_ontologies_interpros", :id => false, :force => true do |t|
+    t.integer "interpro_id"
+    t.integer "gene_ontology_id"
+  end
+
+  add_index "gene_ontologies_interpros", ["gene_ontology_id"], :name => "index_gene_ontologies_interpros_on_gene_ontology_id"
+  add_index "gene_ontologies_interpros", ["interpro_id", "gene_ontology_id"], :name => "index_gene_ontologies_interpros_on_interpro_id_gene_ontology_id", :unique => true
+  add_index "gene_ontologies_interpros", ["interpro_id"], :name => "index_gene_ontologies_interpros_on_interpro_id"
 
   create_table "interpros", :force => true do |t|
     t.string   "accession"
