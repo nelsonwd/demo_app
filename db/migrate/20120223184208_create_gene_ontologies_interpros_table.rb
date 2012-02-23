@@ -6,7 +6,7 @@ class CreateGeneOntologiesInterprosTable < ActiveRecord::Migration
     end
     add_index :gene_ontologies_interpros , :interpro_id
     add_index :gene_ontologies_interpros, :gene_ontology_id
-    add_index :gene_ontologies_interpros , [:interpro_id,:gene_ontology_id], :unique => true
+    add_index :gene_ontologies_interpros , [:interpro_id,:gene_ontology_id], :name => 'index_gene_ontologies_interpros_on_interpro_id_gene_ontology_id', :unique => true
   end
 
   def self.down
