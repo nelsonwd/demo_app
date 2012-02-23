@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @annotation_source.name %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= @annotation_source.url %>
+</p>
+
+
+<%= link_to 'Edit', edit_annotation_source_path(@annotation_source) %> |
+<%= link_to 'Back', annotation_sources_path %>

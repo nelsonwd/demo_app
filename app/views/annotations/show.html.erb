@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Accession:</b>
+  <%= @annotation.accession %>
+</p>
+
+<p>
+  <b>Desc:</b>
+  <%= @annotation.desc %>
+</p>
+
+<p>
+  <b>Annotation source:</b>
+  <%= @annotation.annotation_source_id %>
+</p>
+
+<p>
+  <b>Interpro:</b>
+  <%= @annotation.interpro_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_annotation_path(@annotation) %> |
+<%= link_to 'Back', annotations_path %>

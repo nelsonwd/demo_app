@@ -1,0 +1,33 @@
+<h1>Listing features</h1>
+
+<table>
+  <tr>
+    <th>Sequence</th>
+    <th>Annotation</th>
+    <th>Start pos</th>
+    <th>End pos</th>
+    <th>Frame</th>
+    <th>Strand</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @features.each do |feature| %>
+  <tr>
+    <td><%= feature.sequence_id %></td>
+    <td><%= feature.annotation_id %></td>
+    <td><%= feature.start_pos %></td>
+    <td><%= feature.end_pos %></td>
+    <td><%= feature.frame %></td>
+    <td><%= feature.strand %></td>
+    <td><%= link_to 'Show', feature %></td>
+    <td><%= link_to 'Edit', edit_feature_path(feature) %></td>
+    <td><%= link_to 'Destroy', feature, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Feature', new_feature_path %>

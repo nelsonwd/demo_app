@@ -1,0 +1,25 @@
+<h1>Listing annotation_sources</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Url</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @annotation_sources.each do |annotation_source| %>
+  <tr>
+    <td><%= annotation_source.name %></td>
+    <td><%= annotation_source.url %></td>
+    <td><%= link_to 'Show', annotation_source %></td>
+    <td><%= link_to 'Edit', edit_annotation_source_path(annotation_source) %></td>
+    <td><%= link_to 'Destroy', annotation_source, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Annotation source', new_annotation_source_path %>

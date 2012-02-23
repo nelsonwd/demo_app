@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120126213237) do
+ActiveRecord::Schema.define(:version => 20120119205214) do
 
   create_table "annotation_sources", :force => true do |t|
     t.string   "name"
@@ -29,26 +29,6 @@ ActiveRecord::Schema.define(:version => 20120126213237) do
   end
 
   add_index "annotations", ["accession"], :name => "index_annotations_on_accession", :unique => true
-
-  create_table "biosensors", :force => true do |t|
-    t.string   "sensitivity"
-    t.string   "name"
-    t.string   "type"
-    t.string   "anal_tech"
-    t.string   "iv_props"
-    t.string   "organism"
-    t.string   "fluorophore"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "biosensors_refs", :id => false, :force => true do |t|
-    t.integer "biosensor_id"
-    t.integer "ref_id"
-  end
-
-  add_index "biosensors_refs", ["biosensor_id", "ref_id"], :name => "index_biosensors_refs_on_biosensor_id_and_ref_id"
-  add_index "biosensors_refs", ["ref_id", "biosensor_id"], :name => "index_biosensors_refs_on_ref_id_and_biosensor_id"
 
   create_table "blast_dbs", :force => true do |t|
     t.string   "display_name"
@@ -72,7 +52,8 @@ ActiveRecord::Schema.define(:version => 20120126213237) do
     t.integer  "start_pos"
     t.integer  "end_pos"
     t.integer  "frame"
-    t.string   "strand"
+    t.float    "score"
+    t.string   "match_status"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -99,26 +80,12 @@ ActiveRecord::Schema.define(:version => 20120126213237) do
     t.datetime "updated_at"
   end
 
-  create_table "interpros_gene_ontologies", :id => false, :force => true do |t|
-    t.integer "interpro_id"
-    t.integer "gene_ontology_id"
-  end
-
   create_table "microposts", :force => true do |t|
     t.string   "content"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "refs", :force => true do |t|
-    t.string   "pub_med"
-    t.string   "pi"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "refs", ["pub_med"], :name => "index_refs_on_pub_med", :unique => true
 
   create_table "sequences", :force => true do |t|
     t.string   "accession"

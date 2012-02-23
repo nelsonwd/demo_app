@@ -1,0 +1,29 @@
+<%= form_for(@gene_ontology) do |f| %>
+  <% if @gene_ontology.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@gene_ontology.errors.count, "error") %> prohibited this gene_ontology from being saved:</h2>
+
+      <ul>
+      <% @gene_ontology.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :accession %><br />
+    <%= f.text_field :accession %>
+  </div>
+  <div class="field">
+    <%= f.label :ontology_root %><br />
+    <%= f.text_field :ontology_root %>
+  </div>
+  <div class="field">
+    <%= f.label :keyword %><br />
+    <%= f.text_field :keyword %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,29 @@
+<h1>Listing annotations</h1>
+
+<table>
+  <tr>
+    <th>Accession</th>
+    <th>Desc</th>
+    <th>Annotation source</th>
+    <th>Interpro</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @annotations.each do |annotation| %>
+  <tr>
+    <td><%= annotation.accession %></td>
+    <td><%= annotation.desc %></td>
+    <td><%= annotation.annotation_source_id %></td>
+    <td><%= annotation.interpro_id %></td>
+    <td><%= link_to 'Show', annotation %></td>
+    <td><%= link_to 'Edit', edit_annotation_path(annotation) %></td>
+    <td><%= link_to 'Destroy', annotation, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Annotation', new_annotation_path %>

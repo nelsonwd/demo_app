@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Acc:</b>
+  <%= @sequence.acc %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @sequence.name %>
+</p>
+
+<p>
+  <b>Desc:</b>
+  <%= @sequence.desc %>
+</p>
+
+<p>
+  <b>Na seq:</b>
+  <%= @sequence.na_seq %>
+</p>
+
+<p>
+  <b>Blast db:</b>
+  <%= @sequence.blast_db_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_sequence_path(@sequence) %> |
+<%= link_to 'Back', sequences_path %>

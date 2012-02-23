@@ -1,0 +1,29 @@
+<%= form_for(@interpro) do |f| %>
+  <% if @interpro.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@interpro.errors.count, "error") %> prohibited this interpro from being saved:</h2>
+
+      <ul>
+      <% @interpro.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :accession %><br />
+    <%= f.text_field :accession %>
+  </div>
+  <div class="field">
+    <%= f.label :desc %><br />
+    <%= f.text_field :desc %>
+  </div>
+  <div class="field">
+    <%= f.label :gene_ontology_id %><br />
+    <%= f.text_field :gene_ontology_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

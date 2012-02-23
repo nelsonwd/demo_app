@@ -1,0 +1,31 @@
+<h1>Listing sequences</h1>
+
+<table>
+  <tr>
+    <th>Acc</th>
+    <th>Name</th>
+    <th>Desc</th>
+    <th>Na seq</th>
+    <th>Blast db</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @sequences.each do |sequence| %>
+  <tr>
+    <td><%= sequence.acc %></td>
+    <td><%= sequence.name %></td>
+    <td><%= sequence.desc %></td>
+    <td><%= sequence.na_seq %></td>
+    <td><%= sequence.blast_db_id %></td>
+    <td><%= link_to 'Show', sequence %></td>
+    <td><%= link_to 'Edit', edit_sequence_path(sequence) %></td>
+    <td><%= link_to 'Destroy', sequence, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Sequence', new_sequence_path %>

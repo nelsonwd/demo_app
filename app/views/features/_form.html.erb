@@ -1,0 +1,41 @@
+<%= form_for(@feature) do |f| %>
+  <% if @feature.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@feature.errors.count, "error") %> prohibited this feature from being saved:</h2>
+
+      <ul>
+      <% @feature.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :sequence_id %><br />
+    <%= f.text_field :sequence_id %>
+  </div>
+  <div class="field">
+    <%= f.label :annotation_id %><br />
+    <%= f.text_field :annotation_id %>
+  </div>
+  <div class="field">
+    <%= f.label :start_pos %><br />
+    <%= f.text_field :start_pos %>
+  </div>
+  <div class="field">
+    <%= f.label :end_pos %><br />
+    <%= f.text_field :end_pos %>
+  </div>
+  <div class="field">
+    <%= f.label :frame %><br />
+    <%= f.text_field :frame %>
+  </div>
+  <div class="field">
+    <%= f.label :strand %><br />
+    <%= f.text_field :strand %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,27 @@
+<h1>Listing gene_ontologies</h1>
+
+<table>
+  <tr>
+    <th>Accession</th>
+    <th>Ontology root</th>
+    <th>Keyword</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @gene_ontologies.each do |gene_ontology| %>
+  <tr>
+    <td><%= gene_ontology.accession %></td>
+    <td><%= gene_ontology.ontology_root %></td>
+    <td><%= gene_ontology.keyword %></td>
+    <td><%= link_to 'Show', gene_ontology %></td>
+    <td><%= link_to 'Edit', edit_gene_ontology_path(gene_ontology) %></td>
+    <td><%= link_to 'Destroy', gene_ontology, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Gene ontology', new_gene_ontology_path %>

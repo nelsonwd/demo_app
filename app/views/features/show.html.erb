@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Sequence:</b>
+  <%= @feature.sequence_id %>
+</p>
+
+<p>
+  <b>Annotation:</b>
+  <%= @feature.annotation_id %>
+</p>
+
+<p>
+  <b>Start pos:</b>
+  <%= @feature.start_pos %>
+</p>
+
+<p>
+  <b>End pos:</b>
+  <%= @feature.end_pos %>
+</p>
+
+<p>
+  <b>Frame:</b>
+  <%= @feature.frame %>
+</p>
+
+<p>
+  <b>Strand:</b>
+  <%= @feature.strand %>
+</p>
+
+
+<%= link_to 'Edit', edit_feature_path(@feature) %> |
+<%= link_to 'Back', features_path %>
