@@ -49,12 +49,12 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
     @file = "#{Rails.root}/public/fasta/" + params[:file]
 
     if BlastDb.where(:file_name => params[:file]).first.blast_index_name == "symb2master" then
+      @title = "Gene Annotation"
       @query = params[:query].chomp      
       s = Sequence.where(:accession => @query).first
       unless s.nil? then
         @result = {} 
-        @result[:gene_name] = s.accession
-        @result[:description] = s.desc
+        @result[:sequence] = s
         feats = []
         feats = s.features
         @result[:interpro] = {}

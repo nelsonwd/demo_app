@@ -229,10 +229,6 @@ padding: auto;
 
 #mainpage {
    margin-top: 30px;
-/* background: url("images/longreds.gif"); */
-   background: url(images/porphyra_back.gif);
-   background-repeat: no-repeat;
-   background-position: bottom right;
    padding: 35px;
    padding-bottom: 160px;
    text-align: left;

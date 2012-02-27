@@ -1,18 +1,25 @@
 <% if @result.class == {}.class then%>
   <table>
-    <tr><th colspan="3" ><%= @result.fetch(:gene_name)   %> </th></tr>
-    <tr><th colspan="3" ><%= @result.fetch(:description) %> </th></tr>
-    <tr><th >Start</th><th>End</th><th>Frame</th></tr>
+    <tr><th colspan="5" >Gene name: <%= @result.fetch(:sequence).accession %> </th></tr>
+    <tr><th colspan="5" ><%= @result.fetch(:sequence).desc %> </th></tr>
+    <tr><th >Start</th><th>End</th><th>Frame</th><th>Application</th><th>App description</td></tr>
     <% interpro_hash = @result.fetch(:interpro)
        interpro_hash.each do |i,f_array|  %>
-     <tr><th><%= i.accession %></th><th><%= i.desc %></td></tr>
-      <% f_array.each do |f| %>
-     <tr><td ><%= f.start_pos %> </td><td><%= f.end_pos %></td><td><%=f.frame%></td><td><%=f.annotation.interpro.accession%></td></tr>
+     <tr><td colspan="5" style="background-color:lightgray;" ><a href = "http://www.ebi.ac.uk/interpro/IEntry?ac=<%= i.accession %>" ><%= i.desc %></a></td></tr>
+      <% f_array.each do |f| 
+          url = f.annotation.annotation_source.url.sub(/@@/, f.annotation.accession) 
+          href = "<a href=\"#{url}\" >#{f.annotation.annotation_source.name}</a>"%>
+     <tr><td ><%= f.start_pos %> </td><td><%= f.end_pos %></td><td><%=f.frame%></td><td><%=href.html_safe%></td><td><%=f.annotation.desc%></td></tr>
     <%   end
        end %>
-     <% @result.fetch(:no_interpro).each do |f|  %>
-     <tr><td ><%= f.start_pos %> </td><td><%= f.end_pos %></td><td><%=f.frame%></td><td><%=(f.annotation.interpro.nil?)?"NA":f.annotation.interpro.accession%></td></tr>
+     <tr><th style="background-color:lightgray;" colspan="5" >No InterPro Accession</th></tr>
+     <% @result.fetch(:no_interpro).each do |f|  
+          url = f.annotation.annotation_source.url.sub(/@@/, f.annotation.accession) 
+          href = "<a href=\"#{url}\" >#{f.annotation.annotation_source.name}</a>" %>
+     <tr><td ><%= f.start_pos %> </td><td><%= f.end_pos %></td><td><%=f.frame%></td><td><%=href.html_safe%></td><td><%=f.annotation.desc%></td></tr>
     <% end %>
+    <tr><th  style="background-color:lightgray;" colspan="5" >Sequence</td></tr>
+    <tr><th  style="background-color:white;font-family:monospace;" colspan="5" ><pre><%= Bio::Sequence::NA.new(@result.fetch(:sequence).na_seq).upcase.to_fasta(@result.fetch(:sequence).accession, 80)%></pre></td></tr>
   </table>
 <%else%>
   <pre><%= @result %></pre>
