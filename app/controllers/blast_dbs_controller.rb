@@ -47,34 +47,60 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
   def fastasearch
     @title = "FASTA search results"
     @file = "#{Rails.root}/public/fasta/" + params[:file]
-    @query = params[:query].split(%r{\s*,\s*})
-    @query = @query.map {|q| Regexp.escape(q)}
-    @result = ""
-    file = File.new(@file, "r")
-    hit = nil
-    count = 0
-    while (line = file.gets)
-       if hit &&  !line.start_with?(">")
-         @result += line
-       elsif  hit && line.start_with?(">")
-         hit = nil
-       end
-       @query.each do |q|
-         if line.start_with?(">") &&  line =~ /#{q}/i
-           break if count >= 100
+
+    if BlastDb.where(:file_name => params[:file]).first.blast_index_name == "symb2master" then
+      @query = params[:query].chomp      
+      s = Sequence.where(:accession => @query).first
+      unless s.nil? then
+        @result = {} 
+        @result[:gene_name] = s.accession
+        @result[:description] = s.desc
+        feats = []
+        feats = s.features
+        @result[:interpro] = {}
+        @result[:no_interpro] = []
+        feats.each do |f|
+          if f.annotation.interpro.nil?
+            @result.fetch(:no_interpro).push(f)
+          else
+            if @result[:interpro].has_key?(f.annotation.interpro) then
+              @result.fetch(:interpro)[f.annotation.interpro].push(f)
+            else
+               @result.fetch(:interpro)[f.annotation.interpro] = [f]
+            end
+          end
+        end
+      end
+    else  
+      @query = params[:query].split(%r{\s*,\s*})
+      @query = @query.map {|q| Regexp.escape(q)}
+      @result = ""
+      file = File.new(@file, "r")
+      hit = nil
+      count = 0
+      while (line = file.gets)
+         if hit &&  !line.start_with?(">")
            @result += line
-           hit = 1
-           count += 1
-           break
+         elsif  hit && line.start_with?(">")
+           hit = nil
          end
-       end
-       break if count >= 100
-     end
-    file.close
+         @query.each do |q|
+           if line.start_with?(">") &&  line =~ /#{q}/i
+             break if count >= 100
+             @result += line
+             hit = 1
+             count += 1
+             break
+           end
+         end
+         break if count >= 100
+      end
+      file.close
+    end
     if @result.blank?
       @result = "No matches found for #{@query} in #{params[:file]}"
     else
-      @result = "Total number of matches = #{count} \n\n" + @result
+     # @result = "Total number of matches = #{count} \n\n" + @result
     end
   end
 

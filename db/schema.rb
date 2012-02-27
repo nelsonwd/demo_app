@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120223184208) do
+ActiveRecord::Schema.define(:version => 20120224235300) do
 
   create_table "annotation_sources", :force => true do |t|
     t.string   "name"
@@ -73,8 +73,8 @@ ActiveRecord::Schema.define(:version => 20120223184208) do
   add_index "gene_ontologies", ["accession"], :name => "index_gene_ontologies_on_accession", :unique => true
 
   create_table "gene_ontologies_interpros", :id => false, :force => true do |t|
-    t.integer "interpro_id"
     t.integer "gene_ontology_id"
+    t.integer "interpro_id"
   end
 
   add_index "gene_ontologies_interpros", ["gene_ontology_id"], :name => "index_gene_ontologies_interpros_on_gene_ontology_id"
@@ -84,9 +84,13 @@ ActiveRecord::Schema.define(:version => 20120223184208) do
   create_table "interpros", :force => true do |t|
     t.string   "accession"
     t.string   "desc"
-    t.integer  "gene_ontology_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "interpros_gene_ontologies", :id => false, :force => true do |t|
+    t.integer "interpro_id"
+    t.integer "gene_ontology_id"
   end
 
   create_table "microposts", :force => true do |t|

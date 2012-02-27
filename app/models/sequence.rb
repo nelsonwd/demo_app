@@ -16,7 +16,7 @@ class Sequence < ActiveRecord::Base
     db_id = BlastDb.where(:blast_index_name => blast_index).first
     file.each_entry do |f|
       accession, description = Sequence.parse_accession(f.definition, blast_index)
-      Sequence.find_or_create_by_accession(accession, :name => nil, :desc => description, :na_seq => f.naseq.upcase , :blast_db_id => db_id )
+      Sequence.find_or_create_by_accession(accession, :name => nil, :desc => description, :na_seq => f.naseq.upcase , :blast_db_id => db_id.id )
      end
   end
 end

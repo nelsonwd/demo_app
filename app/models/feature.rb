@@ -54,9 +54,10 @@ belongs_to :annotation
       parts = line.split("\t")
       a_f = acc_frame parts[0]
       frame = a_f[1]
-      seq_name, dummy = Sequence.parse_accession(a_f[0], "symb2master")
+      seq_name, desc = Sequence.parse_accession(a_f[0], "symb2master")
       seq = Sequence.where( :accession => seq_name ).first
       gene_onts = []
+      ipr = nil
       gene_onts = go_terms parts[13] unless parts[13].blank?
       annot_src = AnnotationSource.where(:name => parts[3]).first
       unless (parts[11] == "NULL")

@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "gene_ontologies/new.html.erb" do
   before(:each) do
     assign(:gene_ontology, stub_model(GeneOntology,
-      :accession => "",
-      :ontology_root => "",
+      :accession => "MyString",
+      :ontology_root => "MyString",
       :keyword => "MyString"
     ).as_new_record)
   end
