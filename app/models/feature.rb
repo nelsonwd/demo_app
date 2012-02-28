@@ -61,12 +61,12 @@ belongs_to :annotation
       gene_onts = go_terms parts[13] unless parts[13].blank?
       annot_src = AnnotationSource.where(:name => parts[3]).first
       unless (parts[11] == "NULL")
-        ipr = Interpro.find_or_create_by_accession(parts[11], :desc => parts[12])
+        ipr = Interpro.find_or_create_by_accession(parts[11], :description => parts[12])
         gene_onts.each do |g_o|
           ipr.gene_ontologies<<g_o unless ipr.gene_ontologies.include?(g_o)
         end
       end
-      annot = Annotation.find_or_create_by_accession(parts[4], :desc => parts[5],:annotation_source => annot_src, :interpro => ipr ) 
+      annot = Annotation.find_or_create_by_accession(parts[4], :description => parts[5],:annotation_source => annot_src, :interpro => ipr ) 
       feat =  Feature.create( :sequence_id => seq.id, :annotation_id => annot.id, :start_pos => parts[6], :end_pos => parts[7], :frame => frame, :score => parts[8], :match_status => parts[9]) rescue []
     end
   end

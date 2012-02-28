@@ -2,8 +2,7 @@ class CreateInterpros < ActiveRecord::Migration
   def self.up
     create_table :interpros do |t|
       t.string :accession
-      t.string :desc
-
+      t.string :description
       t.timestamps
     end
   end

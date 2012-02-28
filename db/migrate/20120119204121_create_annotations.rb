@@ -2,7 +2,7 @@ class CreateAnnotations < ActiveRecord::Migration
   def self.up
     create_table :annotations do |t|
       t.string :accession
-      t.string :desc
+    t.string :description
       t.integer :annotation_source_id
       t.integer :interpro_id
 

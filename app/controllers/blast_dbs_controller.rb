@@ -70,9 +70,29 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
             end
           end
         end
+      else
+        goes = GeneOntology.where("keyword LIKE  '%#{@query}%'")
+        iprs = goes.uniq.map do |g|
+          g.interpros
+        end
+        iprs << Interpro.where("description LIKE '%#{@query}%'")
+        iprs.flatten!
+        annots = iprs.uniq.map do |i|
+          i.annotations
+        end
+        annots << Annotation.where("description LIKE '%#{@query}%'")
+        annots.flatten!
+        feats = annots.uniq.map do |a|
+          a.features
+        end
+        feats.flatten!
+        @result = feats.uniq.map do |f|
+          f.sequence
+        end
+        
       end
     else  
-      @query = params[:query].split(%r{\s*,\s*})
+      @query = params[:query].chomp.split(%r{\s*,\s*})
       @query = @query.map {|q| Regexp.escape(q)}
       @result = ""
       file = File.new(@file, "r")
@@ -97,9 +117,9 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
       end
       file.close
     end
-    if @result.blank?
-      @result = "No matches found for #{@query} in #{params[:file]}"
-    else
+     if @result.blank?
+       @result = "No matches found for #{@query} in #{params[:file]}"
+    #else
      # @result = "Total number of matches = #{count} \n\n" + @result
     end
   end

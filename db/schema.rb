@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(:version => 20120224235300) do
 
   create_table "annotations", :force => true do |t|
     t.string   "accession"
-    t.string   "desc"
+    t.string   "description"
     t.integer  "annotation_source_id"
     t.integer  "interpro_id"
     t.datetime "created_at"
@@ -83,14 +83,9 @@ ActiveRecord::Schema.define(:version => 20120224235300) do
 
   create_table "interpros", :force => true do |t|
     t.string   "accession"
-    t.string   "desc"
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "interpros_gene_ontologies", :id => false, :force => true do |t|
-    t.integer "interpro_id"
-    t.integer "gene_ontology_id"
   end
 
   create_table "microposts", :force => true do |t|
@@ -103,7 +98,7 @@ ActiveRecord::Schema.define(:version => 20120224235300) do
   create_table "sequences", :force => true do |t|
     t.string   "accession"
     t.string   "name"
-    t.string   "desc"
+    t.string   "description"
     t.text     "na_seq"
     t.integer  "blast_db_id"
     t.datetime "created_at"

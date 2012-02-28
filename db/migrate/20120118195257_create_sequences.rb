@@ -3,7 +3,7 @@ class CreateSequences < ActiveRecord::Migration
     create_table :sequences do |t|
       t.string :accession
       t.string :name
-      t.string :desc
+      t.string :description
       t.text :na_seq
       t.integer :blast_db_id
 
