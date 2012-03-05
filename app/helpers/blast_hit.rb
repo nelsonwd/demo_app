@@ -17,9 +17,9 @@ require_relative 'blast_graphic'
     report = ""
     if @hit_def.size < 63 
       @hit_def[@hit_def.size] = ' '*(66 - @hit_def.size)
-      report += "  #{@hit_def}"
+      report += "  #{annotation_href(@hit_def, false)}"
     else
-      report += "  #{@hit_def[0,63]}..."
+      report += "  #{annotation_href(@hit_def[0,63], false)}..."
     end
     pad = 6 - String(@hit_hsps.first.hsp_bit_score.round).size
     report += ' '*pad
@@ -32,20 +32,7 @@ require_relative 'blast_graphic'
   end
 
   def html_report_detail
-    if @hit_name.start_with?("gi")
-      gi = @hit_name.split("|")[1]
-      href = "http://www.ncbi.nlm.nih.gov/nuccore/#{gi}"
-    elsif @hit_name.start_with?("Locus")
-      href = "/blast_dbs/fastasearch?utf8=%E2%9C%93&file=symb1.2.fa&query=#{@hit_name}&commit=Search"
-    elsif @hit_name.start_with?("symb2master")
-      href = "/blast_dbs/fastasearch?file=symb2.1.fa&query=#{@hit_name}&commit=Search"
-    elsif @hit_name.start_with?("kb")
-      href = "/blast_dbs/fastasearch?utf8=%E2%9C%93&file=kb8_assembly2.fasta&query=#{@hit_name}&commit=Search"
-    elsif @hit_name.start_with?("mf")
-      href = "/blast_dbs/fastasearch?utf8=%E2%9C%93&file=mf105_assembly.fasta&query=#{@hit_name}&commit=Search"
-    end
-
-    report = "><a name=\"#{@hit_def.object_id}\"></a><a target=\"_blank\" href=\"#{href}\">#{@hit_name}</a>\n"
+    report = ">#{annotation_href(@hit_name,true)}\n"
     if @hit_annot
       report += " #{@hit_annot[0,80]}\n" 
       if @hit_annot.size > 80
@@ -61,5 +48,27 @@ require_relative 'blast_graphic'
     end
 
     report
+  end
+
+  private
+
+  def annotation_href link_name, with_anchor
+    anchor = ''
+    if(with_anchor)
+      anchor = "name=\"#{@hit_def.object_id}\""
+    end
+    if @hit_name.start_with?("gi")
+      gi = @hit_name.split("|")[1]
+      href = "http://www.ncbi.nlm.nih.gov/nuccore/#{gi}"
+    elsif @hit_name.start_with?("Locus")
+      href = "/blast_dbs/fastasearch?utf8=%E2%9C%93&file=symb1.2.fa&query=#{@hit_name}&commit=Search"
+    elsif @hit_name.start_with?("symb2master")
+      href = "/blast_dbs/fastasearch?file=symb2.1.fa&query=#{@hit_name}&commit=Search"
+    elsif @hit_name.start_with?("kb")
+      href = "/blast_dbs/fastasearch?utf8=%E2%9C%93&file=kb8_assembly2.fasta&query=#{@hit_name}&commit=Search"
+    elsif @hit_name.start_with?("mf")
+      href = "/blast_dbs/fastasearch?utf8=%E2%9C%93&file=mf105_assembly.fasta&query=#{@hit_name}&commit=Search"
+    end
+    "<a #{anchor}></a><a target=\"_blank\" href=\"#{href}\">#{link_name}</a>" 
   end
 end
