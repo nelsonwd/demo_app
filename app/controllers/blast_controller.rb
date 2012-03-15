@@ -31,7 +31,7 @@ class BlastController < ApplicationController
     elsif @task == 'tblastx'
       @program = "tblastx"
     end
-    @blast_cmd = "#{@program} -query #{Rails.root}/tmp/#{@timestamp}_query.fa -db \\\"#{@db_list}\\\" #{@options} -evalue #{@expectvalue} -num_alignments #{@max_hits} -num_descriptions #{@max_hits} -html -outfmt #{@output_format} -out #{Rails.root}/tmp/#{@timestamp}_working.txt 2>#{Rails.root}/tmp/#{@timestamp}_error.txt"
+    @blast_cmd = "#{@program} -query #{Rails.root}/tmp/#{@timestamp}_query.fa -db \\\"#{@db_list}\\\" #{@options} -evalue #{@expectvalue} -num_alignments #{@max_hits} -num_descriptions #{@max_hits} -num_threads 2 -outfmt #{@output_format} -out #{Rails.root}/tmp/#{@timestamp}_working.txt 2>#{Rails.root}/tmp/#{@timestamp}_error.txt"
     scriptCmd =  "#{Rails.root}/lib/tasks/blast.rb \"#{@blast_cmd}\" #{Rails.root}/tmp/#{@timestamp} &"
     logger.debug scriptCmd
     system(scriptCmd);

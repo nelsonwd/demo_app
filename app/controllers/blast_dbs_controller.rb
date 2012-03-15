@@ -5,7 +5,8 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
   # GET /blast_dbs.xml
   def index
     @title = "Sequence Databases"
-    @blast_dbs = BlastDb.all
+    @blast_dbs = BlastDb.where(:taxonomy_id => 2949).order("created_at DESC")
+    @blast_dbs += BlastDb.where("taxonomy_id != 2949").order("display_name")
 
     respond_to do |format|
       format.html # index.html.erb
