@@ -1,0 +1,29 @@
+<h1>Listing de_data</h1>
+
+<table>
+  <tr>
+    <th>Abundance</th>
+    <th>Sequence</th>
+    <th>De analysis</th>
+    <th>Treatment</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @de_data.each do |de_datum| %>
+  <tr>
+    <td><%= de_datum.abundance %></td>
+    <td><%= de_datum.sequence_id %></td>
+    <td><%= de_datum.de_analysis_id %></td>
+    <td><%= de_datum.treatment_id %></td>
+    <td><%= link_to 'Show', de_datum %></td>
+    <td><%= link_to 'Edit', edit_de_datum_path(de_datum) %></td>
+    <td><%= link_to 'Destroy', de_datum, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New De datum', new_de_datum_path %>

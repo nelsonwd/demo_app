@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Abundance:</b>
+  <%= @de_datum.abundance %>
+</p>
+
+<p>
+  <b>Sequence:</b>
+  <%= @de_datum.sequence_id %>
+</p>
+
+<p>
+  <b>De analysis:</b>
+  <%= @de_datum.de_analysis_id %>
+</p>
+
+<p>
+  <b>Treatment:</b>
+  <%= @de_datum.treatment_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_de_datum_path(@de_datum) %> |
+<%= link_to 'Back', de_data_path %>

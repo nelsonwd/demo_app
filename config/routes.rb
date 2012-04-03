@@ -1,4 +1,14 @@
 DemoApp::Application.routes.draw do
+  resources :de_data
+
+  resources :treatments
+
+  resources :fold_changes
+
+  resources :de_analyses
+
+  resources :experiments
+
   resources :gene_ontologies
 
   resources :interpros

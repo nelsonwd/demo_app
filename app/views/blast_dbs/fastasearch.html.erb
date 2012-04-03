@@ -24,7 +24,7 @@
 <%elsif @result.class == [].class %>
   <%= @result.count.to_s %> sequences found<br>
   <% @result.each do |s|%>
-  <a href="/blast_dbs/fastasearch?utf8=✓&file=symb2.1.fa&query=<%= s.accession %>&commit=Search" ><%= s.accession %></a><br>
+  <a href="/blast_dbs/fastasearch?utf8=&file=<%=s.blast_db.file_name%>&query=<%= s.accession %>&commit=Search" ><%= s.accession %></a><br>
   <% end %>
 <% else %>
   <pre><%= @result %></pre>

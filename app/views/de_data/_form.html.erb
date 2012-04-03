@@ -1,0 +1,33 @@
+<%= form_for(@de_datum) do |f| %>
+  <% if @de_datum.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@de_datum.errors.count, "error") %> prohibited this de_datum from being saved:</h2>
+
+      <ul>
+      <% @de_datum.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :abundance %><br />
+    <%= f.text_field :abundance %>
+  </div>
+  <div class="field">
+    <%= f.label :sequence_id %><br />
+    <%= f.text_field :sequence_id %>
+  </div>
+  <div class="field">
+    <%= f.label :de_analysis_id %><br />
+    <%= f.text_field :de_analysis_id %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_id %><br />
+    <%= f.text_field :treatment_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

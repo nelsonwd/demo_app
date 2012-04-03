@@ -1,0 +1,29 @@
+<%= form_for(@de_analyasis) do |f| %>
+  <% if @de_analyasis.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@de_analyasis.errors.count, "error") %> prohibited this de_analyasis from being saved:</h2>
+
+      <ul>
+      <% @de_analyasis.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :method %><br />
+    <%= f.text_field :method %>
+  </div>
+  <div class="field">
+    <%= f.label :script_name %><br />
+    <%= f.text_field :script_name %>
+  </div>
+  <div class="field">
+    <%= f.label :experiment_id %><br />
+    <%= f.text_field :experiment_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

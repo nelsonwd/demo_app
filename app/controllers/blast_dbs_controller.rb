@@ -48,8 +48,9 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
   def fastasearch
     @title = "FASTA search results"
     @file = "#{Rails.root}/public/fasta/" + params[:file]
-
-    if BlastDb.where(:file_name => params[:file]).first.blast_index_name == "symb2master" then
+    blast_db = BlastDb.where(:file_name => params[:file]).first
+    #if(index_name == "symb2master" || index_name == "symb3master")  then
+    if(Sequence.where("blast_db_id = #{blast_db.id}").exists?) then
       @title = "Gene Annotation"
       @query = params[:query].chomp      
       s = Sequence.where(:accession => @query).first
@@ -88,9 +89,13 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
         end
         feats.flatten!
         @result = feats.uniq.map do |f|
-          f.sequence
+          if(f.sequence.blast_db == blast_db)
+            f.sequence
+          end
         end
-        
+        @result.compact!
+        @result.uniq!
+        puts "RESULT:" + @result.to_s + @result.size.to_s
       end
     else  
       @query = params[:query].chomp.split(%r{\s*,\s*})

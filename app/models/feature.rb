@@ -5,12 +5,14 @@ belongs_to :annotation
   #parses out the sequence accession number and frame
   def acc_frame acc
     acc.chomp!
-    name = acc[0, acc.size - 2]
-    frame = acc[acc.size - 1]
+    
+    parts = acc.split('-')
+    name = parts[0]
+    frame = (parts[1].nil?)? 0 : parts[1] 
     #fix name 
-    n_p = name.split("_")
-    fixed_name = "#{n_p[0]}_#{n_p[1]}_#{n_p[2]}_#{n_p[3]}/#{n_p[4]}_#{n_p[5]}_#{n_p[6]}_#{n_p[7]}_#{n_p[8]}"
-    [fixed_name, frame]
+    #n_p = name.split("_")
+    #fixed_name = "#{n_p[0]}_#{n_p[1]}_#{n_p[2]}_#{n_p[3]}/#{n_p[4]}_#{n_p[5]}_#{n_p[6]}_#{n_p[7]}_#{n_p[8]}"
+    [name, frame]
   end
 
   def go_terms terms
@@ -47,14 +49,25 @@ belongs_to :annotation
     AnnotationSource.find_or_create_by_name("BlastProDom", :url => "http://prodom.prabi.fr/prodom/current/cgi-bin/request.pl?SSID=1289309949_1085&db_ent1=@@")
   end
 
+# 0 =  accession-frameNum
+# 3 =  annotation source application
+# 4 =  application accession 
+# 5 =  application description
+# 6 =  start_pos
+# 7 =  end_pos
+# 8 =  score
+# 11 = IPR accession
+# 12 = IPR description
+# 13 = GO keyword and accessions
+
   def load file_name
     file = File.open("#{Rails.root}/#{file_name}", 'rb')
     init_annot_src
     while(line = file.gets)
       parts = line.split("\t")
-      a_f = acc_frame parts[0]
-      frame = a_f[1]
-      seq_name, desc = Sequence.parse_accession(a_f[0], "symb2master")
+      seq_name, frame = acc_frame parts[0]
+      #frame = a_f[1]
+      #seq_name, desc = Sequence.parse_accession(a_f[0], "symb2master")
       seq = Sequence.where( :accession => seq_name ).first
       gene_onts = []
       ipr = nil

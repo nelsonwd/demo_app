@@ -1,0 +1,35 @@
+<h1>Listing fold_changes</h1>
+
+<table>
+  <tr>
+    <th>Log2fc</th>
+    <th>Fdr</th>
+    <th>Pval</th>
+    <th>De analysis</th>
+    <th>Treatment</th>
+    <th>Base treatment</th>
+    <th>Sequence</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @fold_changes.each do |fold_change| %>
+  <tr>
+    <td><%= fold_change.log2fc %></td>
+    <td><%= fold_change.fdr %></td>
+    <td><%= fold_change.pval %></td>
+    <td><%= fold_change.de_analysis_id %></td>
+    <td><%= fold_change.treatment_id %></td>
+    <td><%= fold_change.base_treatment_id %></td>
+    <td><%= fold_change.sequence_id %></td>
+    <td><%= link_to 'Show', fold_change %></td>
+    <td><%= link_to 'Edit', edit_fold_change_path(fold_change) %></td>
+    <td><%= link_to 'Destroy', fold_change, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Fold change', new_fold_change_path %>

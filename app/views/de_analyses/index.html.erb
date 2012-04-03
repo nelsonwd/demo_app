@@ -1,0 +1,27 @@
+<h1>Listing de_analyses</h1>
+
+<table>
+  <tr>
+    <th>Method</th>
+    <th>Script name</th>
+    <th>Experiment</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @de_analyses.each do |de_analyasis| %>
+  <tr>
+    <td><%= de_analyasis.method %></td>
+    <td><%= de_analyasis.script_name %></td>
+    <td><%= de_analyasis.experiment_id %></td>
+    <td><%= link_to 'Show', de_analyasis %></td>
+    <td><%= link_to 'Edit', edit_de_analyasis_path(de_analyasis) %></td>
+    <td><%= link_to 'Destroy', de_analyasis, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New De analysis', new_de_analyasis_path %>

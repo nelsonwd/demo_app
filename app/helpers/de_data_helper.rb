@@ -1,0 +1,2 @@
+module DeDataHelper
+end
