@@ -1,6 +1,7 @@
 class Sequence < ActiveRecord::Base
   belongs_to :blast_db
   has_many :features,  :dependent => :destroy
+  has_many :de_data,  :dependent => :destroy
   has_many :annotations, :through => :features
 
 #  def Sequence.parse_accession(desc, blast_index)

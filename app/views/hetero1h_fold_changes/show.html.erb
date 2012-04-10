@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Log2fc:</b>
+  <%= @hetero1h_fold_change.log2fc %>
+</p>
+
+<p>
+  <b>Fdr:</b>
+  <%= @hetero1h_fold_change.fdr %>
+</p>
+
+<p>
+  <b>Pval:</b>
+  <%= @hetero1h_fold_change.pval %>
+</p>
+
+<p>
+  <b>De analysis:</b>
+  <%= @hetero1h_fold_change.de_analysis_id %>
+</p>
+
+<p>
+  <b>Treatment:</b>
+  <%= @hetero1h_fold_change.treatment_id %>
+</p>
+
+<p>
+  <b>Base treatment:</b>
+  <%= @hetero1h_fold_change.base_treatment_id %>
+</p>
+
+<p>
+  <b>Sequence:</b>
+  <%= @hetero1h_fold_change.sequence_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_hetero1h_fold_change_path(@hetero1h_fold_change) %> |
+<%= link_to 'Back', hetero1h_fold_changes_path %>

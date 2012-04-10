@@ -2,7 +2,7 @@
 
 <table>
   <tr>
-    <th>Method</th>
+    <th>Analysis method</th>
     <th>Script name</th>
     <th>Experiment</th>
     <th></th>
@@ -10,18 +10,19 @@
     <th></th>
   </tr>
 
-<% @de_analyses.each do |de_analyasis| %>
+<% @de_analyses.each do |de_analysis| %>
   <tr>
-    <td><%= de_analyasis.method %></td>
-    <td><%= de_analyasis.script_name %></td>
-    <td><%= de_analyasis.experiment_id %></td>
-    <td><%= link_to 'Show', de_analyasis %></td>
-    <td><%= link_to 'Edit', edit_de_analyasis_path(de_analyasis) %></td>
-    <td><%= link_to 'Destroy', de_analyasis, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= de_analysis.analysis_method %></td>
+    <td><%= de_analysis.script_name %></td>
+    <td><%= de_analysis.experiment_id %></td>
+    <td><%= de_analysis.default_treatment_id %></td>
+    <td><%= link_to 'Show', de_analysis %></td>
+    <td><%= link_to 'Edit', edit_de_analysis_path(de_analysis) %></td>
+    <td><%= link_to 'Destroy', de_analysis, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New De analysis', new_de_analyasis_path %>
+<%= link_to 'New DE Analysis', new_de_analysis_path %>

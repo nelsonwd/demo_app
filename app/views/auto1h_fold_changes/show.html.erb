@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Log2fc:</b>
+  <%= @auto1h_fold_change.log2fc %>
+</p>
+
+<p>
+  <b>Fdr:</b>
+  <%= @auto1h_fold_change.fdr %>
+</p>
+
+<p>
+  <b>Pval:</b>
+  <%= @auto1h_fold_change.pval %>
+</p>
+
+<p>
+  <b>De analysis:</b>
+  <%= @auto1h_fold_change.de_analysis_id %>
+</p>
+
+<p>
+  <b>Treatment:</b>
+  <%= @auto1h_fold_change.treatment_id %>
+</p>
+
+<p>
+  <b>Base treatment:</b>
+  <%= @auto1h_fold_change.base_treatment_id %>
+</p>
+
+<p>
+  <b>Sequence:</b>
+  <%= @auto1h_fold_change.sequence_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_auto1h_fold_change_path(@auto1h_fold_change) %> |
+<%= link_to 'Back', auto1h_fold_changes_path %>

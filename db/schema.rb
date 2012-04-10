@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120403001727) do
+ActiveRecord::Schema.define(:version => 20120409183957) do
 
   create_table "annotation_sources", :force => true do |t|
     t.string   "name"
@@ -30,6 +30,34 @@ ActiveRecord::Schema.define(:version => 20120403001727) do
 
   add_index "annotations", ["accession"], :name => "index_annotations_on_accession", :unique => true
 
+  create_table "auto1h_fold_changes", :force => true do |t|
+    t.float    "log2fc"
+    t.float    "fdr"
+    t.float    "pval"
+    t.integer  "de_analysis_id"
+    t.integer  "treatment_id"
+    t.integer  "base_treatment_id"
+    t.integer  "sequence_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "auto1h_fold_changes", ["sequence_id", "de_analysis_id", "treatment_id", "base_treatment_id"], :name => "index_auto1h_fold_changes", :unique => true
+
+  create_table "auto24h_fold_changes", :force => true do |t|
+    t.float    "log2fc"
+    t.float    "fdr"
+    t.float    "pval"
+    t.integer  "de_analysis_id"
+    t.integer  "treatment_id"
+    t.integer  "base_treatment_id"
+    t.integer  "sequence_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "auto24h_fold_changes", ["sequence_id", "de_analysis_id", "treatment_id", "base_treatment_id"], :name => "index_auto24h_fold_changes", :unique => true
+
   create_table "blast_dbs", :force => true do |t|
     t.string   "display_name"
     t.string   "blast_index_name"
@@ -47,9 +75,10 @@ ActiveRecord::Schema.define(:version => 20120403001727) do
   end
 
   create_table "de_analyses", :force => true do |t|
-    t.string   "method"
+    t.string   "analysis_method"
     t.string   "script_name"
     t.integer  "experiment_id"
+    t.integer  "default_treatment_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -57,7 +86,7 @@ ActiveRecord::Schema.define(:version => 20120403001727) do
   add_index "de_analyses", ["script_name"], :name => "index_de_analyses_on_script_name", :unique => true
 
   create_table "de_data", :force => true do |t|
-    t.integer  "abundance"
+    t.float    "abundance"
     t.integer  "sequence_id"
     t.integer  "de_analysis_id"
     t.integer  "treatment_id"
@@ -65,7 +94,7 @@ ActiveRecord::Schema.define(:version => 20120403001727) do
     t.datetime "updated_at"
   end
 
-  add_index "de_data", ["sequence_id", "treatment_id"], :name => "index_de_data", :unique => true
+  add_index "de_data", ["sequence_id", "treatment_id", "de_analysis_id"], :name => "index_de_data", :unique => true
 
   create_table "experiments", :force => true do |t|
     t.string   "name"
@@ -105,6 +134,7 @@ ActiveRecord::Schema.define(:version => 20120403001727) do
   end
 
   add_index "fold_changes", ["sequence_id", "treatment_id", "base_treatment_id"], :name => "index_fold_changes", :unique => true
+  add_index "fold_changes", ["sequence_id", "treatment_id", "base_treatment_id"], :name => "index_hetero1h_fold_changes", :unique => true
 
   create_table "gene_ontologies", :force => true do |t|
     t.string   "accession"
@@ -124,6 +154,34 @@ ActiveRecord::Schema.define(:version => 20120403001727) do
   add_index "gene_ontologies_interpros", ["gene_ontology_id"], :name => "index_gene_ontologies_interpros_on_gene_ontology_id"
   add_index "gene_ontologies_interpros", ["interpro_id", "gene_ontology_id"], :name => "index_gene_ontologies_interpros_on_interpro_id_gene_ontology_id", :unique => true
   add_index "gene_ontologies_interpros", ["interpro_id"], :name => "index_gene_ontologies_interpros_on_interpro_id"
+
+  create_table "hetero1h_fold_changes", :force => true do |t|
+    t.float    "log2fc"
+    t.float    "fdr"
+    t.float    "pval"
+    t.integer  "de_analysis_id"
+    t.integer  "treatment_id"
+    t.integer  "base_treatment_id"
+    t.integer  "sequence_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "hetero1h_fold_changes", ["sequence_id", "de_analysis_id", "treatment_id", "base_treatment_id"], :name => "index_hetero1h_fold_changes", :unique => true
+
+  create_table "hetero24h_fold_changes", :force => true do |t|
+    t.float    "log2fc"
+    t.float    "fdr"
+    t.float    "pval"
+    t.integer  "de_analysis_id"
+    t.integer  "treatment_id"
+    t.integer  "base_treatment_id"
+    t.integer  "sequence_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "hetero24h_fold_changes", ["sequence_id", "de_analysis_id", "treatment_id", "base_treatment_id"], :name => "index_hetero24h_fold_changes", :unique => true
 
   create_table "interpros", :force => true do |t|
     t.string   "accession"

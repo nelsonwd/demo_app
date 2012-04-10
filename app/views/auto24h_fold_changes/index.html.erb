@@ -1,0 +1,35 @@
+<h1>Listing auto24h_fold_changes</h1>
+
+<table>
+  <tr>
+    <th>Log2fc</th>
+    <th>Fdr</th>
+    <th>Pval</th>
+    <th>De analysis</th>
+    <th>Treatment</th>
+    <th>Base treatment</th>
+    <th>Sequence</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @auto24h_fold_changes.each do |auto24h_fold_change| %>
+  <tr>
+    <td><%= auto24h_fold_change.log2fc %></td>
+    <td><%= auto24h_fold_change.fdr %></td>
+    <td><%= auto24h_fold_change.pval %></td>
+    <td><%= auto24h_fold_change.de_analysis_id %></td>
+    <td><%= auto24h_fold_change.treatment_id %></td>
+    <td><%= auto24h_fold_change.base_treatment_id %></td>
+    <td><%= auto24h_fold_change.sequence_id %></td>
+    <td><%= link_to 'Show', auto24h_fold_change %></td>
+    <td><%= link_to 'Edit', edit_auto24h_fold_change_path(auto24h_fold_change) %></td>
+    <td><%= link_to 'Destroy', auto24h_fold_change, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Auto24h fold change', new_auto24h_fold_change_path %>

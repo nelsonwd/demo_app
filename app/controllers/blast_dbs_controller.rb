@@ -61,6 +61,7 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
         feats = s.features
         @result[:interpro] = {}
         @result[:no_interpro] = []
+        @result[:experiments] = {}
         feats.each do |f|
           if f.annotation.interpro.nil?
             @result.fetch(:no_interpro).push(f)
@@ -72,6 +73,23 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
             end
           end
         end
+        
+        #analyses = s.de_data.map { |d| d.de_analysis }
+        s.de_data.each do |a|
+            @result.fetch(:experiments)[a.de_analysis] = [] if @result.fetch(:experiments)[a.de_analysis].nil?
+            fc = nil
+            fc_table =  a.de_analysis.experiment.name.camelcase + "FoldChange" 
+            denominator_treatment = (params[:denominator])? params[:denominator] : a.de_analysis.default_treatment_id
+puts  (params[:denominator]) + "DENOMINATOR"
+#puts   (a.de_analysis.default_treatment_id).first
+            fc = Kernel.const_get(fc_table).where(:sequence_id => s.id, :de_analysis_id => a.de_analysis_id, :treatment_id => a.treatment_id, :base_treatment_id => denominator_treatment).first
+            if fc.nil?
+             @result.fetch(:experiments)[a.de_analysis] << [a.abundance , a.treatment.name, "N/A", "N/A", "N/A", a.treatment_id]
+            else
+             @result.fetch(:experiments)[a.de_analysis] << [a.abundance , a.treatment.name, fc.log2fc, fc.pval, fc.fdr, a.treatment_id]
+            end
+        end
+
       else
         goes = GeneOntology.where("keyword LIKE  '%#{@query}%'")
         iprs = goes.uniq.map do |g|

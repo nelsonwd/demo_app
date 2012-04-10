@@ -5,26 +5,65 @@
     <tr><th >Start</th><th>End</th><th>Frame</th><th>Application</th><th>App description</td></tr>
     <% interpro_hash = @result.fetch(:interpro)
        interpro_hash.each do |i,f_array|  %>
-     <tr><td colspan="5" style="background-color:lightgray;" ><a href = "http://www.ebi.ac.uk/interpro/IEntry?ac=<%= i.accession %>" ><%= i.description%></a></td></tr>
+     <tr><td colspan="5" style="background-color:lightgray;" >InterPro: <a href = "http://www.ebi.ac.uk/interpro/IEntry?ac=<%= i.accession %>" ><%= i.description%></a></td></tr>
       <% f_array.each do |f| 
           url = f.annotation.annotation_source.url.sub(/@@/, f.annotation.accession) 
           href = "<a href=\"#{url}\" >#{f.annotation.annotation_source.name}</a>"%>
      <tr><td ><%= f.start_pos %> </td><td><%= f.end_pos %></td><td><%=f.frame%></td><td><%=href.html_safe%></td><td><%=f.annotation.description%></td></tr>
     <%   end
        end %>
-     <tr><th style="background-color:lightgray;" colspan="5" >No InterPro Accession</th></tr>
+    <% if @result.fetch(:no_interpro).size > 0 %> <tr><th style="background-color:lightgray;" colspan="5" >No InterPro Accession</th></tr><%end%>
      <% @result.fetch(:no_interpro).each do |f|  
           url = f.annotation.annotation_source.url.sub(/@@/, f.annotation.accession) 
           href = "<a href=\"#{url}\" >#{f.annotation.annotation_source.name}</a>" %>
      <tr><td ><%= f.start_pos %> </td><td><%= f.end_pos %></td><td><%=f.frame%></td><td><%=href.html_safe%></td><td><%=f.annotation.description%></td></tr>
     <% end %>
-    <tr><th  style="background-color:lightgray;" colspan="5" >Sequence</td></tr>
+
+    <tr><th  style="background-color:lightgray;" colspan="5" >Experiments</td></tr>
+    <% experiments_hash = @result.fetch(:experiments)
+       experiments_hash.each do |x,x_array|  %>
+     <tr>
+         <td colspan="2" style="background-color:lightgray;" >Expreiment: <%=x.experiment.name%></td>
+         <td style="background-color:lightgray;" colspan="3">Analysis method: <%=x.analysis_method%></td>
+     </tr><tr>
+         <td>Treatment</td>
+         <td><a href="?denominator=<%=x_array[0][5]%>&file=<%=@result.fetch(:sequence).blast_db.file_name%>&query=<%=@result.fetch(:sequence).accession%>"><%=x_array[0][1]%></a></td>
+         <td><a href="?denominator=<%=x_array[1][5]%>&file=<%=@result.fetch(:sequence).blast_db.file_name%>&query=<%=@result.fetch(:sequence).accession%>"><%=x_array[1][1]%></a></td>
+         <td><a href="?denominator=<%=x_array[2][5]%>&file=<%=@result.fetch(:sequence).blast_db.file_name%>&query=<%=@result.fetch(:sequence).accession%>"><%=x_array[2][1]%></a></td>
+         <td><a href="?denominator=<%=x_array[3][5]%>&file=<%=@result.fetch(:sequence).blast_db.file_name%>&query=<%=@result.fetch(:sequence).accession%>"><%=x_array[3][1]%></a></td>
+     </tr><tr>
+         <td>RPKM</td>
+         <td><%=x_array[0][0]%></td>
+         <td><%=x_array[1][0]%></td>
+         <td><%=x_array[2][0]%></td>
+         <td><%=x_array[3][0]%></td>
+     </tr><tr>
+         <td>Log2fc</td><td><%=x_array[0][2]%></td>
+         <td><%=x_array[1][2]%></td>
+         <td><%=x_array[2][2]%></td>
+         <td><%=x_array[3][2]%></td>
+     </tr><tr>
+         <td>pVal</td>
+         <td><%=x_array[0][3]%></td>
+         <td><%=x_array[1][3]%></td>
+         <td><%=x_array[2][3]%></td>
+         <td><%=x_array[3][3]%></td>
+     </tr><tr>
+         <td>FDR</td>
+         <td><%=x_array[0][4]%></td>
+         <td><%=x_array[1][4]%></td>
+         <td><%=x_array[2][4]%></td>
+         <td><%=x_array[3][4]%></td>
+     </tr>
+    <% end %>
+
+    <tr><th  style="background-color:lightgray;" colspan="5" >NA Sequence</td></tr>
     <tr><th  style="background-color:white;font-family:monospace;" colspan="5" ><pre><%= Bio::Sequence::NA.new(@result.fetch(:sequence).na_seq).upcase.to_fasta(@result.fetch(:sequence).accession, 80)%></pre></td></tr>
   </table>
 <%elsif @result.class == [].class %>
   <%= @result.count.to_s %> sequences found<br>
   <% @result.each do |s|%>
-  <a href="/blast_dbs/fastasearch?utf8=&file=<%=s.blast_db.file_name%>&query=<%= s.accession %>&commit=Search" ><%= s.accession %></a><br>
+  <a href="/blast_dbs/fastasearch?file=<%=s.blast_db.file_name%>&query=<%= s.accession %>" ><%= s.accession %></a><br>
   <% end %>
 <% else %>
   <pre><%= @result %></pre>

@@ -1,0 +1,2 @@
+module Auto1hFoldChangesHelper
+end

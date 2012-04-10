@@ -1,0 +1,2 @@
+module Auto24hFoldChangesHelper
+end

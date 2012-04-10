@@ -1,0 +1,45 @@
+<%= form_for(@hetero24h_fold_change) do |f| %>
+  <% if @hetero24h_fold_change.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@hetero24h_fold_change.errors.count, "error") %> prohibited this hetero24h_fold_change from being saved:</h2>
+
+      <ul>
+      <% @hetero24h_fold_change.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :log2fc %><br />
+    <%= f.text_field :log2fc %>
+  </div>
+  <div class="field">
+    <%= f.label :fdr %><br />
+    <%= f.text_field :fdr %>
+  </div>
+  <div class="field">
+    <%= f.label :pval %><br />
+    <%= f.text_field :pval %>
+  </div>
+  <div class="field">
+    <%= f.label :de_analysis_id %><br />
+    <%= f.text_field :de_analysis_id %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_id %><br />
+    <%= f.text_field :treatment_id %>
+  </div>
+  <div class="field">
+    <%= f.label :base_treatment_id %><br />
+    <%= f.text_field :base_treatment_id %>
+  </div>
+  <div class="field">
+    <%= f.label :sequence_id %><br />
+    <%= f.text_field :sequence_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

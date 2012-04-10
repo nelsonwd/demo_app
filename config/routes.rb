@@ -1,4 +1,12 @@
 DemoApp::Application.routes.draw do
+  resources :auto24h_fold_changes
+
+  resources :auto1h_fold_changes
+
+  resources :hetero24h_fold_changes
+
+  resources :hetero1h_fold_changes
+
   resources :de_data
 
   resources :treatments
