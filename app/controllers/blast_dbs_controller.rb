@@ -80,7 +80,6 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
             fc = nil
             fc_table =  a.de_analysis.experiment.name.camelcase + "FoldChange" 
             denominator_treatment = (params[:denominator])? params[:denominator] : a.de_analysis.default_treatment_id
-puts  (params[:denominator]) + "DENOMINATOR"
 #puts   (a.de_analysis.default_treatment_id).first
             fc = Kernel.const_get(fc_table).where(:sequence_id => s.id, :de_analysis_id => a.de_analysis_id, :treatment_id => a.treatment_id, :base_treatment_id => denominator_treatment).first
             if fc.nil?
