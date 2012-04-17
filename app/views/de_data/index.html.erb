@@ -1,29 +1,79 @@
-<h1>Listing de_data</h1>
 
+<% prev_page= ((params[:page].to_i) - 1)
+   next_page = params[:page].to_i + 1
+   current_page = params[:page].to_i 
+   current_base  = params[:base_treatment] %>
+   <% if prev_page > 0 then 
+     params[:page] = prev_page %> 
+     <%= link_to("Previous", params) %> 
+   <%end%>
+   <%=current_page %> of <%= @total_pages%> 
+   <%if next_page <= @total_pages then
+     params[:page] = next_page %>
+     <%= link_to( "Next", params) %> 
+   <%end
+     params[:page] = current_page%> 
+<%= form_tag({:controller => "de_data"}, {:method => "get"}) do %>
 <table>
-  <tr>
-    <th>Abundance</th>
+<tr><th>Sort order</th><th colspan=2>Filter</th></tr>
+<tr><td></td><td></td><td>
+<%= label_tag(:filter_value,"Filter value:") %>
+</td></tr>
+<tr><td></td><td></td><td>
+<%= text_field_tag(:filter_value) %>
+</td></tr>
+<tr><td></td><td></td><td>
+<%=submit_tag("Refresh")%>
+</td></tr>
+</table>
+<% end %>
+
+<table >
+  <tr style="background-color:lightgray;">
+    <th></th>
+    <th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
+        <% params[:base_treatment] = 1 %>
+        <%=link_to("0µE",params)%>
+    </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
+      <% params[:base_treatment] = 2 %>
+      <%=link_to("10µE",params)%>
+    </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
+      <% params[:base_treatment] = 3 %>
+      <%=link_to("100µE",params)%>
+    </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
+      <% params[:base_treatment] = 4 %>
+      <%=link_to("500µE",params)%>
+    </th>
+  </tr>
+  <tr style="text-align: center;background-color:lightgray;">
     <th>Sequence</th>
-    <th>De analysis</th>
-    <th>Treatment</th>
-    <th></th>
-    <th></th>
-    <th></th>
+    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
+    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
+    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
+    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
   </tr>
 
-<% @de_data.each do |de_datum| %>
+<% @results_hash.each_pair do |seq,d_array| %> 
   <tr>
-    <td><%= de_datum.abundance %></td>
-    <td><%= de_datum.sequence_id %></td>
-    <td><%= de_datum.de_analysis_id %></td>
-    <td><%= de_datum.treatment_id %></td>
-    <td><%= link_to 'Show', de_datum %></td>
-    <td><%= link_to 'Edit', edit_de_datum_path(de_datum) %></td>
-    <td><%= link_to 'Destroy', de_datum, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>"><%= seq.accession %></a></td>
+    <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[1][0]%></td>
+    <td><%= d_array[1][1]%></td>
+    <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[2][0]%></td>
+    <td><%= d_array[2][1]%></td>
+    <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[3][0]%></td>
+    <td><%= d_array[3][1]%></td>
+    <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[4][0]%></td>
+    <td><%= d_array[4][1]%></td>
   </tr>
 <% end %>
 </table>
+ <% if prev_page > 0 then 
+     params[:page] = prev_page %> 
+     <%= link_to("Previous", params) %> 
+ <%end%>
+ <%=current_page %> of <%= @total_pages%> 
+ <%if next_page <= @total_pages then
+   params[:page] = next_page %>
+   <%= link_to( "Next", params) %> 
+ <%end %> 
 
-<br />
-
-<%= link_to 'New De datum', new_de_datum_path %>

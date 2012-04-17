@@ -1,24 +1,18 @@
-<h1>Listing de_analyses</h1>
 
 <table>
   <tr>
-    <th>Analysis method</th>
-    <th>Script name</th>
     <th>Experiment</th>
-    <th></th>
-    <th></th>
-    <th></th>
+    <th>Analysis method</th>
+    <th colspan="4" >Treatments</th>
   </tr>
 
 <% @de_analyses.each do |de_analysis| %>
   <tr>
+    <td><%= de_analysis.experiment.name %></td>
     <td><%= de_analysis.analysis_method %></td>
-    <td><%= de_analysis.script_name %></td>
-    <td><%= de_analysis.experiment_id %></td>
-    <td><%= de_analysis.default_treatment_id %></td>
-    <td><%= link_to 'Show', de_analysis %></td>
-    <td><%= link_to 'Edit', edit_de_analysis_path(de_analysis) %></td>
-    <td><%= link_to 'Destroy', de_analysis, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% Treatment.all.each do |t|%>
+      <td><a href="de_data?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>&base_treatment=<%=t.id%>&page=1"><%= t.name %></a></td>
+    <% end%>
   </tr>
 <% end %>
 </table>

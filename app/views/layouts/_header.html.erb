@@ -5,6 +5,7 @@
       <% if signed_in? %>
       <li><%= link_to "Blast", root_path %></li>
       <li><%= link_to "Data", blast_dbs_path %></li>
+      <li><%= link_to "Experiments", de_analyses_path %></li>
       <li><%= link_to "Profile", current_user %></li>
       <% if current_user.admin? %>
       <li><%= link_to "Users", users_path %></li>

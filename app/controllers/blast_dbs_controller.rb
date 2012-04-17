@@ -85,7 +85,14 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
             if fc.nil?
              @result.fetch(:experiments)[a.de_analysis] << [a.abundance , a.treatment.name, "N/A", "N/A", "N/A", a.treatment_id]
             else
-             @result.fetch(:experiments)[a.de_analysis] << [a.abundance , a.treatment.name, fc.log2fc, fc.pval, fc.fdr, a.treatment_id]
+             if (a.abundance == 0)
+               fdr = 1
+               pval = 1
+             else 
+               fdr = fc.fdr
+               pval = fc.pval
+             end
+             @result.fetch(:experiments)[a.de_analysis] << [a.abundance , a.treatment.name, fc.log2fc, pval, fdr, a.treatment_id]
             end
         end
 

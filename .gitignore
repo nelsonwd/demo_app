@@ -12,3 +12,9 @@ Gemfile*
 /public/fasta/
 /public/image/tmp/
 /config/
+/1h-auto/
+/24h-auto/
+/1h-hetero/
+/24h-hetero/
+*.orig
+/lib/tasks/load.rake

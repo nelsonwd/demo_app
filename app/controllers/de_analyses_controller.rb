@@ -2,6 +2,7 @@ class DeAnalysesController < ApplicationController
   # GET /de_analyses
   # GET /de_analyses.xml
   def index
+    @title = "Experiments"
     @de_analyses = DeAnalysis.all
 
     respond_to do |format|
