@@ -38,10 +38,12 @@ ActiveRecord::Schema.define(:version => 20120409183957) do
     t.integer  "treatment_id"
     t.integer  "base_treatment_id"
     t.integer  "sequence_id"
+    t.integer  "de_datum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "auto1h_fold_changes", ["de_datum_id", "treatment_id", "de_analysis_id", "sequence_id", "base_treatment_id"], :name => "index_h1a_de_data_to_fc", :unique => true
   add_index "auto1h_fold_changes", ["sequence_id", "de_analysis_id", "treatment_id", "base_treatment_id"], :name => "index_auto1h_fold_changes", :unique => true
 
   create_table "auto24h_fold_changes", :force => true do |t|
@@ -52,10 +54,12 @@ ActiveRecord::Schema.define(:version => 20120409183957) do
     t.integer  "treatment_id"
     t.integer  "base_treatment_id"
     t.integer  "sequence_id"
+    t.integer  "de_datum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "auto24h_fold_changes", ["de_datum_id", "treatment_id", "de_analysis_id", "sequence_id", "base_treatment_id"], :name => "index_h24a_de_data_to_fc", :unique => true
   add_index "auto24h_fold_changes", ["sequence_id", "de_analysis_id", "treatment_id", "base_treatment_id"], :name => "index_auto24h_fold_changes", :unique => true
 
   create_table "blast_dbs", :force => true do |t|
@@ -163,10 +167,12 @@ ActiveRecord::Schema.define(:version => 20120409183957) do
     t.integer  "treatment_id"
     t.integer  "base_treatment_id"
     t.integer  "sequence_id"
+    t.integer  "de_datum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "hetero1h_fold_changes", ["de_datum_id", "treatment_id", "de_analysis_id", "sequence_id", "base_treatment_id"], :name => "index_h1h_de_data_to_fc", :unique => true
   add_index "hetero1h_fold_changes", ["sequence_id", "de_analysis_id", "treatment_id", "base_treatment_id"], :name => "index_hetero1h_fold_changes", :unique => true
 
   create_table "hetero24h_fold_changes", :force => true do |t|
@@ -177,10 +183,12 @@ ActiveRecord::Schema.define(:version => 20120409183957) do
     t.integer  "treatment_id"
     t.integer  "base_treatment_id"
     t.integer  "sequence_id"
+    t.integer  "de_datum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "hetero24h_fold_changes", ["de_datum_id", "treatment_id", "de_analysis_id", "sequence_id", "base_treatment_id"], :name => "index_h24h_de_data_to_fc", :unique => true
   add_index "hetero24h_fold_changes", ["sequence_id", "de_analysis_id", "treatment_id", "base_treatment_id"], :name => "index_hetero24h_fold_changes", :unique => true
 
   create_table "interpros", :force => true do |t|
