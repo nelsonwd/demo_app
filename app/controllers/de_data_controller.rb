@@ -9,9 +9,9 @@ class DeDataController < ApplicationController
     @base_treatment = (params[:base_treatment])? params[:base_treatment] : 2
     default_treatment  = ([1,2,3,4] - [@base_treatment.to_i]).first
     @treatment      = (params[:treatment])? params[:treatment] : default_treatment
-    @order_by       = (params[:order_by])? params[:order_by] : "pval"
-    @filter         = (params[:filter])? params[:filter] : "pval" 
-    @filter_value   = (params[:filter_value])? params[:filter_value] : "0.005" 
+    @order_by = params[:order_by] = (params[:order_by])? params[:order_by] : "pval"
+    @filter = params[:filter] = (params[:filter])? params[:filter] : "pval" 
+    @filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] : "0.005" 
     @page           = (params[:page])? params[:page] : "1"
     offset         = (@page.to_i - 1) * per_page
     fc_table_name = @experiment + "_fold_changes"
