@@ -2,7 +2,7 @@ class DeDataController < ApplicationController
   # GET /de_data
   # GET /de_data.xml
   def index
-    per_page=30
+    per_page=25
     @experiment     = params[:experiment]
     @title = @experiment.camelcase
     @analysis_id    = params[:analysis_id]
@@ -10,11 +10,13 @@ class DeDataController < ApplicationController
     default_treatment  = ([1,2,3,4] - [@base_treatment.to_i]).first
     @treatment      = (params[:treatment])? params[:treatment] : default_treatment
     @order_by       = (params[:order_by])? params[:order_by] : "pval"
-    @filter         = (params[:filter])? params[:filter] : "" 
+    @filter         = (params[:filter])? params[:filter] : "pval" 
+    @filter_value   = (params[:filter_value])? params[:filter_value] : "0.005" 
     @page           = (params[:page])? params[:page] : "1"
-    offset         = (@page.to_i - 1) * 30 + 1
+    offset         = (@page.to_i - 1) * per_page
     fc_table_name = @experiment + "_fold_changes"
-    @filter         = (@filter.empty?) ? "" : "and #{fc_table_name}.#{@order_by} < #{@filter}"
+    filter_string = filter_sql @filter, @filter_value, fc_table_name
+    order_string = order_sql @order_by, fc_table_name
     fc_table =  Kernel.const_get(@experiment.camelcase + "FoldChange") 
 #    count = fc_table.where("#{fc_table_name}.treatment_id = #{@treatment} and #{fc_table_name}.de_analysis_id = #{@analysis_id} and #{fc_table_name}.base_treatment_id = #{@base_treatment} #{@filter}").size
     count =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
@@ -22,6 +24,7 @@ class DeDataController < ApplicationController
                                          "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
                                          "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and" +
                                          "      #{fc_table_name}.de_datum_id = de_data.id and" +
+                                         "      #{filter_string} " +
                                          "      de_data.abundance > 0").size 
     @total_pages = count / per_page
     @total_pages += 1 if ((count % per_page) != 0)
@@ -33,13 +36,14 @@ class DeDataController < ApplicationController
                                          "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
                                          "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and" +
                                          "      #{fc_table_name}.de_datum_id = de_data.id and" +
+                                         "      #{filter_string} " +
                                          "      de_data.abundance > 0 " +
-                                         "      order by #{@order_by} " +
+                                         "      order by #{order_string} " +
                                          "limit #{per_page} " +
                                          "offset #{offset} ").map{|x| x.sequence_id} 
     
 
-    fc_base = fc_table.includes(:sequence, :de_datum).where( :de_analysis_id => @analysis_id, :base_treatment_id => @base_treatment, :sequence_id => uniq_seq_ids)
+    fc_base = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => @analysis_id, :base_treatment_id => @base_treatment, :sequence_id => uniq_seq_ids).order(order_string)
 
     fc_base.each do |d| 
       if (@results_hash[d.sequence].nil?)
@@ -128,3 +132,35 @@ class DeDataController < ApplicationController
     end
   end
 end
+
+
+def filter_sql(filter, filter_value, fc_table_name)
+  if filter_value.empty?
+   "" 
+  elsif is_a_number?(filter_value)
+    "#{fc_table_name}.#{filter} < #{filter_value} and "
+  else
+    flash[:error] = "\"#{filter_value}\" is not a valid filter entry"
+    redirect_to( :back)
+    ""
+  end
+end
+
+def order_sql(order_by, fc_table_name)
+  if order_by == "pval" || order_by == "fdr"
+    order_by
+  elsif order_by == "-log2fc" 
+    "log2fc"
+  elsif order_by == "+log2fc" 
+    "log2fc desc"
+  elsif order_by == "+rpkm" 
+    "de_data.abundance desc"
+  elsif order_by == "-rpkm" 
+    "de_data.abundance"
+  end
+end
+
+def is_a_number?(s)
+  s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true 
+end
+

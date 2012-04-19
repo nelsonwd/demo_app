@@ -21,9 +21,10 @@
 
     <tr><th  style="background-color:lightgray;" colspan="5" >Experiments</td></tr>
     <% experiments_hash = @result.fetch(:experiments)
+       denominator = (params[:denominator])?params[:denominator]:2
        experiments_hash.each do |x,x_array|  %>
      <tr>
-         <td colspan="2" style="background-color:lightgray;" >Expreiment: <%=x.experiment.name%></td>
+         <td colspan="2" style="background-color:lightgray;" >Expreiment:<%= link_to( x.experiment.name, :controller => 'de_data', :experiment => x.experiment.name,:analysis_id => x.id, :base_treatment => denominator,:page => '1' ) %></td>
          <td style="background-color:lightgray;" colspan="3">Analysis method: <%=x.analysis_method%></td>
      </tr><tr>
          <td>Treatment</td>
