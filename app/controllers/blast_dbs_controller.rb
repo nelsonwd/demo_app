@@ -86,8 +86,8 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
              @result.fetch(:experiments)[a.de_analysis] << [a.abundance , a.treatment.name, "N/A", "N/A", "N/A", a.treatment_id]
             else
              if (a.abundance == 0)
-               fdr = 1
-               pval = 1
+               fdr = "1.0"
+               pval = "1.0"
              else 
                fdr = fc.fdr
                pval = fc.pval

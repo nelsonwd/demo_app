@@ -71,13 +71,13 @@
   <tr>
     <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>"><%= seq.accession %></a></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[1][0]%></td>
-    <td><%= d_array[1][1]%></td>
+    <td style="<%= d_array[1][2]%>"><%= d_array[1][1]%></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[2][0]%></td>
-    <td><%= d_array[2][1]%></td>
+    <td style="<%= d_array[2][2]%>"><%= d_array[2][1]%></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[3][0]%></td>
-    <td><%= d_array[3][1]%></td>
+    <td style="<%= d_array[3][2]%>"><%= d_array[3][1]%></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[4][0]%></td>
-    <td><%= d_array[4][1]%></td>
+    <td style="<%= d_array[4][2]%>"><%= d_array[4][1]%></td>
   </tr>
 <% end %>
 </table>
