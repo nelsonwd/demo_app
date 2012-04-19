@@ -28,12 +28,12 @@
     <tr style="background-color:white;">
       <th><%=label_tag(:order_by, "Sort order")%></th>
       <th><%= label_tag(:filter, "Filter") %></th>
-      <th><%= label_tag(:filter_value,"Filter value:") %></th>
+      <th><%= label_tag(:filter_value,"Filter value (0 to 1):") %></th>
       <td></td>
     </tr><tr style="background-color:lightgray;" >
       <td style="background-color:white;"><%= select_tag(:order_by, options_for_select([["p-Val","pval"],["FDR", "fdr"],["Log2FC asc","-log2fc"],["Log2FC desc","+log2fc"],["RPKM desc", "+rpkm"], ["RPKM asc", "-rpkm"]], default_order)) %></td>
       <td style="background-color:white;"><%= select_tag(:filter, options_for_select([["p-Val","pval"],["FDR", "fdr"]], default_filter)) %></td>
-      <td style="background-color:white;"><%= text_field_tag(:filter_value, default_filter_value) %></td>
+      <td style="background-color:white;"> < <%= text_field_tag(:filter_value, default_filter_value) %></td>
       <td style="background-color:white;"><%=submit_tag("Refresh")%></td>
     </tr>
   </table>
