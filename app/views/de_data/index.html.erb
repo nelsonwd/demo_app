@@ -1,18 +1,7 @@
 
-<% prev_page= ((params[:page].to_i) - 1)
-   next_page = params[:page].to_i + 1
-   current_page = params[:page].to_i 
+<% paginate_string = pagination()
    current_base  = params[:base_treatment] %>
-   <% if prev_page > 0 then 
-     params[:page] = prev_page %> 
-     <%= link_to("Previous", params) %> 
-   <%end%>
-   <%=current_page %> of <%=pluralize(@total_pages,"page")%>
-   <%if next_page <= @total_pages then
-     params[:page] = next_page %>
-     <%= link_to( "Next", params) %> 
-   <%end
-     params[:page] = current_page%> 
+<%= paginate_string.html_safe %>
 
 
 <%= form_tag({:controller => "de_data"}, {:method => "get"}) do %>
@@ -84,13 +73,4 @@
   </tr>
 <% end %>
 </table>
- <% if prev_page > 0 then 
-     params[:page] = prev_page %> 
-     <%= link_to("Previous", params) %> 
- <%end%>
- <%=current_page %> of <%= pluralize(@total_pages,"page") %>
- <%if next_page <= @total_pages then
-   params[:page] = next_page %>
-   <%= link_to( "Next", params) %> 
- <%end %> 
-
+<%= paginate_string.html_safe %>

@@ -214,9 +214,10 @@ end
 def up_middle_down_split(fc_table, treatment, uniq_seq_ids)
     clusters = []
     fc_table_name = fc_table.table_name
-    filter_strings = ["#{fc_table_name}.log2fc < 0 and #{fc_table_name}.#{@filter} < #{@filter_value} and ",
-                      "#{fc_table_name}.#{@filter} >= #{@filter_value} and ",
-                      "#{fc_table_name}.log2fc > 0 and #{fc_table_name}.#{@filter} < #{@filter_value} and "]
+    cluster_filter = (@filter_value.empty?) ? 2 : @filter_value
+    filter_strings = ["#{fc_table_name}.log2fc < 0 and #{fc_table_name}.#{@filter} < #{cluster_filter} and ",
+                      "#{fc_table_name}.#{@filter} >= #{cluster_filter} and ",
+                      "#{fc_table_name}.log2fc > 0 and #{fc_table_name}.#{@filter} < #{cluster_filter} and "]
      (0..2).each do |count|
          seq_ids = fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
                                          "from  #{fc_table_name}, de_data " +

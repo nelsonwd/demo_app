@@ -15,5 +15,25 @@ def cluster_options(base_treatment)
     end
   end
   options
-end  
+end
+    
+def pagination()
+    s = ""
+    prev_page= ((params[:page].to_i) - 1)
+    next_page = params[:page].to_i + 1
+    current_page = params[:page].to_i 
+    
+    
+    if prev_page > 0 then 
+        params[:page] = prev_page 
+        s = link_to("Previous", params) 
+    end
+    s += " #{current_page} of #{pluralize(@total_pages,"page")} "
+    if next_page <= @total_pages then
+        params[:page] = next_page
+        s += link_to( "Next", params) 
+    end
+    params[:page] = current_page
+    s
+end    
 end
