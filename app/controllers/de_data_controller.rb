@@ -18,7 +18,7 @@ class DeDataController < ApplicationController
     filter_string = filter_sql @filter, @filter_value, fc_table_name
     order_string = order_sql @order_by, fc_table_name
     fc_table =  Kernel.const_get(@experiment.camelcase + "FoldChange") 
-#    count = fc_table.where("#{fc_table_name}.treatment_id = #{@treatment} and #{fc_table_name}.de_analysis_id = #{@analysis_id} and #{fc_table_name}.base_treatment_id = #{@base_treatment} #{@filter}").size
+    
     count =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
                                          "from  #{fc_table_name}, de_data " +
                                          "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
@@ -29,9 +29,8 @@ class DeDataController < ApplicationController
     @total_pages = count / per_page
     @total_pages += 1 if ((count % per_page) != 0)
     @results_hash ={}
-    #uniq_seq_ids = fc_table.joins(:de_datum).where( "#{fc_table_name}.de_analysis_id = #{@analysis_id} and #{fc_table_name}.base_treatment_id = #{@base_treatment} " +
-    #                                            " and de_data.abundance > 0").order(@order_by).limit(per_page).offset(offset).map {|s|s.sequence_id}
-    uniq_seq_ids =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
+    unless (params[:cluster] && params[:cluster] != "")
+      uniq_seq_ids =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
                                          "from  #{fc_table_name}, de_data " +
                                          "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
                                          "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and" +
@@ -41,10 +40,24 @@ class DeDataController < ApplicationController
                                          "      order by #{order_string} " +
                                          "limit #{per_page} " +
                                          "offset #{offset} ").map{|x| x.sequence_id} 
-    
+      fc_base = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => @analysis_id, :base_treatment_id => @base_treatment, :sequence_id => uniq_seq_ids).order(order_string)
 
-    fc_base = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => @analysis_id, :base_treatment_id => @base_treatment, :sequence_id => uniq_seq_ids).order(order_string)
+    else
+      order_array =  params[:cluster].split(',')
+      seq_ids =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
+                                         "from  #{fc_table_name}, de_data " +
+                                         "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
+                                         "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and" +
+                                         "      #{fc_table_name}.de_datum_id = de_data.id and" +
+                                         "      #{filter_string} " +
+                                         "      de_data.abundance > 0").map{|x| x.sequence_id} 
+      uniq_seq_ids = clusterfy(fc_table, order_array, seq_ids)
+      fc_base = []
+      uniq_seq_ids.each do |clust|
+        fc_base += fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => @analysis_id, :base_treatment_id => @base_treatment, :sequence_id => clust)
+      end
 
+    end
     fc_base.each do |d| 
       if (@results_hash[d.sequence].nil?)
         @results_hash[d.sequence] = [[],[],[],[]] 
@@ -178,3 +191,45 @@ def de_color(filter, filter_value, d)
     'color: blue;' 
   end
 end
+
+def clusterfy(fc_table, order_array, uniq_seq_ids)
+     top_clusters = up_middle_down_split(fc_table, order_array[0], uniq_seq_ids )
+puts "TOP CLUSTER SIZE: #{top_clusters.size}"
+     middle_clusters = []
+     top_clusters.each do |seq_ids|
+       tmp_clusters =  up_middle_down_split(fc_table, order_array[1],seq_ids)
+puts "TEMP CLUSTER SIZE: #{tmp_clusters.size}"
+       middle_clusters +=  tmp_clusters
+puts "MIDDLE CLUSTER SIZE: #{middle_clusters.size}"
+     end
+     bottom_clusters = []
+     middle_clusters.each do |seq_ids|
+       bottom_clusters +=  up_middle_down_split(fc_table, order_array[2], seq_ids)
+puts "BOTTOM CLUSTER SIZE: #{bottom_clusters.size}"
+     end
+     bottom_clusters
+     
+end
+
+def up_middle_down_split(fc_table, treatment, uniq_seq_ids)
+    clusters = []
+    fc_table_name = fc_table.table_name
+    filter_strings = ["#{fc_table_name}.log2fc < 0 and #{fc_table_name}.#{@filter} < #{@filter_value} and ",
+                      "#{fc_table_name}.#{@filter} >= #{@filter_value} and ",
+                      "#{fc_table_name}.log2fc > 0 and #{fc_table_name}.#{@filter} < #{@filter_value} and "]
+     (0..2).each do |count|
+         seq_ids = fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
+                                         "from  #{fc_table_name}, de_data " +
+                                         "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
+                                         "      #{fc_table_name}.treatment_id = #{treatment} and " +
+                                         "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and " +
+                                         "      #{fc_table_name}.de_datum_id = de_data.id and " +
+                                                filter_strings[count] + 
+                                         "      #{fc_table_name}.sequence_id in (#{uniq_seq_ids.join(',')})").map{|x| x.sequence_id}
+      clusters[count] = seq_ids if seq_ids.size > 0
+puts "SEQ_IDS SIZE IS : #{seq_ids.size} AND THE SEQUENCES ARE: #{seq_ids.join(",")}"
+      seq_ids = []
+    end
+    clusters.compact
+end
+
