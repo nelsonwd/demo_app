@@ -1,0 +1,10 @@
+<div style="border:solid 2px #000000; background:#FFFFFF; color:#000000; padding:4px; width:430px; height:800px; overflow:auto; ">
+<table style="vertical-align:top;border:solid 3px #000000;" >
+<tr><th>Accession(<%= @seq_clusters[cluster_num].size.to_s%>)</th><th>Annotation</th></tr>
+<% @seq_clusters[cluster_num].each do |s| %>
+<tr ><td style="background:#E5ECF9;border-top:solid 3px #ffffff;"><%= link_to(s.accession,{:controller => 'blast_dbs', :action => 'fastasearch', :file => 'symb3master.fa', :query => s.accession}) %></td>
+<td style="border-top:solid 3px #ffffff;" ><%=s.features.map {|f| f.annotation.interpro.description unless f.annotation.interpro.nil?}.compact.uniq.join('; ')%></td></tr>
+<% end %>
+</table>
+</div>
+

@@ -7,8 +7,6 @@ DemoApp::Application.routes.draw do
 
   resources :hetero1h_fold_changes
 
-  resources :de_data
-
   resources :treatments
 
   resources :fold_changes
@@ -51,11 +49,15 @@ DemoApp::Application.routes.draw do
 
   get "blast_dbs/fastasearch"  
   match '/fastasearch', :to => 'blast_dbs#fastasearch'  
+
+  get "de_data/heatmap"
+  match '/heatmap', :to => 'de_data#heatmap'  
+
   get "users/password"
   get "users/new"
   resources :microposts
 
-
+  resources :de_data
   resources :blast_dbs
 
   root :to => 'pages#blast'

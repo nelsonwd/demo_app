@@ -1,0 +1,51 @@
+
+<%  default_filter = params[:filter] ? params[:filter] : DEFAULT_FILTER
+    default_filter_value = params[:filter_value] ? params[:filter_value] : DEFAULT_FILTER_VALUE 
+    default_base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
+    default_cluster_order = ['1','2','3','4']
+	    default_cluster_order.delete(default_base_treatment)
+    default_cluster = (params[:cluster] && params[:cluster].count(default_base_treatment) == 0)  ? params[:cluster] : default_cluster_order.join(",")
+    default_cluster_num = (params[:cluster_num])  ? params[:cluster_num] : '0' %>
+
+<%= form_tag({:controller => "de_data",:action => "heatmap"}, {:method => "get"}) do %>
+  <%= hidden_field_tag(:experiment, params[:experiment])%>
+  <%= hidden_field_tag(:analysis_id, params[:analysis_id])%>
+
+  <table style="border:solid 3px #000000;">
+    <tr style="background-color:white;">
+      <th><%= label_tag(:base_treatment, "Base treatment") %></th>
+      <th><%= label_tag(:filter, "Filter") %></th>
+      <th><%= label_tag(:filter_value,"Filter value (0 to 1)") %></th>
+      <th><%= label_tag(:cluster,"Cluster Order") %></th>
+      <td><%= link_to("Table",params.merge({:controller => 'de_data', :action => 'index',:page => 1}))%></td>
+    </tr><tr style="background-color:lightgray;" >
+      <td style="background-color:white;"><%= select_tag(:base_treatment, options_for_select([["0uE","1"],["10uE","2"],["100uE","3"], ["500uE","4"]], default_base_treatment)) %></td>
+      <td style="background-color:white;"><%= select_tag(:filter, options_for_select([["p-Val","pval"],["FDR", "fdr"]], default_filter)) %></td>
+      <td style="background-color:white;"> < <%= text_field_tag(:filter_value, default_filter_value) %></td>
+      <td style="background-color:white;"><%= select_tag(:cluster, options_for_select(cluster_options(params[:base_treatment]), default_cluster)) %></td>
+      <td style="background-color:white;"><%=submit_tag("Refresh")%></td>
+    </tr>
+  </table>
+<% end %>
+
+<div><%= cluster_info_string %></div>
+
+<table style="width:300px;background-color:white" ><tr >
+<%=cluster_column_lables(default_cluster).html_safe%>
+</tr><tr><td colspan="3" style="vertical-align:top;background-color:white;">
+<%= @map_image.html_safe %>
+</td><td style="background-color:white;vertical-align:top;">
+
+<%= form_tag({:controller => "de_data",:action => "heatmap"}, {:name => "clust_form", :id => "clust_form", :method => "get"}) do %>
+  <%= hidden_field_tag(:experiment, params[:experiment])%>
+  <%= hidden_field_tag(:analysis_id, params[:analysis_id])%>
+  <%= hidden_field_tag(:base_treatment,default_base_treatment ) %>
+  <%= hidden_field_tag(:filter,default_filter ) %>
+  <%= hidden_field_tag(:filter_value,default_filter_value) %>
+  <%= hidden_field_tag(:cluster,default_cluster) %>
+  <% clust_options = (0..(@cluster_count - 1)).map {|c| ["cluster #{(c + 1).to_s}", c.to_s]}%>
+  <%= select_tag(:cluster_num, options_for_select(clust_options,default_cluster_num),{:onchange => 'clust_form.submit();'}) %>
+<% end %>
+
+<%= render :partial => 'seq_cluster',:object => @seq_clusters[default_cluster_num.to_i], :locals => {:cluster_num => default_cluster_num.to_i} %>
+</td></tr></table>

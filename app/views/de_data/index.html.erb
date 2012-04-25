@@ -10,22 +10,21 @@
   <%= hidden_field_tag(:base_treatment, params[:base_treatment])%>
   <%= hidden_field_tag(:treatment, params[:treatment])%>
   <%= hidden_field_tag(:page, "1")%>
-  <%  default_order = params[:order_by] ? params[:order_by] : "pval" 
-      default_filter = params[:filter] ? params[:filter] : "fdr"
-      default_filter_value = params[:filter_value] ? params[:filter_value] : "0.01" 
+  <%  default_order = params[:order_by] ? params[:order_by] : DEFAULT_ORDER
+      default_filter = params[:filter] ? params[:filter] : DEFAULT_FILTER.delete(base_treatment)
+      default_filter_value = params[:filter_value] ? params[:filter_value] : DEFAULT_FILTER_VALUE
       default_cluster = params[:cluster] ? params[:cluster] : "" %>
   <table style="border:solid 3px #000000;">
     <tr style="background-color:white;">
       <th><%=label_tag(:order_by, "Sort order")%></th>
       <th><%= label_tag(:filter, "Filter") %></th>
       <th><%= label_tag(:filter_value,"Filter value (0 to 1)") %></th>
-      <th><%= label_tag(:cluster,"Clustering") %></th>
-      <td></td>
+<% dummy_params = params.clone;dummy_params.delete(:action) %>
+      <td><%= link_to("cluster", {:controller => "de_data", :action => "heatmap"}.merge(dummy_params)) %></td>
     </tr><tr style="background-color:lightgray;" >
       <td style="background-color:white;"><%= select_tag(:order_by, options_for_select([["p-Val","pval"],["FDR", "fdr"],["Log2FC asc","-log2fc"],["Log2FC desc","+log2fc"],["RPKM desc", "+rpkm"], ["RPKM asc", "-rpkm"]], default_order)) %></td>
       <td style="background-color:white;"><%= select_tag(:filter, options_for_select([["p-Val","pval"],["FDR", "fdr"]], default_filter)) %></td>
       <td style="background-color:white;"> < <%= text_field_tag(:filter_value, default_filter_value) %></td>
-      <td style="background-color:white;"><%= select_tag(:cluster, options_for_select(cluster_options(params[:base_treatment]), default_cluster)) %></td>
       <td style="background-color:white;"><%=submit_tag("Refresh")%></td>
     </tr>
   </table>
@@ -63,13 +62,13 @@
   <tr>
     <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>"><%= seq.accession %></a></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[1][0]%></td>
-    <td style="<%= d_array[1][2]%>"><%= d_array[1][1]%></td>
+    <td style="color:<%= d_array[1][2]%>;"><%= d_array[1][1]%></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[2][0]%></td>
-    <td style="<%= d_array[2][2]%>"><%= d_array[2][1]%></td>
+    <td style="color:<%= d_array[2][2]%>;"><%= d_array[2][1]%></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[3][0]%></td>
-    <td style="<%= d_array[3][2]%>"><%= d_array[3][1]%></td>
+    <td style="color:<%= d_array[3][2]%>;"><%= d_array[3][1]%></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[4][0]%></td>
-    <td style="<%= d_array[4][2]%>"><%= d_array[4][1]%></td>
+    <td style="color:<%= d_array[4][2]%>;"><%= d_array[4][1]%></td>
   </tr>
 <% end %>
 </table>

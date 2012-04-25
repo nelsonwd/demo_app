@@ -3,16 +3,15 @@
   <tr>
     <th>Experiment</th>
     <th>Analysis method</th>
-    <th colspan="4" >Base treatment</th>
+    <th colspan="2" ></th>
   </tr>
 
 <% @de_analyses.each do |de_analysis| %>
   <tr>
     <td><%= de_analysis.experiment.name %></td>
     <td><%= de_analysis.analysis_method %></td>
-    <% Treatment.all.each do |t|%>
-      <td><a href="de_data?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>&base_treatment=<%=t.id%>&page=1"><%= t.name %></a></td>
-    <% end%>
+      <td><a href="de_data?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>&page=1">Table</a></td>
+      <td><a href="heatmap?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>">Heat map</a></td>
   </tr>
 <% end %>
 </table>
