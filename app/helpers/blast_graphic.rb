@@ -40,8 +40,8 @@ class BlastGraphic
         end
       end
     end
-    rvg.draw.write("public/images/tmp/#{@blast_hit.hit_num}-#{@blast_hit.hit_name.object_id}.gif")
-    "<img src=\"images/tmp/#{@blast_hit.hit_num}-#{@blast_hit.hit_name.object_id}.gif\" >"
+    rvg.draw.write("public/tmp/#{@blast_hit.hit_num}-#{@blast_hit.hit_name.object_id}.gif")
+    "<img src=\"tmp/#{@blast_hit.hit_num}-#{@blast_hit.hit_name.object_id}.gif\" >"
   end
 
   private

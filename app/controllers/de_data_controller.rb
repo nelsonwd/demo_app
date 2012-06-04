@@ -4,8 +4,48 @@ include Magick
 DEFAULT_FILTER_VALUE = "0.005"
 DEFAULT_FILTER = "pval"
 DEFAULT_BASE_TREATMENT = "2"
+DEFAULT_CLUSTER_NUM = "0"
+MAP_MAX = 8000
+
 
 class DeDataController < ApplicationController
+
+def cluster_annot
+    experiment = params[:experiment]
+    @title = experiment.camelcase
+    fc_table =  get_table experiment 
+    analysis_id = params[:analysis_id]
+    base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
+    default_cluster_order =  ["1","2","3","4"]; 
+    default_cluster_order.delete(base_treatment)
+    order_array =  (params[:cluster] && params[:cluster].count(base_treatment) == 0) ? params[:cluster].split(',') : default_cluster_order
+    filter = params[:filter] = (params[:filter])? params[:filter] :  DEFAULT_FILTER
+    filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] :  DEFAULT_FILTER_VALUE
+    default_cluster_num = (params[:cluster_num]) ? params[:cluster_num] : DEFAULT_CLUSTER_NUM
+    filter_string = filter_sql filter, filter_value, fc_table.table_name
+    results_hash ={}
+    # Get all sequence ids that pass the filter in at least
+    seq_ids = get_filtered_seq_ids(fc_table, analysis_id, base_treatment, filter_string)
+
+    #Group the ids into clusters as an array of arrays
+    seq_id_clusters = clusterfy(fc_table, order_array, seq_ids,base_treatment, analysis_id, filter_value, filter)
+
+    #create an array of clusters
+    cluster_count = seq_id_clusters.size
+    fc_base = []
+    @seq_clusters = []
+
+    #Get the data for the desired cluster
+    fc_base = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => analysis_id, :base_treatment_id => base_treatment, :sequence_id => seq_id_clusters[default_cluster_num.to_i])
+    fc_base.each do |d|
+      @seq_clusters << d.sequence
+    end
+    @seq_clusters.uniq!
+    respond_to do |format|
+      format.js
+      format.html # show.html.erb
+    end
+  end
 
 
   # GET /heatmap
@@ -14,30 +54,32 @@ class DeDataController < ApplicationController
     @title = experiment.camelcase
     fc_table_name = experiment + "_fold_changes"
     fc_table =  Kernel.const_get(experiment.camelcase + "FoldChange") 
-    @analysis_id = params[:analysis_id]
-    @base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
+    analysis_id = params[:analysis_id]
+    base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
     default_cluster_order =  ["1","2","3","4"]; 
-    default_cluster_order.delete(@base_treatment)
-    order_array =  (params[:cluster] && params[:cluster].count(@base_treatment) == 0) ? params[:cluster].split(',') : default_cluster_order
-    @filter = params[:filter] = (params[:filter])? params[:filter] :  DEFAULT_FILTER
-    @filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] :  DEFAULT_FILTER_VALUE
-    filter_string = filter_sql @filter, @filter_value, fc_table_name
+    default_cluster_order.delete(base_treatment)
+    order_array =  (params[:cluster] && params[:cluster].count(base_treatment) == 0) ? params[:cluster].split(',') : default_cluster_order
+    filter = params[:filter] = (params[:filter])? params[:filter] :  DEFAULT_FILTER
+    filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] :  DEFAULT_FILTER_VALUE
+    filter_string = filter_sql filter, filter_value, fc_table_name
     results_hash ={}
-    seq_ids =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
-                                    "from  #{fc_table_name}, de_data " +
-                                    "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
-                                    "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and" +
-                                    "      #{fc_table_name}.de_datum_id = de_data.id and" +
-                                    "      #{filter_string} " +
-                                    "      de_data.abundance > 0").map{|x| x.sequence_id} 
-    uniq_seq_ids = clusterfy(fc_table, order_array, seq_ids)
+    seq_ids = get_filtered_seq_ids(fc_table, analysis_id, base_treatment, filter_string)
+
+    ##seq_ids =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
+                                    #"from  #{fc_table_name}, de_data " +
+                                    #"where #{fc_table_name}.de_analysis_id = #{analysis_id} and " +
+                                    #"      #{fc_table_name}.base_treatment_id = #{base_treatment} and" +
+                                    #"      #{fc_table_name}.de_datum_id = de_data.id and" +
+                                    #"      #{filter_string} " +
+                                    #"      de_data.abundance > 0").map{|x| x.sequence_id} 
+    uniq_seq_ids = clusterfy(fc_table, order_array, seq_ids,base_treatment, analysis_id, filter_value, filter)
 #create an array of clusters
     @cluster_count = uniq_seq_ids.size
     fc_base = []
     @seq_clusters = []
 #Get the data for each cluster
     uniq_seq_ids.each do |clust|
-      fc_clust = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => @analysis_id, :base_treatment_id => @base_treatment, :sequence_id => clust)
+      fc_clust = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => analysis_id, :base_treatment_id => base_treatment, :sequence_id => clust)
       fc_base += fc_clust
       seq_clust = []
       fc_clust.each do |d|
@@ -52,7 +94,7 @@ class DeDataController < ApplicationController
         bt_abundance = DeDatum.where(:sequence_id => d.sequence_id, :treatment_id => d.base_treatment_id, :de_analysis_id => d.de_analysis_id).first.abundance      
         results_hash[d.sequence][d.base_treatment_id]= [bt_abundance, "N/A","black"]
       end
-      results_hash[d.sequence][d.treatment_id] = [d.de_datum.abundance, d.log2fc, de_color(@filter, @filter_value, d)]
+      results_hash[d.sequence][d.treatment_id] = [d.de_datum.abundance, d.log2fc, de_color(filter, filter_value, d)]
     end
     @seq_count = results_hash.size
     @map_image = draw_map(order_array,results_hash)
@@ -222,34 +264,34 @@ def is_a_number?(s)
 end
 
 
-def clusterfy(fc_table, order_array, uniq_seq_ids)
-     top_clusters = up_middle_down_split(fc_table, order_array[0], uniq_seq_ids )
+def clusterfy(fc_table, order_array, uniq_seq_ids, base_treatment, analysis_id, filter_value, filter)
+     top_clusters = up_middle_down_split(fc_table, order_array[0], uniq_seq_ids, base_treatment, analysis_id, filter_value, filter )
      middle_clusters = []
      top_clusters.each do |seq_ids|
-       tmp_clusters =  up_middle_down_split(fc_table, order_array[1],seq_ids)
+       tmp_clusters =  up_middle_down_split(fc_table, order_array[1],seq_ids, base_treatment, analysis_id, filter_value, filter)
        middle_clusters +=  tmp_clusters
      end
      bottom_clusters = []
      middle_clusters.each do |seq_ids|
-       bottom_clusters +=  up_middle_down_split(fc_table, order_array[2], seq_ids)
+       bottom_clusters +=  up_middle_down_split(fc_table, order_array[2], seq_ids, base_treatment, analysis_id, filter_value, filter)
      end
      bottom_clusters
      
 end
 
-def up_middle_down_split(fc_table, treatment, uniq_seq_ids)
+def up_middle_down_split(fc_table, treatment, uniq_seq_ids,base_treatment, analysis_id, filter_value, filter)
     clusters = []
     fc_table_name = fc_table.table_name
-    cluster_filter = (@filter_value.empty?) ? 2 : @filter_value
-    filter_strings = ["#{fc_table_name}.log2fc < 0 and #{fc_table_name}.#{@filter} < #{cluster_filter} and ",
-                      "#{fc_table_name}.#{@filter} >= #{cluster_filter} and ",
-                      "#{fc_table_name}.log2fc > 0 and #{fc_table_name}.#{@filter} < #{cluster_filter} and "]
+    cluster_filter = (filter_value.empty?) ? 2 : filter_value
+    filter_strings = ["#{fc_table_name}.log2fc < 0 and #{fc_table_name}.#{filter} < #{cluster_filter} and ",
+                      "#{fc_table_name}.#{filter} >= #{cluster_filter} and ",
+                      "#{fc_table_name}.log2fc > 0 and #{fc_table_name}.#{filter} < #{cluster_filter} and "]
      (0..2).each do |count|
          seq_ids = fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
                                          "from  #{fc_table_name}, de_data " +
-                                         "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
+                                         "where #{fc_table_name}.de_analysis_id = #{analysis_id} and " +
                                          "      #{fc_table_name}.treatment_id = #{treatment} and " +
-                                         "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and " +
+                                         "      #{fc_table_name}.base_treatment_id = #{base_treatment} and " +
                                          "      #{fc_table_name}.de_datum_id = de_data.id and " +
                                                 filter_strings[count] + 
                                          "      #{fc_table_name}.sequence_id in (#{uniq_seq_ids.join(',')})").map{|x| x.sequence_id}
@@ -300,8 +342,8 @@ def draw_map(order, results_hash)
      area_tags << "<area shape=\"rect\" coords=\"#{start_coords},#{g_wdt},#{y_pos}\" title=\"cluster #{cluster_count}\" onclick=\"document.getElementById('cluster_num').selectedIndex = #{cluster_count - 1};document.getElementById('cluster_num').onchange();\" />"
    end
      
-   rvg.draw.write("public/images/tmp/#{@title}-#{rvg.object_id}.gif")
-               "<img src=\"/images/tmp/#{@title}-#{rvg.object_id}.gif\" width=\"300\" height=\"#{g_hgt}\"  alt=\"heatmap\" usemap=\"#heatmap\" >\n" + 
+   rvg.draw.write("public/tmp/#{@title}-#{rvg.object_id}.gif")
+               "<img src=\"/tmp/#{@title}-#{rvg.object_id}.gif\" width=\"300\" height=\"#{g_hgt}\"  alt=\"heatmap\" usemap=\"#heatmap\" >\n" + 
                "<map name=\"heatmap\" >\n" + 
                area_tags.join("\n") +
                "</map>"
@@ -322,4 +364,20 @@ def de_color(filter, filter_value, d)
   else
     'black'
   end
+end
+
+# Get all sequence ids that pass the filter in at least
+def get_filtered_seq_ids(fc_table, analysis_id, base_treatment, filter_string)
+    fc_table_name = fc_table.table_name
+    fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
+                                    "from  #{fc_table_name}, de_data " +
+                                    "where #{fc_table_name}.de_analysis_id = #{analysis_id} and " +
+                                    "      #{fc_table_name}.base_treatment_id = #{base_treatment} and" +
+                                    "      #{fc_table_name}.de_datum_id = de_data.id and" +
+                                    "      #{filter_string} " +
+                                    "      de_data.abundance > 0").map{|x| x.sequence_id} 
+end
+
+def get_table(experiment_name)
+   Kernel.const_get(experiment_name.camelcase + "FoldChange") 
 end

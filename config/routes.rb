@@ -53,6 +53,10 @@ DemoApp::Application.routes.draw do
   get "de_data/heatmap"
   match '/heatmap', :to => 'de_data#heatmap'  
 
+  get "de_data/cluster_annot"
+  match '/cluster_annot', :to => 'de_data#cluster_annot'
+
+
   get "users/password"
   get "users/new"
   resources :microposts

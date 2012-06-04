@@ -2,7 +2,7 @@
 db/*.sqlite3
 log/*.log
 *.log
-/tmp/
+/tmp/**/*
 doc/
 *.swp
 *~
@@ -11,10 +11,13 @@ doc/
 Gemfile*
 /public/fasta/
 /public/image/tmp/
-/config/
+/config/database.yml
+/config/app_config.yml
 /1h-auto/
 /24h-auto/
 /1h-hetero/
 /24h-hetero/
 *.orig
 /lib/tasks/load.rake
+.sass-cache/
+/public/assets/

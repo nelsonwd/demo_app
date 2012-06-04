@@ -36,7 +36,7 @@
 <%= @map_image.html_safe %>
 </td><td style="background-color:white;vertical-align:top;">
 
-<%= form_tag({:controller => "de_data",:action => "heatmap"}, {:name => "clust_form", :id => "clust_form", :method => "get"}) do %>
+<%= form_tag({:controller => "de_data",:action => "cluster_annot"}, {:name => "clust_form", :id => "clust_form", :remote => true, :method => "get", :class => 'submit_me'}) do %>
   <%= hidden_field_tag(:experiment, params[:experiment])%>
   <%= hidden_field_tag(:analysis_id, params[:analysis_id])%>
   <%= hidden_field_tag(:base_treatment,default_base_treatment ) %>
@@ -44,8 +44,8 @@
   <%= hidden_field_tag(:filter_value,default_filter_value) %>
   <%= hidden_field_tag(:cluster,default_cluster) %>
   <% clust_options = (0..(@cluster_count - 1)).map {|c| ["cluster #{(c + 1).to_s}", c.to_s]}%>
-  <%= select_tag(:cluster_num, options_for_select(clust_options,default_cluster_num),{:onchange => 'clust_form.submit();'}) %>
+  <%= select_tag(:cluster_num, options_for_select(clust_options,default_cluster_num),{:onchange => "$(this).closest('form').submit()"}) %>
 <% end %>
 
-<%= render :partial => 'seq_cluster',:object => @seq_clusters[default_cluster_num.to_i], :locals => {:cluster_num => default_cluster_num.to_i} %>
+<%= render :partial => 'seq_cluster',:object => @seq_clusters, :locals => {:cluster_num => default_cluster_num.to_i} %>
 </td></tr></table>
