@@ -4,7 +4,7 @@
 <tr><th>Accession(<%= seqs.size.to_s%>)</th><th>Annotation</th></tr>
 <% seqs.each do |s| %>
 <tr ><td style="background:#E5ECF9;border-top:solid 3px #ffffff;"><%= link_to(s.accession,{:controller => 'blast_dbs', :action => 'fastasearch', :file => 'symb3master.fa', :query => s.accession}) %></td>
-<td style="border-top:solid 3px #ffffff;" ><%=s.features.map {|f| f.annotation.interpro.description unless f.annotation.interpro.nil?}.compact.uniq.join('; ')%></td></tr>
+<td style="border-top:solid 3px #ffffff;" ><span style="color:blue;"> <%=s.description%></span><br><%=s.features.map {|f| f.annotation.interpro.description unless f.annotation.interpro.nil?}.compact.uniq.join('; ')%></td></tr>
 <% end %>
 </table>
 </div>
