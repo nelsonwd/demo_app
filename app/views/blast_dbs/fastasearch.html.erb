@@ -44,7 +44,7 @@
 <dd>
   <table>
     <% experiments_hash = @result.fetch(:experiments)
-       denominator = (!params[:denominator].empty?) ?params[:denominator]:'2'
+       denominator = (!params[:denominator].blank?) ?params[:denominator]:'2'
        experiments_hash.each do |x,x_array|  %>
      <tr>
          <td colspan="2" style="background-color:lightgray;" >Expreiment:<%= link_to( x.experiment.name, :controller => 'de_data', :experiment => x.experiment.name,:analysis_id => x.id, :base_treatment => denominator,:page => '1' ) %></td>
