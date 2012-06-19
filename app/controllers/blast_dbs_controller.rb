@@ -49,7 +49,7 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
     @title = "FASTA search results"
     @file = "#{Rails.root}/public/fasta/" + params[:file]
     blast_db = BlastDb.where(:file_name => params[:file]).first
-    #if(index_name == "symb2master" || index_name == "symb3master")  then
+
     if(Sequence.where("blast_db_id = #{blast_db.id}").exists?) then
       @title = "Gene Annotation"
       @query = params[:query].chomp      
@@ -62,9 +62,23 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
         @result[:interpro] = {}
         @result[:no_interpro] = []
         @result[:experiments] = {}
+        @result[:blast_nt] = 'No match'
+        @result[:blast_nr] = 'No match'
+        @result[:blast_uniprot]  = 'No match'
+        @result[:mapman] = 'No match'
         feats.each do |f|
           if f.annotation.interpro.nil?
-            @result.fetch(:no_interpro).push(f)
+            if f.annotation.annotation_source.name == 'NCBInt'
+              @result[:blast_nt] = f.annotation_string
+            elsif f.annotation.annotation_source.name == 'NCBInr'
+              @result[:blast_nr] = f.annotation_string
+            elsif f.annotation.annotation_source.name == 'UniProt'
+              @result[:blast_uniprot] = f.annotation_string
+            elsif f.annotation.annotation_source.name == 'MapMan'
+              @result[:mapman] = f.annotation_string
+            else
+              @result.fetch(:no_interpro).push(f)
+            end
           else
             if @result[:interpro].has_key?(f.annotation.interpro) then
               @result.fetch(:interpro)[f.annotation.interpro].push(f)
@@ -79,7 +93,7 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
             @result.fetch(:experiments)[a.de_analysis] = [] if @result.fetch(:experiments)[a.de_analysis].nil?
             fc = nil
             fc_table =  a.de_analysis.experiment.name.camelcase + "FoldChange" 
-            denominator_treatment = (params[:denominator])? params[:denominator] : a.de_analysis.default_treatment_id
+            denominator_treatment = (!params[:denominator].blank?)? params[:denominator] : a.de_analysis.default_treatment_id
 #puts   (a.de_analysis.default_treatment_id).first
             fc = Kernel.const_get(fc_table).where(:sequence_id => s.id, :de_analysis_id => a.de_analysis_id, :treatment_id => a.treatment_id, :base_treatment_id => denominator_treatment).first
             if fc.nil?

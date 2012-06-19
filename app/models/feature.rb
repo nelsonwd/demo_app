@@ -35,6 +35,7 @@ belongs_to :annotation
 
   def init_annot_src
     AnnotationSource.find_or_create_by_name("HMMSmart", :url => "http://smart.embl-heidelberg.de/smart/do_annotation.pl?BLAST=DUMMY&DOMAIN=@@")
+    AnnotationSource.find_or_create_by_name("HMMPIR", :url => "http://pir.georgetown.edu/cgi-bin/ipcSF?id=@@")
     AnnotationSource.find_or_create_by_name("superfamily", :url => "http://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=@@")
     AnnotationSource.find_or_create_by_name("ProfileScan", :url => "http://prosite.expasy.org/@@")
     AnnotationSource.find_or_create_by_name("PatternScan", :url => "http://prosite.expasy.org/@@")
@@ -47,6 +48,9 @@ belongs_to :annotation
     AnnotationSource.find_or_create_by_name("HAMAP", :url => "http://hamap.expasy.org/unirule/@@")
     AnnotationSource.find_or_create_by_name("HMMTigr", :url => "http://cmr.jcvi.org/tigr-scripts/CMR/HmmReport.cgi?hmm_acc=@@")
     AnnotationSource.find_or_create_by_name("BlastProDom", :url => "http://prodom.prabi.fr/prodom/current/cgi-bin/request.pl?SSID=1289309949_1085&db_ent1=@@")
+    AnnotationSource.find_or_create_by_name("NCBInt", :url => "http://www.ncbi.nlm.nih.gov/nuccore/@@")
+    AnnotationSource.find_or_create_by_name("NCBInr", :url => "http://www.ncbi.nlm.nih.gov/protein/@@")
+    AnnotationSource.find_or_create_by_name("UniProt", :url => "http://www.uniprot.org/uniprot/@@")
   end
 
 # 0 =  accession-frameNum
@@ -60,7 +64,7 @@ belongs_to :annotation
 # 12 = IPR description
 # 13 = GO keyword and accessions
 
-  def load file_name
+  def load_interpro file_name
     file = File.open("#{Rails.root}/#{file_name}", 'rb')
     init_annot_src
     while(line = file.gets)
@@ -79,8 +83,43 @@ belongs_to :annotation
           ipr.gene_ontologies<<g_o unless ipr.gene_ontologies.include?(g_o)
         end
       end
-      annot = Annotation.find_or_create_by_accession(parts[4], :description => parts[5],:annotation_source => annot_src, :interpro => ipr ) 
+      annot = Annotation.find_or_create_by_accession(parts[4], :description => parts[5],:annotation_source => annot_src, :interpro => ipr )
       feat =  Feature.create( :sequence_id => seq.id, :annotation_id => annot.id, :start_pos => parts[6], :end_pos => parts[7], :frame => frame, :score => parts[8], :match_status => parts[9]) rescue []
     end
+  end
+
+  def load_blast file_name, db
+    file = File.open("#{Rails.root}/#{file_name}", 'rb')
+    init_annot_src
+    annot_src = AnnotationSource.where(:name => db).first
+    while(line = file.gets)
+      parts = line.split("\t")
+      seq = Sequence.where( :accession => parts[0] ).first
+      annot = Annotation.find_or_create_by_accession(parts[7], :description => parts[8].strip,:annotation_source => annot_src, :interpro => nil )
+
+      Feature.create( :sequence_id => seq.id, :annotation_id => annot.id, :start_pos => parts[4], :end_pos => parts[5], :frame => parts[6], :score => parts[1], :match_status => nil) rescue []
+    end
+  end
+
+  def load_blast_nt file_name
+    load_blast file_name, 'NCBInt'
+  end
+
+  def load_blast_nr file_name
+    load_blast file_name, 'NCBInr'
+  end
+
+  def load_blast_uniprot file_name
+    load_blast file_name, 'UniProt'
+  end
+
+  def annotation_string
+    if annotation.annotation_source.name == 'NCBInt'
+      frame_char = frame == 1 ? ?+ : ?-
+    else
+      frame_char = frame
+    end
+    url = annotation.annotation_source.url.sub(/@@/, annotation.accession)
+    "<a href=\'#{url}\'>#{annotation.accession}</a> #{annotation.description}<br> eVal: #{score} location: #{start_pos}-#{end_pos}(#{frame_char})"
   end
 end

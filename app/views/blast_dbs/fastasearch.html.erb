@@ -18,6 +18,11 @@
   <table>
     <tr><th colspan="5" >Gene name: <%= @result.fetch(:sequence).accession %> </th></tr>
     <tr><th colspan="5" ><%= @result.fetch(:sequence).description %> </th></tr>
+    <tr><th>NCBI nt</th><td colspan="4" ><%= @result[:blast_nt].html_safe %> </td></tr>
+    <tr><th>UniProt</th><td colspan="4" ><%= @result[:blast_uniprot].html_safe %> </td></tr>
+    <tr><th>NCBI nr</th><td colspan="4" ><%= @result[:blast_nr].html_safe %> </td></tr>
+    <tr><th>MapMan</th><td colspan="4" ><%= @result[:mapman].html_safe %> </td></tr>
+
   </table>
 <dt><a href="#">Interpro Scan Annotation</a></dt>
 <dd>
