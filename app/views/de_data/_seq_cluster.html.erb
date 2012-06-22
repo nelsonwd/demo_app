@@ -7,12 +7,12 @@
 <tr ><td style="background:#E5ECF9;border-top:solid 3px #ffffff;">
   <%= link_to(s.accession,{:controller => 'blast_dbs', :action => 'fastasearch', :file => 'symb3master.fa', :query => s.accession}) %>
 </td><td style="border-top:solid 3px #ffffff;" >
-  length: <span style="color:blue;"><%=s.na_seq.size.to_s%></span>
-  <% feats = s.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /UniProt|NCBInt|NCBInr/) }%><br>
+  length: <span style="color:blue;"><%=s.na_seq.size.to_s%></span><br>
+  <% feats = s.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /UniProt|NCBInt|NCBInr/) }%>
   <% feats.map do |f| %>
     <%= f.annotation.annotation_source.name %>:  <span style="color:blue;"><%=f.annotation.description%></span><br>
   <%end%>
-  <% feats = s.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /MapMan/) }%><br>
+  <% feats = s.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /MapMan/) }%>
   <% feats.map do |f| %>
       <%= f.annotation.annotation_source.name %>:  <span style="color:blue;"><%=f.annotation.accession%></span><br>
   <%end%>
