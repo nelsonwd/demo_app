@@ -21,3 +21,4 @@ Gemfile*
 /lib/tasks/load.rake
 .sass-cache/
 /public/assets/
+/.idea/workspace.xml

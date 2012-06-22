@@ -51,6 +51,7 @@ belongs_to :annotation
     AnnotationSource.find_or_create_by_name("NCBInt", :url => "http://www.ncbi.nlm.nih.gov/nuccore/@@")
     AnnotationSource.find_or_create_by_name("NCBInr", :url => "http://www.ncbi.nlm.nih.gov/protein/@@")
     AnnotationSource.find_or_create_by_name("UniProt", :url => "http://www.uniprot.org/uniprot/@@")
+    AnnotationSource.find_or_create_by_name("MapMan", :url => "http://mapman.gabipd.org/web/guest/mapman")
   end
 
 # 0 =  accession-frameNum
@@ -88,6 +89,16 @@ belongs_to :annotation
     end
   end
 
+  # 0 = query accession
+  # 1 = eValue
+  # 2 = score
+  # 3 = bit score
+  # 4 = start
+  # 5 = stop
+  # 6 = frame
+  # 7 = hit accession
+  # 8 = description
+
   def load_blast file_name, db
     file = File.open("#{Rails.root}/#{file_name}", 'rb')
     init_annot_src
@@ -120,6 +131,29 @@ belongs_to :annotation
       frame_char = frame
     end
     url = annotation.annotation_source.url.sub(/@@/, annotation.accession)
-    "<a href=\'#{url}\'>#{annotation.accession}</a> #{annotation.description}<br> eVal: #{score} location: #{start_pos}-#{end_pos}(#{frame_char})"
+    if annotation.annotation_source.name == 'MapMan'
+      "<a href=\'#{url}\'>#{annotation.accession}</a> #{annotation.description}</a>"
+    else
+      "<a href=\'#{url}\'>#{annotation.accession}</a> #{annotation.description}<br> eVal: #{score} location: #{start_pos}-#{end_pos}(#{frame_char})"
+    end
+
+  end
+  # 0 = mapman bin code
+  # 1 = description
+  # 2 = query accession
+  # 3 = hit description
+
+  def load_mapman file_name
+    file = File.open("#{Rails.root}/#{file_name}", 'rb')
+    init_annot_src
+    annot_src = AnnotationSource.where(:name => 'MapMan').first
+    while(line = file.gets)
+      parts = line.split("\t")
+      next if parts[1] == "not assigned.unknown"
+      seq = Sequence.where( :accession => parts[2] ).first
+      annot = Annotation.find_or_create_by_accession(parts[1], :description => parts[3].match(/(.+?)(\s+Transcript\s\d|$)/)[1].strip,:annotation_source => annot_src, :interpro => nil )
+
+      feat = Feature.create( :sequence_id => seq.id, :annotation_id => annot.id, :start_pos => 1, :end_pos => 1, :frame => 1, :score => 0, :match_status => parts[4].strip) rescue []
+    end
   end
 end
