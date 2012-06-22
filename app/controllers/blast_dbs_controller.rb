@@ -65,7 +65,7 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
         @result[:blast_nt] = 'No match'
         @result[:blast_nr] = 'No match'
         @result[:blast_uniprot]  = 'No match'
-        @result[:mapman] = 'No match'
+        @result[:mapman] = []
         feats.each do |f|
           if f.annotation.interpro.nil?
             if f.annotation.annotation_source.name == 'NCBInt'
@@ -75,7 +75,7 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
             elsif f.annotation.annotation_source.name == 'UniProt'
               @result[:blast_uniprot] = f.annotation_string
             elsif f.annotation.annotation_source.name == 'MapMan'
-              @result[:mapman] = f.annotation_string
+              @result[:mapman] << f.annotation_string
             else
               @result.fetch(:no_interpro).push(f)
             end

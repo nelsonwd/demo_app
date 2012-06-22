@@ -8,9 +8,13 @@
   <%= link_to(s.accession,{:controller => 'blast_dbs', :action => 'fastasearch', :file => 'symb3master.fa', :query => s.accession}) %>
 </td><td style="border-top:solid 3px #ffffff;" >
   length: <span style="color:blue;"><%=s.na_seq.size.to_s%></span>
-  <% feats = s.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /UniProt|NCBInt|NCBInr|MapMan/) }%><br>
+  <% feats = s.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /UniProt|NCBInt|NCBInr/) }%><br>
   <% feats.map do |f| %>
     <%= f.annotation.annotation_source.name %>:  <span style="color:blue;"><%=f.annotation.description%></span><br>
+  <%end%>
+  <% feats = s.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /MapMan/) }%><br>
+  <% feats.map do |f| %>
+      <%= f.annotation.annotation_source.name %>:  <span style="color:blue;"><%=f.annotation.accession%></span><br>
   <%end%>
   <% interpro = s.features.map {|f| f.annotation.interpro.description unless f.annotation.interpro.nil?}.compact.uniq.join('; ')
      unless interpro.blank? %>
