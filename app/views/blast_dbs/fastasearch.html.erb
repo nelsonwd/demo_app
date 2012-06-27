@@ -28,7 +28,7 @@
 <dt><a href="#">Interpro Scan Annotation</a></dt>
 <dd>
   <table>
-    <tr><th >Start</th><th>End</th><th>Frame</th><th>Application</th><th>App description</td></tr>
+    <tr><th >Start</th><th>End</th><th>Frame</th><th>Application</th><th>App description</th></tr>
     <% interpro_hash = @result.fetch(:interpro)
        interpro_hash.each do |i,f_array|  %>
      <tr><td colspan="5" style="background-color:lightgray;" >InterPro: <a href = "http://www.ebi.ac.uk/interpro/IEntry?ac=<%= i.accession %>" ><%= i.description%></a></td></tr>
@@ -91,8 +91,14 @@
 </dd>
 <dt><a href="#">NA Sequence</a></dt>
 <dd>
+  <%= form_tag({:controller => "blast_dbs",:action => "fastasearch"}, {:name => "na_seq_form", :id => "na_seq_form", :method => "get", :class => 'submit_me'}) do %>
+      <%= hidden_field_tag(:file, params[:file])%>
+      <%= hidden_field_tag(:query, params[:query])%>
+      <% frame_options = (1..6).map {|f| ["frame #{f.to_s}", f.to_s]}%>
+      <%= select_tag(:frame_num, options_for_select(frame_options,@result[:frame]),{:onchange => "$(this).closest('form').submit()"}) %>
+  <% end %>
 <table>
-    <tr><th  style="background-color:white;font-family:monospace;" colspan="5" ><pre><%= Bio::Sequence::NA.new(@result.fetch(:sequence).na_seq).upcase.to_fasta(@result.fetch(:sequence).accession, 80)%></pre></td></tr>
+    <tr><td  style="background-color:white;font-family:monospace;" colspan="5" ><%=@result[:sequence].na_to_html(@result[:frame]).html_safe %></td></tr>
   </table>
 <%elsif @result.class == [].class %>
   <%= @result.count.to_s %> sequences found<br>

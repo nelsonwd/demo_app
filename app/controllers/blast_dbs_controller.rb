@@ -56,7 +56,7 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
       s = Sequence.where(:accession => @query).first
       unless s.nil? then
         @result = {} 
-        @result[:sequence] = s
+
         feats = []
         feats = s.features
         @result[:interpro] = {}
@@ -66,13 +66,18 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
         @result[:blast_nr] = 'No match'
         @result[:blast_uniprot]  = 'No match'
         @result[:mapman] = []
+
+        @best_frame_hash = {}
         feats.each do |f|
           if f.annotation.interpro.nil?
             if f.annotation.annotation_source.name == 'NCBInt'
+              @best_frame_hash[:blast_nt] = f.frame
               @result[:blast_nt] = f.annotation_string
             elsif f.annotation.annotation_source.name == 'NCBInr'
+              @best_frame_hash[:blast_nr] = f.frame
               @result[:blast_nr] = f.annotation_string
             elsif f.annotation.annotation_source.name == 'UniProt'
+              @best_frame_hash[:blast_uniprot] = f.frame
               @result[:blast_uniprot] = f.annotation_string
             elsif f.annotation.annotation_source.name == 'MapMan'
               @result[:mapman] << f.annotation_string
@@ -81,12 +86,18 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
             end
           else
             if @result[:interpro].has_key?(f.annotation.interpro) then
+              @best_frame_hash[:interpro][f.frame] += 1
               @result.fetch(:interpro)[f.annotation.interpro].push(f)
             else
-               @result.fetch(:interpro)[f.annotation.interpro] = [f]
+              @best_frame_hash[:interpro] = [7,0]
+              @best_frame_hash[:interpro][f.frame] = 1
+              @result.fetch(:interpro)[f.annotation.interpro] = [f]
             end
           end
         end
+
+        @result[:sequence] = s
+        @result[:frame] = params[:frame_num] ? params[:frame_num] : pick_best_frame
         
         #analyses = s.de_data.map { |d| d.de_analysis }
         s.de_data.each do |a|
@@ -219,5 +230,44 @@ private
 
   def admin_user
     deny_access unless current_user.admin?
+  end
+
+  def pick_best_frame
+    if @best_frame_hash[:blast_uniprot]
+      f = @best_frame_hash[:blast_uniprot]
+      frame = case f
+                when f == -3; 6
+                when f == -2; 5
+                when f == -1; 4
+                else f
+              end
+
+    elsif @best_frame_hash[:blast_nr]
+      f = @best_frame_hash[:blast_nr]
+      frame = case f
+                when f == -3; 6
+                when f == -2; 5
+                when f == -1; 4
+                else f
+              end
+    elsif  @best_frame_hash[:interpro]
+      ip = @best_frame_hash[:interpro]
+      max = ip.sort.last
+      frame = case max
+                when max == ip[1]; 1
+                when max == ip[4]; 4
+                else ip.index max
+              end
+    elsif @best_frame_hash[:blast_nt]
+      f = @best_frame_hash[:blast_nt]
+      frame = case f
+                when f == -1; 4
+                else f
+              end
+    else
+      frame = 1
+    end
+    frame
+
   end
 end
