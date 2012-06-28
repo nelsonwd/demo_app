@@ -1,13 +1,13 @@
 
 <% paginate_string = pagination()
-   current_base  = params[:base_treatment] %>
+   current_base = params[:base_treatment].blank? ? '2' :  params[:base_treatment] %>
 <%= paginate_string.html_safe %>
 
 
 <%= form_tag({:controller => "de_data"}, {:method => "get"}) do %>
   <%= hidden_field_tag(:experiment, params[:experiment])%>
   <%= hidden_field_tag(:analysis_id, params[:analysis_id])%>
-  <%= hidden_field_tag(:base_treatment, params[:base_treatment])%>
+  <%= hidden_field_tag(:base_treatment, current_base)%>
   <%= hidden_field_tag(:treatment, params[:treatment])%>
   <%= hidden_field_tag(:page, "1")%>
   <%  default_order = params[:order_by] ? params[:order_by] : DEFAULT_ORDER

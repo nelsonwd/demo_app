@@ -128,7 +128,16 @@ belongs_to :annotation
     if annotation.annotation_source.name == 'NCBInt'
       frame_char = frame == 1 ? ?+ : ?-
     else
-      frame_char = frame
+      frame_char = case frame
+                     when  -1
+                       '4'
+                     when  -2
+                       '5'
+                     when  -3
+                       '6'
+                     else
+                       frame
+                   end
     end
     url = annotation.annotation_source.url.sub(/@@/, annotation.accession)
     if annotation.annotation_source.name == 'MapMan'

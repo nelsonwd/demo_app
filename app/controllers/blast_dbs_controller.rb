@@ -236,33 +236,46 @@ private
     if @best_frame_hash[:blast_uniprot]
       f = @best_frame_hash[:blast_uniprot]
       frame = case f
-                when f == -3; 6
-                when f == -2; 5
-                when f == -1; 4
-                else f
+                when -3
+                  6
+                when -2
+                  5
+                when -1
+                  4
+                else
+                  f
               end
 
     elsif @best_frame_hash[:blast_nr]
       f = @best_frame_hash[:blast_nr]
       frame = case f
-                when f == -3; 6
-                when f == -2; 5
-                when f == -1; 4
-                else f
+                when -3
+                  6
+                when -2
+                  5
+                when -1
+                  4
+                else
+                  f
               end
     elsif  @best_frame_hash[:interpro]
       ip = @best_frame_hash[:interpro]
       max = ip.sort.last
       frame = case max
-                when max == ip[1]; 1
-                when max == ip[4]; 4
-                else ip.index max
+                when ip[1]
+                  1
+                when ip[4]
+                  4
+                else
+                  ip.index max
               end
     elsif @best_frame_hash[:blast_nt]
       f = @best_frame_hash[:blast_nt]
       frame = case f
-                when f == -1; 4
-                else f
+                when -1
+                  4
+                else
+                  f
               end
     else
       frame = 1

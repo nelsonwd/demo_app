@@ -97,9 +97,7 @@
       <% frame_options = (1..6).map {|f| ["frame #{f.to_s}", f.to_s]}%>
       <%= select_tag(:frame_num, options_for_select(frame_options,@result[:frame]),{:onchange => "$(this).closest('form').submit()"}) %>
   <% end %>
-<table>
-    <tr><td  style="background-color:white;font-family:monospace;" colspan="5" ><%=@result[:sequence].na_to_html(@result[:frame]).html_safe %></td></tr>
-  </table>
+<%= render(:partial => 'sequence', :object => @result) %>
 <%elsif @result.class == [].class %>
   <%= @result.count.to_s %> sequences found<br>
   <% @result.each do |s|%>
