@@ -44,6 +44,26 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
     @blast_db = BlastDb.find(params[:id])
   end
 
+  def sequence_map
+    blast_db = BlastDb.where(:file_name => params[:file]).first
+
+    if(Sequence.where("blast_db_id = #{blast_db.id}").exists?) then
+      @query = params[:query].chomp
+      s = Sequence.where(:accession => @query).first
+      unless s.nil? then
+        @result = {}
+        @result[:sequence] = s
+        @result[:frame] = params[:frame_num]
+      end
+    end
+
+
+        respond_to do |format|
+      format.js
+      format.html # show.html.erb
+    end
+  end
+
   # GET /blast_dbs/fastasearch
   def fastasearch
     @title = "FASTA search results"

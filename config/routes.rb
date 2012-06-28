@@ -48,7 +48,10 @@ DemoApp::Application.routes.draw do
   get "pages/about"
 
   get "blast_dbs/fastasearch"  
-  match '/fastasearch', :to => 'blast_dbs#fastasearch'  
+  match '/fastasearch', :to => 'blast_dbs#fastasearch'
+
+  get "blast_dbs/sequence_map"
+  match '/sequence_map', :to => 'blast_dbs#sequence_map'
 
   get "de_data/heatmap"
   match '/heatmap', :to => 'de_data#heatmap'  
