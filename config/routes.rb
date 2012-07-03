@@ -53,6 +53,9 @@ DemoApp::Application.routes.draw do
   get "blast_dbs/sequence_map"
   match '/sequence_map', :to => 'blast_dbs#sequence_map'
 
+  get "blast_dbs/aa_sequence_map"
+  match '/aa_sequence_map', :to => 'blast_dbs#aa_sequence_map'
+
   get "de_data/heatmap"
   match '/heatmap', :to => 'de_data#heatmap'  
 

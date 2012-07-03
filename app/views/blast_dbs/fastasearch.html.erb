@@ -98,6 +98,19 @@
       <%= select_tag(:frame_num, options_for_select(frame_options,@result[:frame]),{:onchange => "$(this).closest('form').submit()"}) %>
   <% end %>
 <%= render(:partial => 'sequence', :object => @result) %>
+</dd>
+<dt><a href="#">AA Sequence</a></dt>
+<dd>
+<%= form_tag({:controller => "blast_dbs",:action => "aa_sequence_map"}, {:name => "aa_seq_form", :id => "aa_seq_form", :remote => true, :method => "get", :class => 'submit_me'}) do %>
+    <%= hidden_field_tag(:file, params[:file])%>
+    <%= hidden_field_tag(:query, params[:query])%>
+    <% frame_options = (1..6).map {|f| ["frame #{f.to_s}", f.to_s]}%>
+    <%= select_tag(:frame_num, options_for_select(frame_options,@result[:frame]),{:onchange => "$(this).closest('form').submit()"}) %>
+<% end %>
+<%= render(:partial => 'aa_sequence', :object => @result) %>
+</dd>
+</dl>
+
 <%elsif @result.class == [].class %>
   <%= @result.count.to_s %> sequences found<br>
   <% @result.each do |s|%>
@@ -106,5 +119,4 @@
 <% else %>
   <pre><%= @result %></pre>
 <% end %>
-</dd>
-</dl>
+

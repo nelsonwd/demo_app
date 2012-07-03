@@ -54,6 +54,7 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
         @result = {}
         @result[:sequence] = s
         @result[:frame] = params[:frame_num]
+        @result[:type] = params[:seq_type]
       end
     end
 
@@ -63,6 +64,27 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
       format.html # show.html.erb
     end
   end
+
+def aa_sequence_map
+  blast_db = BlastDb.where(:file_name => params[:file]).first
+
+  if(Sequence.where("blast_db_id = #{blast_db.id}").exists?) then
+    @query = params[:query].chomp
+    s = Sequence.where(:accession => @query).first
+    unless s.nil? then
+      @result = {}
+      @result[:sequence] = s
+      @result[:frame] = params[:frame_num]
+      @result[:type] = params[:seq_type]
+    end
+  end
+
+
+  respond_to do |format|
+    format.js
+    format.html # show.html.erb
+  end
+end
 
   # GET /blast_dbs/fastasearch
   def fastasearch
@@ -105,11 +127,12 @@ before_filter :admin_user, :only => [ :new, :edit, :create, :update, :destroy ]
               @result.fetch(:no_interpro).push(f)
             end
           else
+            #if @result[:interpro].has_key?(f.annotation.interpro) then
             if @result[:interpro].has_key?(f.annotation.interpro) then
               @best_frame_hash[:interpro][f.frame] += 1
               @result.fetch(:interpro)[f.annotation.interpro].push(f)
             else
-              @best_frame_hash[:interpro] = [7,0]
+              @best_frame_hash[:interpro] = Array.new(7,0)
               @best_frame_hash[:interpro][f.frame] = 1
               @result.fetch(:interpro)[f.annotation.interpro] = [f]
             end
