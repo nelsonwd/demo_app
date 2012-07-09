@@ -33,14 +33,17 @@ def cluster_annot
     #create an array of clusters
     cluster_count = seq_id_clusters.size
     fc_base = []
-    @seq_clusters = []
+    @seq_clusters = {}
 
     #Get the data for the desired cluster
-    fc_base = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => analysis_id, :base_treatment_id => base_treatment, :sequence_id => seq_id_clusters[default_cluster_num.to_i])
+    fc_base = fc_table.includes({:sequence => :blast_db}, :de_datum, :treatment).where( :de_analysis_id => analysis_id, :base_treatment_id => base_treatment, :sequence_id => seq_id_clusters[default_cluster_num.to_i])
     fc_base.each do |d|
-      @seq_clusters << d.sequence
+      ordering = d.treatment.ordering.to_s
+      treatment_index = order_array.index(ordering)
+      @seq_clusters[ d.sequence ]= Array.new(3) if @seq_clusters[ d.sequence ].nil?
+      @seq_clusters[ d.sequence ][treatment_index] = d.log2fc
     end
-    @seq_clusters.uniq!
+    @seq_clusters
     respond_to do |format|
       format.js
       format.html # show.html.erb
@@ -65,27 +68,26 @@ def cluster_annot
     results_hash ={}
     seq_ids = get_filtered_seq_ids(fc_table, analysis_id, base_treatment, filter_string)
 
-    ##seq_ids =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
-                                    #"from  #{fc_table_name}, de_data " +
-                                    #"where #{fc_table_name}.de_analysis_id = #{analysis_id} and " +
-                                    #"      #{fc_table_name}.base_treatment_id = #{base_treatment} and" +
-                                    #"      #{fc_table_name}.de_datum_id = de_data.id and" +
-                                    #"      #{filter_string} " +
-                                    #"      de_data.abundance > 0").map{|x| x.sequence_id} 
     uniq_seq_ids = clusterfy(fc_table, order_array, seq_ids,base_treatment, analysis_id, filter_value, filter)
 #create an array of clusters
     @cluster_count = uniq_seq_ids.size
     fc_base = []
-    @seq_clusters = []
+    @seq_clusters = {}
 #Get the data for each cluster
+    first_clust = true
     uniq_seq_ids.each do |clust|
-      fc_clust = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => analysis_id, :base_treatment_id => base_treatment, :sequence_id => clust)
+      fc_clust = fc_table.includes({:sequence => :blast_db}, :de_datum, :treatment).where( :de_analysis_id => analysis_id, :base_treatment_id => base_treatment, :sequence_id => clust)
       fc_base += fc_clust
-      seq_clust = []
-      fc_clust.each do |d|
-        seq_clust << d.sequence
+      if first_clust
+        seq_clust = {}
+        fc_clust.each do |d|
+          ordering = d.treatment.ordering.to_s
+          treatment_index = order_array.index(ordering)
+          @seq_clusters[ d.sequence ]= Array.new(3) if @seq_clusters[ d.sequence ].nil?
+          @seq_clusters[ d.sequence ][treatment_index] = d.log2fc
+        end
+        first_clust = false
       end
-      @seq_clusters << seq_clust.uniq
     end
 #create a result hash :sequenc.accession => [[1],[3],[4]]
     fc_base.each do |d| 

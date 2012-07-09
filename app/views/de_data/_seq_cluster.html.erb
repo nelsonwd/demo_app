@@ -1,13 +1,17 @@
 <div name="cluster_annotation" id="cluster_annotation" style="border:solid 2px #000000; background:#FFFFFF; color:#000000; padding:4px; width:430px; height:800px; overflow:auto; ">
 <table style="vertical-align:top;border:solid 3px #000000;" >
-<% seqs = @seq_clusters[0].is_a?(Sequence) ? @seq_clusters : @seq_clusters[cluster_num] %>
+<% seqs = @seq_clusters.keys %>
 <tr><th>Accession(<%= seqs.size.to_s%>)</th><th>Annotation</th></tr>
 <% seqs.each do |s| %>
 
 <tr ><td style="background:#E5ECF9;border-top:solid 3px #ffffff;">
   <%= link_to(s.accession,{:controller => 'blast_dbs', :action => 'fastasearch', :file => 'symb3master.fa', :query => s.accession}) %>
 </td><td style="border-top:solid 3px #ffffff;" >
-  length: <span style="color:blue;"><%=s.na_seq.size.to_s%></span><br>
+  length: <span style="color:blue;"><%=s.na_seq.size.to_s%></span> fc: <span style="color:blue;">
+  <%@seq_clusters[s].each do |fc|  %>
+  <%= "%.2f" % fc %>
+  <% end %>
+  </span><br>
   <% feats = s.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /UniProt|NCBInt|NCBInr/) }%>
   <% feats.map do |f| %>
     <%= f.annotation.annotation_source.name %>:  <span style="color:blue;"><%=f.annotation.description%></span><br>
