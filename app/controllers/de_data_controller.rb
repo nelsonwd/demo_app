@@ -13,10 +13,10 @@ class DeDataController < ApplicationController
 def cluster_annot
     experiment = params[:experiment]
     @title = experiment.camelcase
-    fc_table =  get_table experiment 
+    fc_table =  get_table experiment
     analysis_id = params[:analysis_id]
     base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
-    default_cluster_order =  ["1","2","3","4"]; 
+    default_cluster_order =  ["1","2","3","4"];
     default_cluster_order.delete(base_treatment)
     order_array =  (params[:cluster] && params[:cluster].count(base_treatment) == 0) ? params[:cluster].split(',') : default_cluster_order
     filter = params[:filter] = (params[:filter])? params[:filter] :  DEFAULT_FILTER
@@ -56,10 +56,10 @@ def cluster_annot
     experiment = params[:experiment]
     @title = experiment.camelcase
     fc_table_name = experiment + "_fold_changes"
-    fc_table =  Kernel.const_get(experiment.camelcase + "FoldChange") 
+    fc_table =  Kernel.const_get(experiment.camelcase + "FoldChange")
     analysis_id = params[:analysis_id]
     base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
-    default_cluster_order =  ["1","2","3","4"]; 
+    default_cluster_order =  ["1","2","3","4"];
     default_cluster_order.delete(base_treatment)
     order_array =  (params[:cluster] && params[:cluster].count(base_treatment) == 0) ? params[:cluster].split(',') : default_cluster_order
     filter = params[:filter] = (params[:filter])? params[:filter] :  DEFAULT_FILTER
@@ -90,10 +90,10 @@ def cluster_annot
       end
     end
 #create a result hash :sequenc.accession => [[1],[3],[4]]
-    fc_base.each do |d| 
+    fc_base.each do |d|
       if (results_hash[d.sequence].nil?)
-        results_hash[d.sequence] = [[],[],[],[]] 
-        bt_abundance = DeDatum.where(:sequence_id => d.sequence_id, :treatment_id => d.base_treatment_id, :de_analysis_id => d.de_analysis_id).first.abundance      
+        results_hash[d.sequence] = [[],[],[],[]]
+        bt_abundance = DeDatum.where(:sequence_id => d.sequence_id, :treatment_id => d.base_treatment_id, :de_analysis_id => d.de_analysis_id).first.abundance
         results_hash[d.sequence][d.base_treatment_id]= [bt_abundance, "N/A","black"]
       end
       results_hash[d.sequence][d.treatment_id] = [d.de_datum.abundance, d.log2fc, de_color(filter, filter_value, d)]
@@ -115,24 +115,35 @@ def cluster_annot
     default_treatment  = ([1,2,3,4] - [@base_treatment.to_i]).first
     @treatment      = (params[:treatment])? params[:treatment] : default_treatment
     @order_by = params[:order_by] = (params[:order_by])? params[:order_by] : "pval"
-    @filter = params[:filter] = (params[:filter])? params[:filter] : "pval" 
-    @filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] : "0.005" 
+    @filter = params[:filter] = (params[:filter])? params[:filter] : "pval"
+    @filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] : "0.005"
     @page           = (params[:page])? params[:page] : "1"
+    download = (params[:commit] == 'Download') ? true : false
     offset         = (@page.to_i - 1) * per_page
     fc_table_name = @experiment + "_fold_changes"
     filter_string = filter_sql @filter, @filter_value, fc_table_name
     order_string = order_sql @order_by, fc_table_name
-    fc_table =  Kernel.const_get(@experiment.camelcase + "FoldChange") 
-    
+    fc_table =  Kernel.const_get(@experiment.camelcase + "FoldChange")
+    file_name = "#{@experiment}#{@analysis_id}#{@base_treatment}#{@filter_value}.csv"
+    report_url =  "/tmp/" + file_name
+    if(download && File.exists?("public" + report_url))
+      redirect_to report_url
+      return
+    end
+
     count =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
                                          "from  #{fc_table_name}, de_data " +
                                          "where #{fc_table_name}.de_analysis_id = #{@analysis_id} and " +
                                          "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and" +
                                          "      #{fc_table_name}.de_datum_id = de_data.id and" +
                                          "      #{filter_string} " +
-                                         "      de_data.abundance > 0").size 
+                                         "      de_data.abundance > 0").size
     @total_pages = count / per_page
     @total_pages += 1 if ((count % per_page) != 0)
+    if download
+      per_page = count
+      offset = 0
+    end
     @results_hash ={}
       uniq_seq_ids =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
                                          "from  #{fc_table_name}, de_data " +
@@ -143,19 +154,24 @@ def cluster_annot
                                          "      de_data.abundance > 0 " +
                                          "      order by #{order_string} " +
                                          "limit #{per_page} " +
-                                         "offset #{offset} ").map{|x| x.sequence_id} 
+                                         "offset #{offset} ").map{|x| x.sequence_id}
       fc_base = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => @analysis_id, :base_treatment_id => @base_treatment, :sequence_id => uniq_seq_ids).order(order_string)
 
 
-    fc_base.each do |d| 
+    fc_base.each do |d|
       if (@results_hash[d.sequence].nil?)
-        @results_hash[d.sequence] = [[],[],[],[]] 
-        bt_abundance = DeDatum.where(:sequence_id => d.sequence_id, :treatment_id => d.base_treatment_id, :de_analysis_id => d.de_analysis_id).first.abundance      
+        @results_hash[d.sequence] = [[],[],[],[]]
+        bt_abundance = DeDatum.where(:sequence_id => d.sequence_id, :treatment_id => d.base_treatment_id, :de_analysis_id => d.de_analysis_id).first.abundance
         @results_hash[d.sequence][d.base_treatment_id]= [bt_abundance, "N/A","black"]
       end
       @results_hash[d.sequence][d.treatment_id] = [d.de_datum.abundance, d.log2fc, de_color(@filter, @filter_value, d)]
     end
-     
+
+    if download
+      redirect_to create_report_file(@results_hash, report_url)
+      return
+    end
+
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -237,7 +253,7 @@ end
 
 def filter_sql(filter, filter_value, fc_table_name)
   if filter_value.empty?
-   "" 
+   ""
   elsif is_a_number?(filter_value)
     "#{fc_table_name}.#{filter} < #{filter_value} and "
   else
@@ -250,19 +266,19 @@ end
 def order_sql(order_by, fc_table_name)
   if order_by == "pval" || order_by == "fdr"
     order_by
-  elsif order_by == "-log2fc" 
+  elsif order_by == "-log2fc"
     "log2fc"
-  elsif order_by == "+log2fc" 
+  elsif order_by == "+log2fc"
     "log2fc desc"
-  elsif order_by == "+rpkm" 
+  elsif order_by == "+rpkm"
     "de_data.abundance desc"
-  elsif order_by == "-rpkm" 
+  elsif order_by == "-rpkm"
     "de_data.abundance"
   end
 end
 
 def is_a_number?(s)
-  s.to_s.match(/\A[+-.]?\d+?(\.\d+)?\Z/) == nil ? false : true 
+  s.to_s.match(/\A[+-.]?\d+?(\.\d+)?\Z/) == nil ? false : true
 end
 
 
@@ -278,7 +294,7 @@ def clusterfy(fc_table, order_array, uniq_seq_ids, base_treatment, analysis_id, 
        bottom_clusters +=  up_middle_down_split(fc_table, order_array[2], seq_ids, base_treatment, analysis_id, filter_value, filter)
      end
      bottom_clusters
-     
+
 end
 
 def up_middle_down_split(fc_table, treatment, uniq_seq_ids,base_treatment, analysis_id, filter_value, filter)
@@ -295,7 +311,7 @@ def up_middle_down_split(fc_table, treatment, uniq_seq_ids,base_treatment, analy
                                          "      #{fc_table_name}.treatment_id = #{treatment} and " +
                                          "      #{fc_table_name}.base_treatment_id = #{base_treatment} and " +
                                          "      #{fc_table_name}.de_datum_id = de_data.id and " +
-                                                filter_strings[count] + 
+                                                filter_strings[count] +
                                          "      #{fc_table_name}.sequence_id in (#{uniq_seq_ids.join(',')})").map{|x| x.sequence_id}
       clusters[count] = seq_ids if seq_ids.size > 0
       seq_ids = []
@@ -310,7 +326,7 @@ def draw_map(order, results_hash)
    g_wdt = 300
    g_hgt = results_hash.size * row_hgt
    g_hgt_in = g_hgt/100
-   RVG::dpi = 72    
+   RVG::dpi = 72
    area_tags = []
    rvg = RVG.new(3.0.in, g_hgt_in.in).viewbox(0,0, g_wdt, g_hgt) do |canvas|
      canvas.background_fill = 'white'
@@ -325,7 +341,7 @@ def draw_map(order, results_hash)
        if cluster_tag != prev_cluster_tag then
          unless cluster_count == 0
            area_tags << "<area shape=\"rect\" coords=\"#{start_coords},#{g_wdt},#{y_pos}\" title=\"cluster #{cluster_count}\" onclick=\"document.getElementById('cluster_num').selectedIndex = #{cluster_count - 1};document.getElementById('cluster_num').onchange();\" />"
-           start_coords = "0,#{y_pos}" 
+           start_coords = "0,#{y_pos}"
          end
          cluster_count += 1
        end
@@ -343,10 +359,10 @@ def draw_map(order, results_hash)
      end
      area_tags << "<area shape=\"rect\" coords=\"#{start_coords},#{g_wdt},#{y_pos}\" title=\"cluster #{cluster_count}\" onclick=\"document.getElementById('cluster_num').selectedIndex = #{cluster_count - 1};document.getElementById('cluster_num').onchange();\" />"
    end
-     
+
    rvg.draw.write("public/tmp/#{@title}-#{rvg.object_id}.gif")
-               "<img src=\"/tmp/#{@title}-#{rvg.object_id}.gif\" width=\"300\" height=\"#{g_hgt}\"  alt=\"heatmap\" usemap=\"#heatmap\" >\n" + 
-               "<map name=\"heatmap\" >\n" + 
+               "<img src=\"/tmp/#{@title}-#{rvg.object_id}.gif\" width=\"300\" height=\"#{g_hgt}\"  alt=\"heatmap\" usemap=\"#heatmap\" >\n" +
+               "<map name=\"heatmap\" >\n" +
                area_tags.join("\n") +
                "</map>"
 end
@@ -360,9 +376,9 @@ def de_color(filter, filter_value, d)
   end
 
   if d.log2fc > 0
-    'orange' 
+    'orange'
   elsif d.log2fc < 0
-    'blue' 
+    'blue'
   else
     'black'
   end
@@ -377,9 +393,41 @@ def get_filtered_seq_ids(fc_table, analysis_id, base_treatment, filter_string)
                                     "      #{fc_table_name}.base_treatment_id = #{base_treatment} and" +
                                     "      #{fc_table_name}.de_datum_id = de_data.id and" +
                                     "      #{filter_string} " +
-                                    "      de_data.abundance > 0").map{|x| x.sequence_id} 
+                                    "      de_data.abundance > 0").map{|x| x.sequence_id}
 end
 
 def get_table(experiment_name)
-   Kernel.const_get(experiment_name.camelcase + "FoldChange") 
+   Kernel.const_get(experiment_name.camelcase + "FoldChange")
+end
+
+def create_report_file results_hash, report_url
+  out_file = File.open("public#{report_url}", 'w')
+  out_file.write( "Sequence\t0-Log2FC\t0-RPKM\t10-Log2FC\t10-RPKM\t100-Log2FC\t100-RPKM\t500-Log2FC\t500-RPKM\tUniProt\tNCBInt\tNCBInr\tMapMan\tInterPro\n")
+  results_hash.each_pair do |seq,d_array|
+    annotation_hash = {UniProt: 'n/a', NCBInt: 'n/a', NCBInr: 'n/a', MapMan: 'n/a', InterPro: 'n/a' }
+
+    feats = seq.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /UniProt|NCBInt|NCBInr/) }
+    feats.map do |f|
+      if f.annotation.annotation_source.name =~ /UniProt/
+        annotation_hash[:UniProt] = f.annotation.description
+      elsif f.annotation.annotation_source.name =~ /NCBInt/
+        nt_debug = f.annotation.description
+        annotation_hash[:NCBInt] = f.annotation.description
+        nt_double_debug =  annotation_hash[:NCBInt]
+      elsif f.annotation.annotation_source.name =~ /NCBInr/
+        annotation_hash[:NCBInr] = f.annotation.description
+      end
+
+    end
+    feats = seq.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /MapMan/) }
+    feats.map do |f|
+      annotation_hash[:MapMan] = f.annotation.accession
+    end
+    interpro = seq.features.map {|f| f.annotation.interpro.description unless f.annotation.interpro.nil?}.compact.uniq.join('; ')
+    annotation_hash[:InterPro] = interpro  unless  interpro.blank?
+
+  out_file.write "#{seq.accession}\t#{d_array[1][0]}\t#{d_array[1][1]}\t#{d_array[2][0]}\t#{d_array[2][1]}\t#{d_array[3][0]}\t#{d_array[3][1]}\t#{d_array[4][0]}\t#{d_array[4][1]}\t#{annotation_hash[:UniProt]}\t#{annotation_hash[:NCBInt]}\t#{annotation_hash[:NCBInr]}\t#{annotation_hash[:MapMan]}\t#{annotation_hash[:InterPro]}\n"
+  end
+  out_file.close
+  report_url
 end

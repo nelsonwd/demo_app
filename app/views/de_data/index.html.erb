@@ -25,6 +25,7 @@
       <td style="background-color:white;"><%= select_tag(:order_by, options_for_select([["p-Val","pval"],["FDR", "fdr"],["Log2FC asc","-log2fc"],["Log2FC desc","+log2fc"],["RPKM desc", "+rpkm"], ["RPKM asc", "-rpkm"]], default_order)) %></td>
       <td style="background-color:white;"><%= select_tag(:filter, options_for_select([["p-Val","pval"],["FDR", "fdr"]], default_filter)) %></td>
       <td style="background-color:white;"> < <%= text_field_tag(:filter_value, default_filter_value) %></td>
+      <td style="background-color:white;"><%=submit_tag("Download")%></td>
       <td style="background-color:white;"><%=submit_tag("Refresh")%></td>
     </tr>
   </table>
