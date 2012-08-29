@@ -114,22 +114,28 @@ def cluster_annot
     @base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
     default_treatment  = ([1,2,3,4] - [@base_treatment.to_i]).first
     @treatment      = (params[:treatment])? params[:treatment] : default_treatment
-    @order_by = params[:order_by] = (params[:order_by])? params[:order_by] : "pval"
-    @filter = params[:filter] = (params[:filter])? params[:filter] : "pval"
-    @filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] : "0.005"
+    @order_by       = params[:order_by] = (params[:order_by])? params[:order_by] : "pval"
+    @filter         = params[:filter] = (params[:filter])? params[:filter] : "pval"
+    @filter_value   = params[:filter_value] = (params[:filter_value])? params[:filter_value] : "0.005"
     @page           = (params[:page])? params[:page] : "1"
+    @query          = (params[:search_value]) ?  params[:search_value] : ''
     download = (params[:commit] == 'Download') ? true : false
     offset         = (@page.to_i - 1) * per_page
     fc_table_name = @experiment + "_fold_changes"
     filter_string = filter_sql @filter, @filter_value, fc_table_name
     order_string = order_sql @order_by, fc_table_name
+    flash.delete :notice
+    search_string = search_sql @query
+    flash[:notice] = "No matches found for the query \'#{@query}" if search_string =~ /\(0\)/
     fc_table =  Kernel.const_get(@experiment.camelcase + "FoldChange")
-    file_name = "#{@experiment}#{@analysis_id}#{@base_treatment}#{@filter_value}.csv"
+    file_name = "#{@experiment}#{@analysis_id}#{@base_treatment}#{@filter_value}#{@query.hash}.csv"
     report_url =  "/tmp/" + file_name
     if(download && File.exists?("public" + report_url))
       redirect_to report_url
       return
     end
+
+
 
     count =  fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
                                          "from  #{fc_table_name}, de_data " +
@@ -137,6 +143,7 @@ def cluster_annot
                                          "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and" +
                                          "      #{fc_table_name}.de_datum_id = de_data.id and" +
                                          "      #{filter_string} " +
+                                         "      #{search_string} " +
                                          "      de_data.abundance > 0").size
     @total_pages = count / per_page
     @total_pages += 1 if ((count % per_page) != 0)
@@ -151,11 +158,13 @@ def cluster_annot
                                          "      #{fc_table_name}.base_treatment_id = #{@base_treatment} and" +
                                          "      #{fc_table_name}.de_datum_id = de_data.id and" +
                                          "      #{filter_string} " +
+                                         "      #{search_string} " +
                                          "      de_data.abundance > 0 " +
                                          "      order by #{order_string} " +
                                          "limit #{per_page} " +
                                          "offset #{offset} ").map{|x| x.sequence_id}
       fc_base = fc_table.includes({:sequence => :blast_db}, :de_datum).where( :de_analysis_id => @analysis_id, :base_treatment_id => @base_treatment, :sequence_id => uniq_seq_ids).order(order_string)
+
 
 
     fc_base.each do |d|
@@ -167,8 +176,10 @@ def cluster_annot
       @results_hash[d.sequence][d.treatment_id] = [d.de_datum.abundance, d.log2fc, de_color(@filter, @filter_value, d)]
     end
 
+    @annotation_hash = create_annotation_results @results_hash
+
     if download
-      redirect_to create_report_file(@results_hash, report_url)
+      redirect_to create_report_file(@results_hash, @annotation_hash, report_url)
       return
     end
 
@@ -400,34 +411,74 @@ def get_table(experiment_name)
    Kernel.const_get(experiment_name.camelcase + "FoldChange")
 end
 
-def create_report_file results_hash, report_url
+def create_report_file results_hash, annotation_results, report_url
   out_file = File.open("public#{report_url}", 'w')
-  out_file.write( "Sequence\t0-Log2FC\t0-RPKM\t10-Log2FC\t10-RPKM\t100-Log2FC\t100-RPKM\t500-Log2FC\t500-RPKM\tUniProt\tNCBInt\tNCBInr\tMapMan\tInterPro\n")
+  out_file.write( "Sequence\t0-RPKM\t0-Log2FC\t10-RPKM\t10-Log2FC\t100-RPKM\t100-Log2FC\t500-RPKM\t500-Log2FC\tUniProt\tNCBInt\tNCBInr\tMapMan\tInterPro\n")
   results_hash.each_pair do |seq,d_array|
-    annotation_hash = {UniProt: 'n/a', NCBInt: 'n/a', NCBInr: 'n/a', MapMan: 'n/a', InterPro: 'n/a' }
-
-    feats = seq.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /UniProt|NCBInt|NCBInr/) }
-    feats.map do |f|
-      if f.annotation.annotation_source.name =~ /UniProt/
-        annotation_hash[:UniProt] = f.annotation.description
-      elsif f.annotation.annotation_source.name =~ /NCBInt/
-        nt_debug = f.annotation.description
-        annotation_hash[:NCBInt] = f.annotation.description
-        nt_double_debug =  annotation_hash[:NCBInt]
-      elsif f.annotation.annotation_source.name =~ /NCBInr/
-        annotation_hash[:NCBInr] = f.annotation.description
-      end
-
-    end
-    feats = seq.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /MapMan/) }
-    feats.map do |f|
-      annotation_hash[:MapMan] = f.annotation.accession
-    end
-    interpro = seq.features.map {|f| f.annotation.interpro.description unless f.annotation.interpro.nil?}.compact.uniq.join('; ')
-    annotation_hash[:InterPro] = interpro  unless  interpro.blank?
-
-  out_file.write "#{seq.accession}\t#{d_array[1][0]}\t#{d_array[1][1]}\t#{d_array[2][0]}\t#{d_array[2][1]}\t#{d_array[3][0]}\t#{d_array[3][1]}\t#{d_array[4][0]}\t#{d_array[4][1]}\t#{annotation_hash[:UniProt]}\t#{annotation_hash[:NCBInt]}\t#{annotation_hash[:NCBInr]}\t#{annotation_hash[:MapMan]}\t#{annotation_hash[:InterPro]}\n"
+    annotation_hash = annotation_results[seq]
+    out_file.write "#{seq.accession}\t#{d_array[1][0]}\t#{d_array[1][1]}\t#{d_array[2][0]}\t#{d_array[2][1]}\t#{d_array[3][0]}\t#{d_array[3][1]}\t#{d_array[4][0]}\t#{d_array[4][1]}\t#{annotation_hash[:UniProt]}\t#{annotation_hash[:NCBInt]}\t#{annotation_hash[:NCBInr]}\t#{annotation_hash[:MapMan]}\t#{annotation_hash[:InterPro]}\n"
   end
   out_file.close
   report_url
+end
+
+def create_annotation_results results_hash
+  annotation_hash = {}
+  results_hash.each_pair do |seq,d_array|
+    annotation_hash[seq] = create_annotation seq
+  end
+  annotation_hash
+end
+
+def create_annotation seq
+  annotation_hash = {UniProt: 'n/a', NCBInt: 'n/a', NCBInr: 'n/a', MapMan: 'n/a', InterPro: 'n/a' }
+
+  feats = seq.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /UniProt|NCBInt|NCBInr/) }
+  feats.map do |f|
+    if f.annotation.annotation_source.name =~ /UniProt/
+      annotation_hash[:UniProt] = f.annotation.description
+    elsif f.annotation.annotation_source.name =~ /NCBInt/
+      nt_debug = f.annotation.description
+      annotation_hash[:NCBInt] = f.annotation.description
+      nt_double_debug =  annotation_hash[:NCBInt]
+    elsif f.annotation.annotation_source.name =~ /NCBInr/
+      annotation_hash[:NCBInr] = f.annotation.description
+    end
+
+  end
+  feats = seq.features.select {|f| (f.annotation.interpro.nil? && f.annotation.annotation_source.name =~ /MapMan/) }
+  feats.map do |f|
+    annotation_hash[:MapMan] = f.annotation.accession
+  end
+  interpro = seq.features.map {|f| f.annotation.interpro.description unless f.annotation.interpro.nil?}.compact.uniq.join('; ')
+  annotation_hash[:InterPro] = interpro  unless  interpro.blank?
+  annotation_hash
+
+end
+
+def search_sql query
+  return '' if query.blank?
+  goes = GeneOntology.where("keyword LIKE  '%#{query}%'")
+  iprs = goes.uniq.map do |g|
+    g.interpros
+  end
+  iprs << Interpro.where("description LIKE '%#{query}%'")
+  iprs.flatten!
+  annots = iprs.uniq.map do |i|
+    i.annotations
+  end
+  annots << Annotation.where("description LIKE '%#{query}%'")
+  annots.flatten!
+  feats = annots.uniq.map do |a|
+    a.features
+  end
+  feats.flatten!
+  result = feats.uniq.map do |f|
+    f.sequence_id
+  end
+  if result.size > 0
+    "de_data.sequence_id IN (#{result.join(',')}) and"
+  else
+    "de_data.sequence_id IN (0) and"
+  end
 end

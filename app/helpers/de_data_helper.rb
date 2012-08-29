@@ -53,4 +53,45 @@ def cluster_column_lables(cluster_order)
     return_string
 end
 
+def tab_label tab_num
+  light_array = ["blank","0uE", "10uE","100uE", "500uE"]
+  base_treatment =  (params[:base_treatment]) ? params[:base_treatment] : 2
+  tab_num += 1 if tab_num >= base_treatment.to_i
+
+  "#{light_array[tab_num]} vs. #{light_array[base_treatment.to_i]}"
+end
+
+def treatment_table tab_num
+  base_treatment =  (params[:base_treatment]) ? params[:base_treatment] : 2
+  tab_num += 1 if tab_num >= base_treatment.to_i
+  tab_num
+end
+
+def format_annotation annotation_results
+  annotation_results.each_pair do |seq, annotation_hash|
+    annotation_hash.each_pair do |name, description|
+      if description == 'n/a'
+        annotation_results[seq][name] = ''
+      else
+        annotation = "<span style='font-weight:bold'>#{name}:</span> #{description}"
+        unless @query.blank?
+          annotation.gsub!( /(#{@query})/i, '<span style="background-color:yellow" >\1</span>')
+        end
+        annotation_results[seq][name] = annotation
+      end
+    end
+
+  end
+
+end
+
+  def treatment_table_header
+    "<tr style=\"text-align: center;background-color:lightgray;\">  \
+       <th>Sequence</th>                                            \
+       <th style=\"border-left:solid 3px #ffffff;\" >RPKM</th>      \
+       <th>Log2FC</th>                                              \
+       <th>Annotation</th>                                          \
+    </tr>"
+  end
+
 end

@@ -1,7 +1,13 @@
+<script >
+$(function() {
+$( "#tabs" ).tabs({selected:0});
+});
+</script>
 
 <% paginate_string = pagination()
    current_base = params[:base_treatment].blank? ? '2' :  params[:base_treatment] %>
-<%= paginate_string.html_safe %>
+<% dummy_params = params.clone;dummy_params.delete(:action) %>
+<%= paginate_string.html_safe %><%= link_to("cluster", {:controller => "de_data", :action => "heatmap"}.merge(dummy_params), {:style => 'float:right'}) %>
 
 
 <%= form_tag({:controller => "de_data"}, {:method => "get"}) do %>
@@ -13,42 +19,52 @@
   <%  default_order = params[:order_by] ? params[:order_by] : DEFAULT_ORDER
       default_filter = params[:filter] ? params[:filter] : DEFAULT_FILTER.delete(base_treatment)
       default_filter_value = params[:filter_value] ? params[:filter_value] : DEFAULT_FILTER_VALUE
-      default_cluster = params[:cluster] ? params[:cluster] : "" %>
+      default_cluster = params[:cluster] ? params[:cluster] : ""
+      format_annotation @annotation_hash %>
+
   <table style="border:solid 3px #000000;">
     <tr style="background-color:white;">
       <th><%=label_tag(:order_by, "Sort order")%></th>
       <th><%= label_tag(:filter, "Filter") %></th>
       <th><%= label_tag(:filter_value,"Filter value (0 to 1)") %></th>
-<% dummy_params = params.clone;dummy_params.delete(:action) %>
-      <td><%= link_to("cluster", {:controller => "de_data", :action => "heatmap"}.merge(dummy_params)) %></td>
+      <td><%= label_tag(:search_value,"Annotation match") %></td>
+      <td style="background-color:white;"><%=submit_tag("Refresh")%></td>
     </tr><tr style="background-color:lightgray;" >
       <td style="background-color:white;"><%= select_tag(:order_by, options_for_select([["p-Val","pval"],["FDR", "fdr"],["Log2FC asc","-log2fc"],["Log2FC desc","+log2fc"],["RPKM desc", "+rpkm"], ["RPKM asc", "-rpkm"]], default_order)) %></td>
       <td style="background-color:white;"><%= select_tag(:filter, options_for_select([["p-Val","pval"],["FDR", "fdr"]], default_filter)) %></td>
       <td style="background-color:white;"> < <%= text_field_tag(:filter_value, default_filter_value) %></td>
+      <td style="background-color:white;"><%= text_field_tag(:search_value, @query) %></td>
       <td style="background-color:white;"><%=submit_tag("Download")%></td>
-      <td style="background-color:white;"><%=submit_tag("Refresh")%></td>
     </tr>
   </table>
 
 <% end %>
 
 
-
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">All</a></li>
+    <li><a href="#tabs-2"><%= tab_label 1 %></a></li>
+    <li><a href="#tabs-3"><%= tab_label 2 %></a></li>
+    <li><a href="#tabs-4"><%= tab_label 3 %></a></li>
+  </ul>
+  <div id="tabs-1">
 <table >
   <tr style="background-color:lightgray;">
     <th></th>
     <th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
-        <% params[:base_treatment] = 1 %>
-        <%=link_to("0µE",params)%>
+        <% dummy_params = params.clone
+           dummy_params[:base_treatment] = 1 %>
+        <%=link_to("0µE",dummy_params,{style:'color:#09C'})%>
     </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
-      <% params[:base_treatment] = 2 %>
-      <%=link_to("10µE",params)%>
+      <% dummy_params[:base_treatment] = 2 %>
+      <%=link_to("10µE",dummy_params,{style:'color:#09C'})%>
     </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
-      <% params[:base_treatment] = 3 %>
-      <%=link_to("100µE",params)%>
+      <% dummy_params[:base_treatment] = 3 %>
+      <%=link_to("100µE",dummy_params,{style:'color:#09C'})%>
     </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
-      <% params[:base_treatment] = 4 %>
-      <%=link_to("500µE",params)%>
+      <% dummy_params[:base_treatment] = 4 %>
+      <%=link_to("500µE",dummy_params,{style:'color:#09C'})%>
     </th>
   </tr>
   <tr style="text-align: center;background-color:lightgray;">
@@ -61,7 +77,7 @@
 
 <% @results_hash.each_pair do |seq,d_array| %> 
   <tr>
-    <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>"><%= seq.accession %></a></td>
+    <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[1][0]%></td>
     <td style="color:<%= d_array[1][2]%>;"><%= d_array[1][1]%></td>
     <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[2][0]%></td>
@@ -73,4 +89,53 @@
   </tr>
 <% end %>
 </table>
+</div>
+<div id="tabs-2">
+  <table >
+    <%treatment = treatment_table 1 %>
+    <%= treatment_table_header.html_safe %>
+
+    <% @results_hash.each_pair do |seq,d_array| %>
+        <tr>
+          <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
+          <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[treatment][0]%></td>
+          <td style="color:<%= d_array[treatment][2]%>;"><%= d_array[treatment][1]%></td>
+          <td><%= @annotation_hash[seq][:UniProt].html_safe %> <%= @annotation_hash[seq][:NCBInt].html_safe  %> <%= @annotation_hash[seq][:NCBInr].html_safe  %> <%= @annotation_hash[seq][:MapMan].html_safe  %> <%= @annotation_hash[seq][:InterPro].html_safe %></td>
+        </tr>
+    <% end %>
+  </table>
+</div>
+<div id="tabs-3">
+  <table >
+    <%treatment = treatment_table 2 %>
+    <%= treatment_table_header.html_safe %>
+
+    <% @results_hash.each_pair do |seq,d_array| %>
+        <tr>
+          <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
+          <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[treatment][0]%></td>
+          <td style="color:<%= d_array[treatment][2]%>;"><%= d_array[treatment][1]%></td>
+          <td><%= @annotation_hash[seq][:UniProt].html_safe %> <%= @annotation_hash[seq][:NCBInt].html_safe  %> <%= @annotation_hash[seq][:NCBInr].html_safe  %> <%= @annotation_hash[seq][:MapMan].html_safe  %> <%= @annotation_hash[seq][:InterPro].html_safe %></td>
+
+        </tr>
+    <% end %>
+  </table>
+</div>
+<div id="tabs-4">
+  <table >
+    <%treatment = treatment_table 3 %>
+    <%= treatment_table_header.html_safe %>
+
+    <% @results_hash.each_pair do |seq,d_array| %>
+        <tr>
+          <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
+          <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[treatment][0]%></td>
+          <td style="color:<%= d_array[treatment][2]%>;"><%= d_array[treatment][1]%></td>
+          <td><%= @annotation_hash[seq][:UniProt].html_safe %> <%= @annotation_hash[seq][:NCBInt].html_safe  %> <%= @annotation_hash[seq][:NCBInr].html_safe  %> <%= @annotation_hash[seq][:MapMan].html_safe  %> <%= @annotation_hash[seq][:InterPro].html_safe %></td>
+
+        </tr>
+    <% end %>
+  </table>
+</div>
+</div>
 <%= paginate_string.html_safe %>

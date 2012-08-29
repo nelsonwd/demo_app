@@ -11,4 +11,5 @@
  *= require_self
  *= require blueprint/screen
  *= require custom
+ *= require jquery-ui
 */
