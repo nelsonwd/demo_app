@@ -1,7 +1,13 @@
 <script >
-$(function() {
-$( "#tabs" ).tabs({selected:0});
-});
+$(document).ready(
+  function() {
+    $( "#tabs" ).tabs({selected:<%= @tab %>});
+    $( '#tabs' ).bind('tabsselect', function(event, ui) {
+    tab.value = ui.index;
+  });
+}
+);
+
 </script>
 
 <% paginate_string = pagination()
@@ -16,6 +22,7 @@ $( "#tabs" ).tabs({selected:0});
   <%= hidden_field_tag(:base_treatment, current_base)%>
   <%= hidden_field_tag(:treatment, params[:treatment])%>
   <%= hidden_field_tag(:page, "1")%>
+  <%= hidden_field_tag(:tab, @tab)%>
   <%  default_order = params[:order_by] ? params[:order_by] : DEFAULT_ORDER
       default_filter = params[:filter] ? params[:filter] : DEFAULT_FILTER.delete(base_treatment)
       default_filter_value = params[:filter_value] ? params[:filter_value] : DEFAULT_FILTER_VALUE

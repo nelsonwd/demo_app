@@ -108,6 +108,7 @@ def cluster_annot
   # GET /de_data.xml
   def index
     per_page=25
+    @tab = params[:tab] ? params[:tab] : 0
     @experiment     = params[:experiment]
     @title = @experiment.camelcase
     @analysis_id    = params[:analysis_id]
