@@ -4,6 +4,7 @@ $(document).ready(
     $( "#tabs" ).tabs({selected:<%= @tab %>});
     $( '#tabs' ).bind('tabsselect', function(event, ui) {
     tab.value = ui.index;
+    filter_form.submit();
   });
 }
 );
@@ -12,11 +13,14 @@ $(document).ready(
 
 <% paginate_string = pagination()
    current_base = params[:base_treatment].blank? ? '2' :  params[:base_treatment] %>
-<% dummy_params = params.clone;dummy_params.delete(:action) %>
+<% dummy_params = params.clone; dummy_params.delete(:action);dummy_params.delete(:tab) %>
+
+
+
 <%= paginate_string.html_safe %><%= link_to("cluster", {:controller => "de_data", :action => "heatmap"}.merge(dummy_params), {:style => 'float:right'}) %>
 
 
-<%= form_tag({:controller => "de_data"}, {:method => "get"}) do %>
+<%= form_tag({:controller => "de_data"}, {:name => "filter_form", :id => "filter_form", :method => "get"}) do %>
   <%= hidden_field_tag(:experiment, params[:experiment])%>
   <%= hidden_field_tag(:analysis_id, params[:analysis_id])%>
   <%= hidden_field_tag(:base_treatment, current_base)%>
@@ -53,96 +57,27 @@ $(document).ready(
     <li><a href="#tabs-1">All</a></li>
     <li><a href="#tabs-2"><%= tab_label 1 %></a></li>
     <li><a href="#tabs-3"><%= tab_label 2 %></a></li>
-    <li><a href="#tabs-4"><%= tab_label 3 %></a></li>
+    <li><a href="https://www.google.com"><%= tab_label 3 %></a></li>
   </ul>
   <div id="tabs-1">
-<table >
-  <tr style="background-color:lightgray;">
-    <th></th>
-    <th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
-        <% dummy_params = params.clone
-           dummy_params[:base_treatment] = 1 %>
-        <%=link_to("0µE",dummy_params,{style:'color:#09C'})%>
-    </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
-      <% dummy_params[:base_treatment] = 2 %>
-      <%=link_to("10µE",dummy_params,{style:'color:#09C'})%>
-    </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
-      <% dummy_params[:base_treatment] = 3 %>
-      <%=link_to("100µE",dummy_params,{style:'color:#09C'})%>
-    </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
-      <% dummy_params[:base_treatment] = 4 %>
-      <%=link_to("500µE",dummy_params,{style:'color:#09C'})%>
-    </th>
-  </tr>
-  <tr style="text-align: center;background-color:lightgray;">
-    <th>Sequence</th>
-    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
-    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
-    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
-    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
-  </tr>
-
-<% @results_hash.each_pair do |seq,d_array| %> 
-  <tr>
-    <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
-    <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[1][0]%></td>
-    <td style="color:<%= d_array[1][2]%>;"><%= d_array[1][1]%></td>
-    <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[2][0]%></td>
-    <td style="color:<%= d_array[2][2]%>;"><%= d_array[2][1]%></td>
-    <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[3][0]%></td>
-    <td style="color:<%= d_array[3][2]%>;"><%= d_array[3][1]%></td>
-    <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[4][0]%></td>
-    <td style="color:<%= d_array[4][2]%>;"><%= d_array[4][1]%></td>
-  </tr>
-<% end %>
-</table>
-</div>
-<div id="tabs-2">
-  <table >
-    <%treatment = treatment_table 1 %>
-    <%= treatment_table_header.html_safe %>
-
-    <% @results_hash.each_pair do |seq,d_array| %>
-        <tr>
-          <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
-          <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[treatment][0]%></td>
-          <td style="color:<%= d_array[treatment][2]%>;"><%= d_array[treatment][1]%></td>
-          <td><%= @annotation_hash[seq][:UniProt].html_safe %> <%= @annotation_hash[seq][:NCBInt].html_safe  %> <%= @annotation_hash[seq][:NCBInr].html_safe  %> <%= @annotation_hash[seq][:MapMan].html_safe  %> <%= @annotation_hash[seq][:InterPro].html_safe %></td>
-        </tr>
+    <% if @tab == "0" %>
+      <%= render :partial => 'experiment_all', :locals => { :current_base => current_base } %>
     <% end %>
-  </table>
-</div>
-<div id="tabs-3">
-  <table >
-    <%treatment = treatment_table 2 %>
-    <%= treatment_table_header.html_safe %>
-
-    <% @results_hash.each_pair do |seq,d_array| %>
-        <tr>
-          <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
-          <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[treatment][0]%></td>
-          <td style="color:<%= d_array[treatment][2]%>;"><%= d_array[treatment][1]%></td>
-          <td><%= @annotation_hash[seq][:UniProt].html_safe %> <%= @annotation_hash[seq][:NCBInt].html_safe  %> <%= @annotation_hash[seq][:NCBInr].html_safe  %> <%= @annotation_hash[seq][:MapMan].html_safe  %> <%= @annotation_hash[seq][:InterPro].html_safe %></td>
-
-        </tr>
+  </div>
+  <div id="tabs-2">
+    <% if @tab == "1" %>
+      <%= render :partial => 'experiment', :locals => {:treatment_table_num => 1, :current_base => current_base } %>
     <% end %>
-  </table>
-</div>
-<div id="tabs-4">
-  <table >
-    <%treatment = treatment_table 3 %>
-    <%= treatment_table_header.html_safe %>
-
-    <% @results_hash.each_pair do |seq,d_array| %>
-        <tr>
-          <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
-          <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[treatment][0]%></td>
-          <td style="color:<%= d_array[treatment][2]%>;"><%= d_array[treatment][1]%></td>
-          <td><%= @annotation_hash[seq][:UniProt].html_safe %> <%= @annotation_hash[seq][:NCBInt].html_safe  %> <%= @annotation_hash[seq][:NCBInr].html_safe  %> <%= @annotation_hash[seq][:MapMan].html_safe  %> <%= @annotation_hash[seq][:InterPro].html_safe %></td>
-
-        </tr>
+  </div>
+  <div id="tabs-3">
+    <% if @tab == "2" %>
+      <%= render :partial => 'experiment', :locals => {:treatment_table_num => 2, :current_base => current_base } %>
     <% end %>
-  </table>
-</div>
+  </div>
+  <div id="tabs-4">
+    <% if @tab == "3" %>
+      <%= render :partial => 'experiment', :locals => {:treatment_table_num => 3, :current_base => current_base } %>
+    <% end %>
+  </div>
 </div>
 <%= paginate_string.html_safe %>

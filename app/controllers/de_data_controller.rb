@@ -108,13 +108,13 @@ def cluster_annot
   # GET /de_data.xml
   def index
     per_page=25
-    @tab = params[:tab] ? params[:tab] : 0
+    @tab = params[:tab] ? params[:tab] : "0"
     @experiment     = params[:experiment]
     @title = @experiment.camelcase
     @analysis_id    = params[:analysis_id]
     @base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
-    default_treatment  = ([1,2,3,4] - [@base_treatment.to_i]).first
-    @treatment      = (params[:treatment])? params[:treatment] : default_treatment
+    #default_treatment  = ([1,2,3,4] - [@base_treatment.to_i]).first
+    #@treatment      = (params[:treatment])? params[:treatment] : default_treatment
     @order_by       = params[:order_by] = (params[:order_by])? params[:order_by] : "pval"
     @filter         = params[:filter] = (params[:filter])? params[:filter] : "pval"
     @filter_value   = params[:filter_value] = (params[:filter_value])? params[:filter_value] : "0.005"
@@ -123,6 +123,7 @@ def cluster_annot
     download = (params[:commit] == 'Download') ? true : false
     offset         = (@page.to_i - 1) * per_page
     fc_table_name = @experiment + "_fold_changes"
+    treatment_string = treatment_sql @tab, @base_treatment, fc_table_name
     filter_string = filter_sql @filter, @filter_value, fc_table_name
     order_string = order_sql @order_by, fc_table_name
     flash.delete :notice
@@ -145,6 +146,7 @@ def cluster_annot
                                          "      #{fc_table_name}.de_datum_id = de_data.id and" +
                                          "      #{filter_string} " +
                                          "      #{search_string} " +
+                                         "      #{treatment_string} " +
                                          "      de_data.abundance > 0").size
     @total_pages = count / per_page
     @total_pages += 1 if ((count % per_page) != 0)
@@ -160,6 +162,7 @@ def cluster_annot
                                          "      #{fc_table_name}.de_datum_id = de_data.id and" +
                                          "      #{filter_string} " +
                                          "      #{search_string} " +
+                                         "      #{treatment_string} " +
                                          "      de_data.abundance > 0 " +
                                          "      order by #{order_string} " +
                                          "limit #{per_page} " +
@@ -188,6 +191,7 @@ def cluster_annot
       format.html # index.html.erb
     end
   end
+
 
   # GET /de_data/1
   # GET /de_data/1.xml
@@ -261,7 +265,14 @@ def cluster_annot
   end
 end
 
-
+def treatment_sql(tab, base_treatment, fc_table_name)
+  if tab.empty? || tab == "0"
+    ""
+  else
+    treatment_tabs  = [0,1,2,3,4] - [base_treatment.to_i]
+    "#{fc_table_name}.treatment_id = #{treatment_tabs[tab.to_i]} and "
+  end
+end
 
 def filter_sql(filter, filter_value, fc_table_name)
   if filter_value.empty?
@@ -483,3 +494,5 @@ def search_sql query
     "de_data.sequence_id IN (0) and"
   end
 end
+
+

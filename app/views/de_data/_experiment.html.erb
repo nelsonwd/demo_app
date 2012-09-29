@@ -1,0 +1,14 @@
+<table >
+  <%treatment = treatment_table treatment_table_num %>
+  <%= treatment_table_header.html_safe %>
+
+  <% @results_hash.each_pair do |seq,d_array| %>
+      <tr>
+        <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
+        <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[treatment][0]%></td>
+        <td style="color:<%= d_array[treatment][2]%>;"><%= d_array[treatment][1]%></td>
+        <td><%= @annotation_hash[seq][:UniProt].html_safe %> <%= @annotation_hash[seq][:NCBInt].html_safe  %> <%= @annotation_hash[seq][:NCBInr].html_safe  %> <%= @annotation_hash[seq][:MapMan].html_safe  %> <%= @annotation_hash[seq][:InterPro].html_safe %></td>
+
+      </tr>
+  <% end %>
+</table>

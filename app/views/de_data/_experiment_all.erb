@@ -1,0 +1,41 @@
+<table >
+  <tr style="background-color:lightgray;">
+    <th></th>
+    <th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
+      <% dummy_params = params.clone
+         dummy_params.delete :tab
+         dummy_params[:base_treatment] = 1 %>
+      <%=link_to("0µE",dummy_params,{style:'color:#09C'})%>
+    </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
+    <% dummy_params[:base_treatment] = 2 %>
+    <%=link_to("10µE",dummy_params,{style:'color:#09C'})%>
+  </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
+    <% dummy_params[:base_treatment] = 3 %>
+    <%=link_to("100µE",dummy_params,{style:'color:#09C'})%>
+  </th><th colspan=2 style="text-align: center;border-left:solid 3px #ffffff;" >
+    <% dummy_params[:base_treatment] = 4 %>
+    <%=link_to("500µE",dummy_params,{style:'color:#09C'})%>
+  </th>
+  </tr>
+  <tr style="text-align: center;background-color:lightgray;">
+    <th>Sequence</th>
+    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
+    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
+    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
+    <th style="border-left:solid 3px #ffffff;" >RPKM</th><th>Log2FC</th>
+  </tr>
+
+  <% @results_hash.each_pair do |seq,d_array| %>
+      <tr>
+        <td><a href="blast_dbs/fastasearch?denominator=<%= current_base %>&file=<%=seq.blast_db.file_name%>&query=<%=seq.accession%>" style='color:#09C'><%= seq.accession %></a></td>
+        <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[1][0]%></td>
+        <td style="color:<%= d_array[1][2]%>;"><%= d_array[1][1]%></td>
+        <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[2][0]%></td>
+        <td style="color:<%= d_array[2][2]%>;"><%= d_array[2][1]%></td>
+        <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[3][0]%></td>
+        <td style="color:<%= d_array[3][2]%>;"><%= d_array[3][1]%></td>
+        <td style="text-align:right;border-left:solid 3px #ffffff;"><%= d_array[4][0]%></td>
+        <td style="color:<%= d_array[4][2]%>;"><%= d_array[4][1]%></td>
+      </tr>
+  <% end %>
+</table>
