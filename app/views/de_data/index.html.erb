@@ -3,7 +3,8 @@ $(document).ready(
   function() {
     $( "#tabs" ).tabs({selected:<%= @tab %>});
     $( '#tabs' ).bind('tabsselect', function(event, ui) {
-    tab.value = ui.index;
+    t = document.getElementById("tab")
+    t.value = ui.index;
     filter_form.submit();
   });
 }
