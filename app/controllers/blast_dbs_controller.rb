@@ -93,7 +93,7 @@ end
     blast_db = BlastDb.where(:file_name => params[:file]).first
 
     if(Sequence.where("blast_db_id = #{blast_db.id}").exists?) then
-      @query = params[:query].chomp      
+      @query = params[:query].strip
       s = Sequence.where(:accession => @query).first
       unless s.nil? then
         @result = {} 

@@ -39,12 +39,28 @@ class Sequence < ActiveRecord::Base
 end
 
 class CdsMapper
+  attr_accessor :leader_seq
+  LEADERS=%w(GCCGTAGCCATTTTGGCTCAAG
+             ACCGTAGCCATTTTGGCTCAAG
+             TCCGTAGCCATTTTGGCTCAAG
+              CCGTAGCCATTTTGGCTCAAG
+               CGTAGCCATTTTGGCTCAAG
+                GTAGCCATTTTGGCTCAAG
+                 TAGCCATTTTGGCTCAAG
+                  AGCCATTTTGGCTCAAG
+                   GCCATTTTGGCTCAAG
+                    CCATTTTGGCTCAAG
+                     CATTTTGGCTCAAG
+                      ATTTTGGCTCAAG
+                       TTTTGGCTCAAG)
 
   def initialize(sequence)
     @na_seq = Bio::Sequence::NA.new(sequence.na_seq)
     @sequence = sequence
     @maps = []
     map_cds
+    @leader_seq = map_leader
+    puts @leader_seq
   end
 
   def map_cds
@@ -63,6 +79,14 @@ class CdsMapper
     end
   end
 
+  def map_leader
+    @leader_seq = LEADERS.select {|l| @na_seq.upcase.match /#{l}/}.first
+    if @leader_seq.nil?
+     @leader_seq = LEADERS.select {|l| @na_seq.reverse_complement.upcase.match /#{l}/}.first
+    end
+    @leader_seq
+  end
+
 
   def aa_to_s frame
     aa_s = @na_seq.translate(frame.to_i).to_s
@@ -78,13 +102,15 @@ class CdsMapper
   end
 
   def na_to_html frame
-    return wrap(na_to_s(frame),80)  unless is_valid? frame
+    seq = mark_leader na_to_s(frame)
+    return wrap( seq ,80)  unless is_valid? frame
 
     na = "<span style=\"color:green\" >#{utr_5_na frame}</span>"
     na += "<span style=\"color:red\" >#{start_na(frame)}</span>"
     na += "<span style=\"color:blue\" >#{cds_na(frame)}</span>"
     na += "<span style=\"color:red\" >#{stop_na(frame)}</span>"
     na += "<span style=\"color:green\" >#{utr_3_na(frame)}</span>"
+    na = mark_leader na
     wrap na, 80
   end
 
@@ -97,6 +123,13 @@ class CdsMapper
     aa += "<span style=\"color:red\" >#{stop_aa(frame)}</span>"
     aa += "<span style=\"color:green\" >#{utr_c_aa(frame)}</span>"
     wrap aa, 80
+  end
+
+  def mark_leader  na_seq
+    if @leader_seq
+      na_seq.gsub! @leader_seq, "<span style=\"color:orange\" >#{@leader_seq}</span>"
+    end
+    na_seq
   end
 
   def start_aa frame
@@ -177,6 +210,7 @@ class CdsMapper
     @maps[frame.to_i - 1].is_valid?
   end
 
+  #formats a fasta entry to row_len residues per line, while ignoring hidden html formatting tags.
   def wrap seq, row_len
     count = 0
     returnString = ''
