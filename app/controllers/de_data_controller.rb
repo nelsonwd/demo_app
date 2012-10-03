@@ -113,8 +113,6 @@ def cluster_annot
     @title = @experiment.camelcase
     @analysis_id    = params[:analysis_id]
     @base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
-    #default_treatment  = ([1,2,3,4] - [@base_treatment.to_i]).first
-    #@treatment      = (params[:treatment])? params[:treatment] : default_treatment
     @order_by       = params[:order_by] = (params[:order_by])? params[:order_by] : "pval"
     @filter         = params[:filter] = (params[:filter])? params[:filter] : "pval"
     @filter_value   = params[:filter_value] = (params[:filter_value])? params[:filter_value] : "0.005"

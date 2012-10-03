@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>De analysis:</b>
+  <%= @leader.de_analysis_id %>
+</p>
+
+<p>
+  <b>Treatment:</b>
+  <%= @leader.treatment_id %>
+</p>
+
+<p>
+  <b>Blast db:</b>
+  <%= @leader.blast_db_id %>
+</p>
+
+<p>
+  <b>Read seq:</b>
+  <%= @leader.read_seq %>
+</p>
+
+<p>
+  <b>Leader seq:</b>
+  <%= @leader.leader_seq %>
+</p>
+
+<p>
+  <b>Leader len:</b>
+  <%= @leader.leader_len %>
+</p>
+
+<p>
+  <b>Start pos:</b>
+  <%= @leader.start_pos %>
+</p>
+
+
+<%= link_to 'Edit', edit_leader_path(@leader) %> |
+<%= link_to 'Back', leaders_path %>

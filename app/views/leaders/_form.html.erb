@@ -1,0 +1,45 @@
+<%= form_for(@leader) do |f| %>
+  <% if @leader.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@leader.errors.count, "error") %> prohibited this leader from being saved:</h2>
+
+      <ul>
+      <% @leader.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :de_analysis_id %><br />
+    <%= f.number_field :de_analysis_id %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_id %><br />
+    <%= f.number_field :treatment_id %>
+  </div>
+  <div class="field">
+    <%= f.label :blast_db_id %><br />
+    <%= f.number_field :blast_db_id %>
+  </div>
+  <div class="field">
+    <%= f.label :read_seq %><br />
+    <%= f.text_field :read_seq %>
+  </div>
+  <div class="field">
+    <%= f.label :leader_seq %><br />
+    <%= f.text_field :leader_seq %>
+  </div>
+  <div class="field">
+    <%= f.label :leader_len %><br />
+    <%= f.number_field :leader_len %>
+  </div>
+  <div class="field">
+    <%= f.label :start_pos %><br />
+    <%= f.number_field :start_pos %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

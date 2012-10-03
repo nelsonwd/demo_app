@@ -3,7 +3,7 @@
   <tr>
     <th>Experiment</th>
     <th>Analysis method</th>
-    <th colspan="2" ></th>
+    <th colspan="3" ></th>
   </tr>
 
 <% @de_analyses.each do |de_analysis| %>
@@ -12,6 +12,11 @@
     <td><%= de_analysis.analysis_method %></td>
       <td><a href="de_data?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>&page=1">Table</a></td>
       <td><a href="heatmap?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>">Heat map</a></td>
+      <td>
+        <% if @leaders.include? de_analysis.experiment.id %>
+            <a href="leaders?experiment=<%=de_analysis.experiment.id%>">Leaders</a>
+        <% end %>
+      </td>
   </tr>
 <% end %>
 </table>

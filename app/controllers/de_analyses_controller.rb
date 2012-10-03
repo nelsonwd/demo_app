@@ -4,6 +4,7 @@ class DeAnalysesController < ApplicationController
   def index
     @title = "Experiments"
     @de_analyses = DeAnalysis.all
+    @leaders = Leader.select(:experiment_id).uniq.map{|b| b.experiment_id}
 
     respond_to do |format|
       format.html # index.html.erb

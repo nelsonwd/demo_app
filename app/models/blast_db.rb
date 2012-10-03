@@ -1,5 +1,6 @@
 class BlastDb < ActiveRecord::Base
   has_many :sequences, :dependent => :destroy
+  has_many :leaders
   def run
     file = File.open("#{Rails.root}/db/blast_db.csv", 'rb')
     while(line = file.gets)

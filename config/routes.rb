@@ -1,4 +1,6 @@
 DemoApp::Application.routes.draw do
+  resources :leaders
+
   resources :auto24h_fold_changes
 
   resources :auto1h_fold_changes
@@ -61,6 +63,10 @@ DemoApp::Application.routes.draw do
 
   get "de_data/cluster_annot"
   match '/cluster_annot', :to => 'de_data#cluster_annot'
+
+  get "leaders/detail"
+  match '/leader_detail', :to => 'leaders#detail'
+
 
 
   get "users/password"

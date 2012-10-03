@@ -62,6 +62,8 @@ require_relative 'blast_graphic'
       href = "http://www.ncbi.nlm.nih.gov/nuccore/#{gi}"
     elsif @hit_name.start_with?("Locus")
       href = "/blast_dbs/fastasearch?utf8=%E2%9C%93&file=symb1.2.fa&query=#{@hit_name}&commit=Search"
+    elsif @hit_name.start_with?("s4_")
+      href = "/blast_dbs/fastasearch?file=symb4master.fa&query=#{@hit_name}&commit=Search"
     elsif @hit_name.start_with?("symb3master")
       href = "/blast_dbs/fastasearch?file=symb3master.fa&query=#{@hit_name}&commit=Search"
     elsif @hit_name.start_with?("symb2master")

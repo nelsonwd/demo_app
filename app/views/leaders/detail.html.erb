@@ -1,0 +1,12 @@
+<h1>Leader Reads</h1>
+
+<table>
+
+  <% @leaders.each do |l| %>
+      <tr><td><a target="blank" href="submit?in_querysequence=<%=l.read_seq%>&blastprogramchoice=blastn&expectvalue=1e-10&max_hits=10&ch_genom[]=symb3master">BLAST annotated transcripts</a></td>
+        <td><a target="blank" href="submit?in_querysequence=<%=l.read_seq%>&blastprogramchoice=blastn&expectvalue=1e-10&max_hits=10&ch_genom[]=symb4master">BLAST reference transcripts</a></td></tr>
+      <tr>
+        <td colspan="2"><span style='font-family:monospace;font-size:8pt'><%= l.read_seq.gsub(l.leader_seq, "<span style='font-family:monospace;color:orange'>#{l.leader_seq}</span>").html_safe %></span></td>
+      </tr>
+  <% end %>
+</table>

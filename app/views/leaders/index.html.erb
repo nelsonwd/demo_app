@@ -1,0 +1,26 @@
+<h1>Leader Report for Experiment <%= @exp_name %></h1>
+
+<table>
+  <% @results.each_pair do |k,r| %>
+  <tr><th colspan="5">Treatment: <%= k %></th> </tr>
+  <tr>
+    <th>Leader seq</th>
+    <th>Length</th>
+    <th>@Start</th>
+    <th>@Middle</th>
+    <th>Total</th>
+  </tr>
+      <% r.each_pair do |k,v| %>
+      <tr>
+          <td><%=k%></td>
+          <td><%=v[0]%></td>
+          <td><a href="leader_detail?experiment_id=<%=v[4]%>&treatment_id=<%=v[5]%>&leader_len=<%=v[0]%>&start_pos=0&leader_seq=<%=k%>"><%=v[1]%></a></td>
+          <td><a href="leader_detail?experiment_id=<%=v[4]%>&treatment_id=<%=v[5]%>&leader_len=<%=v[0]%>&start_pos=1&leader_seq=<%=k%>"><%=v[2]%></a></td>
+          <td><a href="leader_detail?experiment_id=<%=v[4]%>&treatment_id=<%=v[5]%>&leader_len=<%=v[0]%>&start_pos=-1&leader_seq=<%=k%>"><%=v[3]%></a></td>
+      </tr>
+      <% end
+      end%>
+</table>
+
+<br/>
+
