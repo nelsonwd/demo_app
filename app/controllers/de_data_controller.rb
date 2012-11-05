@@ -173,9 +173,9 @@ def cluster_annot
       if (@results_hash[d.sequence].nil?)
         @results_hash[d.sequence] = [[],[],[],[]]
         bt_abundance = DeDatum.where(:sequence_id => d.sequence_id, :treatment_id => d.base_treatment_id, :de_analysis_id => d.de_analysis_id).first.abundance
-        @results_hash[d.sequence][d.base_treatment_id]= [bt_abundance, "N/A","black"]
+        @results_hash[d.sequence][d.base_treatment_id]= [bt_abundance,"N/A", "N/A","black"]
       end
-      @results_hash[d.sequence][d.treatment_id] = [d.de_datum.abundance, d.log2fc, de_color(@filter, @filter_value, d)]
+      @results_hash[d.sequence][d.treatment_id] = [d.de_datum.abundance, d.log2fc, d.pval, de_color(@filter, @filter_value, d)]
     end
 
     @annotation_hash = create_annotation_results @results_hash
@@ -423,10 +423,10 @@ end
 
 def create_report_file results_hash, annotation_results, report_url
   out_file = File.open("public#{report_url}", 'w')
-  out_file.write( "Sequence\t0-RPKM\t0-Log2FC\t10-RPKM\t10-Log2FC\t100-RPKM\t100-Log2FC\t500-RPKM\t500-Log2FC\tUniProt\tNCBInt\tNCBInr\tMapMan\tInterPro\n")
+  out_file.write( "Sequence\t0-RPKM\t0-Log2FC\t0-pval\t10-RPKM\t10-Log2FC\t10-pval\t100-RPKM\t100-Log2FC\t100-pval\t500-RPKM\t500-Log2FC\t500-pval\tUniProt\tNCBInt\tNCBInr\tMapMan\tInterPro\n")
   results_hash.each_pair do |seq,d_array|
     annotation_hash = annotation_results[seq]
-    out_file.write "#{seq.accession}\t#{d_array[1][0]}\t#{d_array[1][1]}\t#{d_array[2][0]}\t#{d_array[2][1]}\t#{d_array[3][0]}\t#{d_array[3][1]}\t#{d_array[4][0]}\t#{d_array[4][1]}\t#{annotation_hash[:UniProt]}\t#{annotation_hash[:NCBInt]}\t#{annotation_hash[:NCBInr]}\t#{annotation_hash[:MapMan]}\t#{annotation_hash[:InterPro]}\n"
+    out_file.write "#{seq.accession}\t#{d_array[1][0]}\t#{d_array[1][1]}\t#{d_array[1][2]}\t#{d_array[2][0]}\t#{d_array[2][1]}\t#{d_array[2][2]}\t#{d_array[3][0]}\t#{d_array[3][1]}\t#{d_array[3][2]}\t#{d_array[4][0]}\t#{d_array[4][1]}\t#{d_array[4][2]}\t#{annotation_hash[:UniProt]}\t#{annotation_hash[:NCBInt]}\t#{annotation_hash[:NCBInr]}\t#{annotation_hash[:MapMan]}\t#{annotation_hash[:InterPro]}\n"
   end
   out_file.close
   report_url
