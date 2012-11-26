@@ -41,6 +41,7 @@ DemoApp::Application.routes.draw do
   match '/password', :to => 'users#password'
   match '/submit', :to => 'blast#submit'
   match '/about', :to => 'pages#about'
+  match '/photo', :to => 'pages#photo'
   match '/wait', :to => 'blast#wait'
 
   match '/result', :to => 'blast#result'
@@ -48,6 +49,8 @@ DemoApp::Application.routes.draw do
   get "pages/blast"
 
   get "pages/about"
+
+  get "pages/photo"
 
   get "blast_dbs/fastasearch"  
   match '/fastasearch', :to => 'blast_dbs#fastasearch'
