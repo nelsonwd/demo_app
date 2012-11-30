@@ -72,37 +72,37 @@ var myform=document.getElementById("starttblastnoptions");
         }
 
         if (group=="alveolata") {
-                for (var m = 28; m < 42; m++){
+                for (var m = 28; m < 43; m++){
                 myform[m].checked = isChecked;
                 }
         }
 
         if (group=="dinophyceae") {
-                for (var m = 28; m < 40; m++){
+                for (var m = 28; m < 41; m++){
                 myform[m].checked = isChecked;
                 }
         }
 
         if (group=="symbiodinium") {
-                for (var m = 34; m < 40; m++){
+                for (var m = 34; m < 41; m++){
                 myform[m].checked = isChecked;
                 }
         }
         
         if (group=="apicomplexa") {
-                for (var m = 40; m < 42; m++){
+                for (var m = 41; m < 43; m++){
                 myform[m].checked = isChecked;
                 }
         }
         
         if (group=="cnidaria") {
-                for (var m = 42; m < 45; m++){
+                for (var m = 43; m < 46; m++){
                 myform[m].checked = isChecked;
                 }
         }
         
         if (group=="other") {
-                for (var m = 45; m < 46; m++){
+                for (var m = 46; m < 47; m++){
                 myform[m].checked = isChecked;
                 }
         }
