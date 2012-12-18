@@ -1,4 +1,12 @@
 DemoApp::Application.routes.draw do
+  resources :auto24h_r2_fold_changes
+
+  resources :hetero24h_r2_fold_changes
+
+  resources :hetero1h_r2_fold_changes
+
+  resources :auto1h_r2_fold_changes
+
   resources :leaders
 
   resources :auto24h_fold_changes
@@ -41,6 +49,7 @@ DemoApp::Application.routes.draw do
   match '/password', :to => 'users#password'
   match '/submit', :to => 'blast#submit'
   match '/about', :to => 'pages#about'
+  match '/data', :to => 'pages#data'
   match '/photo', :to => 'pages#photo'
   match '/wait', :to => 'blast#wait'
 
@@ -51,6 +60,8 @@ DemoApp::Application.routes.draw do
   get "pages/about"
 
   get "pages/photo"
+
+  get "pages/data"
 
   get "blast_dbs/fastasearch"  
   match '/fastasearch', :to => 'blast_dbs#fastasearch'

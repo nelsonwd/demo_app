@@ -13,6 +13,11 @@ before_filter :authenticate, :only => [:blast]
     @title = "Contact"
   end
 
+def data
+  @title = "Data"
+  @tab = (params[:tab])?"selected:#{params[:tab]}":'selected:1'
+end
+
 private
 
   def authenticate
