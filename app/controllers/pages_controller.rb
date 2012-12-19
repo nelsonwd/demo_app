@@ -15,7 +15,10 @@ before_filter :authenticate, :only => [:blast]
 
 def data
   @title = "Data"
-  @tab = (params[:tab])?"selected:#{params[:tab]}":'selected:1'
+end
+
+def photo
+  @title = "Photo Gallery"
 end
 
 private
