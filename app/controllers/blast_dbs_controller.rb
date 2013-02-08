@@ -98,7 +98,6 @@ end
       unless s.nil? then
         @result = {} 
 
-        feats = []
         feats = s.features
         @result[:interpro] = {}
         @result[:no_interpro] = []
@@ -213,7 +212,7 @@ end
       end
       file.close
     end
-     if @result.blank?
+    if @result.blank?
        @result = "No matches found for #{@query} in #{params[:file]}"
     #else
      # @result = "Total number of matches = #{count} \n\n" + @result

@@ -61,22 +61,34 @@ class CdsMapper
     @maps = []
     map_cds
     @leader_seq = map_leader
-    puts @leader_seq
+    #puts @leader_seq
   end
 
   def map_cds
     1.upto(6).each do |i|  #frame loop
       aa_sequence = @na_seq.translate(i)
-      start_codon = nil
-      end_codon = nil
-      if start_codon = aa_sequence.index(?M)
-        if end_codon = aa_sequence.index(?*, start_codon + 1)
-          start_codon = end_codon = nil if (end_codon - start_codon) == 1
+      start_marker = cds_len = 0
+      cds_map = CdsMap.new i, nil, nil, @na_seq.size
+      while true
+        if (start_codon = aa_sequence.index(?M, start_marker))
+          if end_codon = aa_sequence.index(?*, start_codon + 1)
+            start_marker = end_codon
+            if (end_codon - start_codon - 1) == 0
+              next
+            else
+              if cds_len < (end_codon - start_codon -1)
+                cds_len =  end_codon - start_codon -1
+                cds_map = CdsMap.new i, start_codon, end_codon, @na_seq.size
+              end
+            end
+          else
+            break
+          end
         else
-          start_codon = nil
+          break
         end
       end
-      @maps[i - 1] = CdsMap.new i, start_codon, end_codon, @na_seq.size
+      @maps[i - 1] = cds_map
     end
   end
 
