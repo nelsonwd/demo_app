@@ -5,10 +5,48 @@ DEFAULT_FILTER_VALUE = "0.005"
 DEFAULT_FILTER = "pval"
 DEFAULT_BASE_TREATMENT = "2"
 DEFAULT_CLUSTER_NUM = "0"
+DEFAULT_ONTOLOGY_ROOT = "Biological Process"
 MAP_MAX = 8000
 
 
 class DeDataController < ApplicationController
+
+def go_summary
+  @experiment = params[:experiment]
+  @analysis_id = params[:analysis_id]
+  @base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
+  @filter = params[:filter] = (params[:filter])? params[:filter] :  DEFAULT_FILTER
+  @filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] :  DEFAULT_FILTER_VALUE
+  @ontology_root = (params[:ontology_root])?params[:ontology_root] : DEFAULT_ONTOLOGY_ROOT
+
+  respond_to do |format|
+    format.html
+  end
+
+end
+
+
+def go_json
+  @experiment = params[:experiment]
+  fc_table =  get_table @experiment
+  analysis_id = params[:analysis_id]
+  base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
+  filter = params[:filter] = (params[:filter])? params[:filter] :  DEFAULT_FILTER
+  filter_value = params[:filter_value] = (params[:filter_value])? params[:filter_value] :  DEFAULT_FILTER_VALUE
+  ontology_root = (params[:ontology_root])?params[:ontology_root] : DEFAULT_ONTOLOGY_ROOT
+  filter_string = filter_sql filter, filter_value, fc_table.table_name
+
+  filtered_seq_ids = get_filtered_seq_ids(fc_table, analysis_id, base_treatment, filter_string)
+
+  heat_hash = get_filtered_seq_ids_with_go_data( filtered_seq_ids, fc_table, analysis_id, base_treatment, ontology_root)
+
+
+  respond_to do |format|
+    format.json{
+      render :json => heat_hash
+    }
+  end
+end
 
 def cluster_annot
     experiment = params[:experiment]
@@ -325,7 +363,7 @@ def up_middle_down_split(fc_table, treatment, uniq_seq_ids,base_treatment, analy
     filter_strings = ["#{fc_table_name}.log2fc < 0 and #{fc_table_name}.#{filter} < #{cluster_filter} and ",
                       "#{fc_table_name}.#{filter} >= #{cluster_filter} and ",
                       "#{fc_table_name}.log2fc > 0 and #{fc_table_name}.#{filter} < #{cluster_filter} and "]
-     (0..2).each do |count|
+      (0..2).each do |count|
          seq_ids = fc_table.find_by_sql("select distinct(#{fc_table_name}.sequence_id) " +
                                          "from  #{fc_table_name}, de_data " +
                                          "where #{fc_table_name}.de_analysis_id = #{analysis_id} and " +
@@ -334,9 +372,9 @@ def up_middle_down_split(fc_table, treatment, uniq_seq_ids,base_treatment, analy
                                          "      #{fc_table_name}.de_datum_id = de_data.id and " +
                                                 filter_strings[count] +
                                          "      #{fc_table_name}.sequence_id in (#{uniq_seq_ids.join(',')})").map{|x| x.sequence_id}
-      clusters[count] = seq_ids if seq_ids.size > 0
-      seq_ids = []
-    end
+         clusters[count] = seq_ids if seq_ids.size > 0
+         seq_ids = []
+      end
     clusters.compact
 end
 
@@ -416,6 +454,37 @@ def get_filtered_seq_ids(fc_table, analysis_id, base_treatment, filter_string)
                                     "      #{filter_string} " +
                                     "      de_data.abundance > 0").map{|x| x.sequence_id}
 end
+
+def get_filtered_seq_ids_with_go_data( filtered_seq_ids, fc_table, analysis_id, base_treatment, ontology_root)
+
+  go_hash = {}
+  result_hash = {}
+
+  go = GeneOntology.includes(:go_slim_sequences => :sequence).
+      where(:ontology_root => ontology_root, 'sequences.id' => filtered_seq_ids)
+  go.map do |g|
+    unless go_hash.has_key?  g.label
+      go_hash[g.label] = g.go_slim_sequences.map{|s|s.sequence}
+    end
+    go_hash[g.label] + g.go_slim_sequences.map{|s|s.sequence}
+  end
+
+  go_hash.each_pair do |go, sequences|
+    result_hash[go] = GoHeatMap.new
+    sequences.each_with_index do |sq, i|
+      fcs = fc_table.includes(:treatment).where(:sequence_id => sq.id,:de_analysis_id => analysis_id, :base_treatment_id => base_treatment).
+        order(:treatment_id)
+      result_hash[go].treatments = fcs.map{|t| t.treatment.name}
+      result_hash[go].accessions << sq.accession
+      anArray = []
+      fcs.each_with_index{|t,y| anArray <<[t.log2fc,i,y]}
+      result_hash[go].log2fc << anArray
+    end
+  end
+
+  result_hash
+end
+
 
 def get_table(experiment_name)
    Kernel.const_get(experiment_name.camelcase + "FoldChange")

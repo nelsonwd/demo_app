@@ -1,4 +1,8 @@
 DemoApp::Application.routes.draw do
+  resources :go_slim_sequences
+
+  resources :go_slims
+
   resources :auto24h_r2_fold_changes
 
   resources :hetero24h_r2_fold_changes
@@ -73,7 +77,14 @@ DemoApp::Application.routes.draw do
   match '/aa_sequence_map', :to => 'blast_dbs#aa_sequence_map'
 
   get "de_data/heatmap"
-  match '/heatmap', :to => 'de_data#heatmap'  
+  match '/heatmap', :to => 'de_data#heatmap'
+
+  get "de_data/go_summary"
+  match '/go_summary', :to => 'de_data#go_summary'
+
+  get "de_data/go_json"
+  match '/go_json', :to => 'de_data#go_json'
+
 
   get "de_data/cluster_annot"
   match '/cluster_annot', :to => 'de_data#cluster_annot'

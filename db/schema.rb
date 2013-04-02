@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121213231856) do
+ActiveRecord::Schema.define(:version => 20130319235131) do
 
   create_table "annotation_sources", :force => true do |t|
     t.string   "name"
@@ -191,6 +191,31 @@ ActiveRecord::Schema.define(:version => 20121213231856) do
   add_index "gene_ontologies_interpros", ["gene_ontology_id"], :name => "index_gene_ontologies_interpros_on_gene_ontology_id"
   add_index "gene_ontologies_interpros", ["interpro_id", "gene_ontology_id"], :name => "index_gene_ontologies_interpros_on_interpro_id_gene_ontology_id", :unique => true
   add_index "gene_ontologies_interpros", ["interpro_id"], :name => "index_gene_ontologies_interpros_on_interpro_id"
+
+  create_table "go_slim_sequences", :force => true do |t|
+    t.integer  "sequence_id"
+    t.integer  "gene_ontology_id"
+    t.integer  "go_slim_id"
+    t.integer  "go_seq_accession"
+    t.string   "go_seq_description"
+    t.string   "gene_symbol"
+    t.integer  "taxon"
+    t.string   "evidence_code"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "go_slim_sequences", ["gene_ontology_id", "go_slim_id", "sequence_id"], :name => "index_go_slim_seqs", :unique => true
+  add_index "go_slim_sequences", ["gene_ontology_id", "go_slim_id"], :name => "index_go_slim_sequences_on_gene_ontology_id_and_go_slim_id"
+  add_index "go_slim_sequences", ["gene_ontology_id"], :name => "index_go_slim_sequences_on_gene_ontology_id"
+  add_index "go_slim_sequences", ["sequence_id", "go_slim_id"], :name => "index_go_slim_sequences_on_sequence_id_and_go_slim_id"
+  add_index "go_slim_sequences", ["sequence_id"], :name => "index_go_slim_sequences_on_sequence_id"
+
+  create_table "go_slims", :force => true do |t|
+    t.string   "subset"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "hetero1h_fold_changes", :force => true do |t|
     t.float    "log2fc"

@@ -1,0 +1,20 @@
+<%= form_for(@go_slim) do |f| %>
+  <% if @go_slim.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@go_slim.errors.count, "error") %> prohibited this go_slim from being saved:</h2>
+
+      <ul>
+      <% @go_slim.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :subset %><br />
+    <%= f.text_field :subset %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

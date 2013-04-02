@@ -1,0 +1,35 @@
+<h1>Listing go_slim_sequences</h1>
+
+<table>
+  <tr>
+    <th>Sequence</th>
+    <th>Gene ontology</th>
+    <th>Go slim</th>
+    <th>Go seq description</th>
+    <th>Gene symbol</th>
+    <th>Taxon</th>
+    <th>Evidence code</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @go_slim_sequences.each do |go_slim_sequence| %>
+  <tr>
+    <td><%= go_slim_sequence.sequence_id %></td>
+    <td><%= go_slim_sequence.gene_ontology_id %></td>
+    <td><%= go_slim_sequence.go_slim_id %></td>
+    <td><%= go_slim_sequence.go_seq_description %></td>
+    <td><%= go_slim_sequence.gene_symbol %></td>
+    <td><%= go_slim_sequence.taxon %></td>
+    <td><%= go_slim_sequence.evidence_code %></td>
+    <td><%= link_to 'Show', go_slim_sequence %></td>
+    <td><%= link_to 'Edit', edit_go_slim_sequence_path(go_slim_sequence) %></td>
+    <td><%= link_to 'Destroy', go_slim_sequence, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Go slim sequence', new_go_slim_sequence_path %>

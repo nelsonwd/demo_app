@@ -1,0 +1,45 @@
+<%= form_for(@go_slim_sequence) do |f| %>
+  <% if @go_slim_sequence.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@go_slim_sequence.errors.count, "error") %> prohibited this go_slim_sequence from being saved:</h2>
+
+      <ul>
+      <% @go_slim_sequence.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :sequence_id %><br />
+    <%= f.text_field :sequence_id %>
+  </div>
+  <div class="field">
+    <%= f.label :gene_ontology_id %><br />
+    <%= f.text_field :gene_ontology_id %>
+  </div>
+  <div class="field">
+    <%= f.label :go_slim_id %><br />
+    <%= f.text_field :go_slim_id %>
+  </div>
+  <div class="field">
+    <%= f.label :go_seq_description %><br />
+    <%= f.text_field :go_seq_description %>
+  </div>
+  <div class="field">
+    <%= f.label :gene_symbol %><br />
+    <%= f.text_field :gene_symbol %>
+  </div>
+  <div class="field">
+    <%= f.label :taxon %><br />
+    <%= f.text_field :taxon %>
+  </div>
+  <div class="field">
+    <%= f.label :evidence_code %><br />
+    <%= f.text_field :evidence_code %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

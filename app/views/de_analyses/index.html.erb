@@ -13,6 +13,10 @@
       <td><a href="de_data?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>&page=1">Table</a></td>
       <td><a href="heatmap?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>">Heat map</a></td>
       <td>
+        <% if de_analysis.has_go_slim? %>
+          <a href="go_summary?experiment=<%=de_analysis.experiment.name%>&analysis_id=<%=de_analysis.id%>">Gene Ontology</a></td>
+        <% end %>
+      <td>
         <% if @leaders.include? de_analysis.experiment.id %>
             <a href="leaders?experiment=<%=de_analysis.experiment.id%>">Leaders</a>
         <% end %>

@@ -1,0 +1,25 @@
+<h1>Listing go_slims</h1>
+
+<table>
+  <tr>
+    <th>Gene ontology</th>
+    <th>Subset</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @go_slims.each do |go_slim| %>
+  <tr>
+    <td><%= go_slim.gene_ontology_id %></td>
+    <td><%= go_slim.subset %></td>
+    <td><%= link_to 'Show', go_slim %></td>
+    <td><%= link_to 'Edit', edit_go_slim_path(go_slim) %></td>
+    <td><%= link_to 'Destroy', go_slim, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Go slim', new_go_slim_path %>

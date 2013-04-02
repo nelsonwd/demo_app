@@ -33,7 +33,7 @@ belongs_to :annotation
   end
 
 
-  def init_annot_src
+  def Feature.init_annot_src
     AnnotationSource.find_or_create_by_name("HMMSmart", :url => "http://smart.embl-heidelberg.de/smart/do_annotation.pl?BLAST=DUMMY&DOMAIN=@@")
     AnnotationSource.find_or_create_by_name("HMMPIR", :url => "http://pir.georgetown.edu/cgi-bin/ipcSF?id=@@")
     AnnotationSource.find_or_create_by_name("superfamily", :url => "http://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=@@")
@@ -52,6 +52,7 @@ belongs_to :annotation
     AnnotationSource.find_or_create_by_name("NCBInr", :url => "http://www.ncbi.nlm.nih.gov/protein/@@")
     AnnotationSource.find_or_create_by_name("UniProt", :url => "http://www.uniprot.org/uniprot/@@")
     AnnotationSource.find_or_create_by_name("MapMan", :url => "http://mapman.gabipd.org/web/guest/mapman")
+    #AnnotationSource.find_or_create_by_name("GO slim", :url => "http://amigo.geneontology.org/cgi-bin/amigo/term_details?term=@@")
   end
 
 # 0 =  accession-frameNum
@@ -152,7 +153,7 @@ belongs_to :annotation
   # 2 = query accession
   # 3 = hit description
 
-  def load_mapman file_name
+  def Feature.load_mapman file_name
     file = File.open("#{Rails.root}/#{file_name}", 'rb')
     init_annot_src
     annot_src = AnnotationSource.where(:name => 'MapMan').first

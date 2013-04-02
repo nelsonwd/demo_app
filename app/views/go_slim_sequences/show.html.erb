@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Sequence:</b>
+  <%= @go_slim_sequence.sequence_id %>
+</p>
+
+<p>
+  <b>Gene ontology:</b>
+  <%= @go_slim_sequence.gene_ontology_id %>
+</p>
+
+<p>
+  <b>Go slim:</b>
+  <%= @go_slim_sequence.go_slim_id %>
+</p>
+
+<p>
+  <b>Go seq description:</b>
+  <%= @go_slim_sequence.go_seq_description %>
+</p>
+
+<p>
+  <b>Gene symbol:</b>
+  <%= @go_slim_sequence.gene_symbol %>
+</p>
+
+<p>
+  <b>Taxon:</b>
+  <%= @go_slim_sequence.taxon %>
+</p>
+
+<p>
+  <b>Evidence code:</b>
+  <%= @go_slim_sequence.evidence_code %>
+</p>
+
+
+<%= link_to 'Edit', edit_go_slim_sequence_path(@go_slim_sequence) %> |
+<%= link_to 'Back', go_slim_sequences_path %>

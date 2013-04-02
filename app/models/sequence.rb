@@ -4,6 +4,7 @@ class Sequence < ActiveRecord::Base
   has_many :de_data,  :dependent => :destroy
   has_many :annotations, :through => :features
   has_and_belongs_to_many :leaders
+  has_many :go_slim_sequences
 
 #  def Sequence.parse_accession(desc, blast_index)
 #    parts = desc.split("_")

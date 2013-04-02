@@ -1,0 +1,157 @@
+<style>
+    div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 180px;
+        height: 28px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+
+    //height of each row in the heatmap
+    var h = 6;
+    //width of each column in the heatmap
+    var w = 40;
+    // top position of each heatmap
+    var yTop = 0;
+    // left position
+    var xLeft = 0;
+
+    //expression value label
+    var expLab = d3.select("body").append("div") .attr("class", "tooltip") .style("opacity", 0);
+
+
+    d3.json("http://localhost:3000/go_json.json?experiment=<%=@experiment%>&analysis_id=<%=@analysis_id%>&base_treatment=<%=@base_treatment%>&filter=<%=@filter%>&filter_value=<%=@filter_value%>&ontology_root=<%=@ontology_root%>",
+            function(jsonHash) {
+        for (var go_term in jsonHash)  {
+            var json = jsonHash[go_term]
+            var cols = json['treatments'];
+            var rows = json['accessions'];
+            var minData = -1.5
+            var maxData = 1.5
+            var data = json['log2fc'];
+
+//attach a SVG node to the document
+//height and width defined by the row/column lengths
+            var mySVG = d3.select("table")
+                    .append("tr")
+                    .append("td")
+                    .append("svg")
+                    .attr("width", (w * cols.length) + 500)
+                    .attr("height", (h * rows.length + 100))
+                    .style('position','relative')
+                    .style('top',yTop)
+                    .style('left',xLeft);
+
+//define a color scale using the min and max expression values
+            var colorScale = d3.scale.linear()
+                    .domain([minData, 0, maxData])
+                    .range(["blue", "white", "red"]);
+
+//generate the heatmap
+            var heatmapRow = mySVG.selectAll(".heatmap")
+                    .data(data)
+                    .enter().append("g")
+                    .attr('name',function(d,i) { return rows[i]});
+            var iy = 0;
+            var heatmapRects = heatmapRow
+                    .selectAll(".rect")
+                    .data(function(d,i) {
+                        return d;
+                    }).enter().append("svg:rect")
+                    .attr('width',w)
+                    .attr('height',h)
+                    .attr('x', function(d,i) {
+                        return (i * w) + 25;
+                    })
+                    .attr('y', function(d,i) {
+                        if (i% d.length == 0){iy++}
+                        return (iy * h) + 50;
+                    })
+                    .style('fill',function(d) {
+                        var color = d[0];
+                        if(d[0] > maxData){
+                            color = maxData;
+                        } else if(d[0] < minData){
+                            color = minData;
+                        }
+                        return colorScale(color);
+                    });
+
+
+
+//Main label
+            var mainLabel = mySVG.selectAll(".mainLabel")
+                    .data([go_term])
+                    .enter().append('svg:text')
+                    .attr('x', 5)
+                    .attr('y', 15)
+                    .attr('class','label')
+                    .style('text-anchor','left')
+                    .text(function(d) {return d + " : " + rows.length + " transcripts";});
+
+//label columns
+            var columnLabel = mySVG.selectAll(".colLabel")
+                    .data(cols)
+                    .enter().append('svg:text')
+                    .attr('x', function(d,i) {
+                        return ((i + 0.5) * w) + 25;
+                    })
+                    .attr('y', 40)
+                    .attr('class','label')
+                    .style('text-anchor','middle')
+                    .text(function(d) {return d;});
+
+
+            heatmapRow.on("mouseover", function(d, i) {
+                d3.select(this)
+                        .attr('stroke-width',4)
+                        .attr('stroke','black');
+
+                expLab
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 0.9);
+
+                output = '<b>' + d3.select(this).attr('name') + '</b><br>';
+                for (var j = 0 , count = d.length; j < count; j ++ ) {
+                    output += d[j][0] + ", ";
+                }
+                expLab
+                        .html(output.substring(0,output.length -2))
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px");
+
+            })
+            .on("mouseout", function(d) {
+
+                d3.select(this)
+                        .attr('stroke-width',0)
+                        .attr('stroke','none');
+                expLab
+                        .transition()
+                        .duration(500)
+                        .style("opacity", 0);
+            })
+            .on("click", function(d,i){
+                accession = d3.select(this).attr('name')
+                window.open('/blast_dbs/fastasearch?denominator=2&file=symb6master.fa&query=' + accession)
+            });
+
+            yTop = 'auto'
+        }
+    });
+
+</script>
+
+<table>
+<!--svg go here-->
+</table>
