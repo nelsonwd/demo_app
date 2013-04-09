@@ -385,7 +385,7 @@ def draw_map(order, results_hash)
    row_hgt = 2
    g_wdt = 300
    g_hgt = results_hash.size * row_hgt
-   g_hgt_in = g_hgt/100
+   g_hgt_in = g_hgt/100.0
    RVG::dpi = 72
    area_tags = []
    rvg = RVG.new(3.0.in, g_hgt_in.in).viewbox(0,0, g_wdt, g_hgt) do |canvas|
@@ -419,7 +419,6 @@ def draw_map(order, results_hash)
      end
      area_tags << "<area shape=\"rect\" coords=\"#{start_coords},#{g_wdt},#{y_pos}\" title=\"cluster #{cluster_count}\" onclick=\"document.getElementById('cluster_num').selectedIndex = #{cluster_count - 1};document.getElementById('cluster_num').onchange();\" />"
    end
-
    rvg.draw.write("public/tmp/#{@title}-#{rvg.object_id}.gif")
                "<img src=\"/tmp/#{@title}-#{rvg.object_id}.gif\" width=\"300\" height=\"#{g_hgt}\"  alt=\"heatmap\" usemap=\"#heatmap\" >\n" +
                "<map name=\"heatmap\" >\n" +
