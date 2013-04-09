@@ -12,6 +12,7 @@ MAP_MAX = 8000
 class DeDataController < ApplicationController
 
 def go_summary
+  @local_url = "http://#{request.host}:#{request.port}"
   @experiment = params[:experiment]
   @analysis_id = params[:analysis_id]
   @base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
@@ -27,7 +28,6 @@ end
 
 
 def go_json
-  @local_url = request.fullpath
   @experiment = params[:experiment]
   fc_table =  get_table @experiment
   analysis_id = params[:analysis_id]
