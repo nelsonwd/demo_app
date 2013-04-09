@@ -29,7 +29,7 @@
     var expLab = d3.select("body").append("div") .attr("class", "tooltip") .style("opacity", 0);
 
 
-    d3.json("http://localhost:3000/go_json.json?experiment=<%=@experiment%>&analysis_id=<%=@analysis_id%>&base_treatment=<%=@base_treatment%>&filter=<%=@filter%>&filter_value=<%=@filter_value%>&ontology_root=<%=@ontology_root%>",
+    d3.json("<%= @local_url %>/go_json.json?experiment=<%=@experiment%>&analysis_id=<%=@analysis_id%>&base_treatment=<%=@base_treatment%>&filter=<%=@filter%>&filter_value=<%=@filter_value%>&ontology_root=<%=@ontology_root%>",
             function(jsonHash) {
         for (var go_term in jsonHash)  {
             var json = jsonHash[go_term]

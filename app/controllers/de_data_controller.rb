@@ -27,6 +27,7 @@ end
 
 
 def go_json
+  @local_url = request.fullpath
   @experiment = params[:experiment]
   fc_table =  get_table @experiment
   analysis_id = params[:analysis_id]
