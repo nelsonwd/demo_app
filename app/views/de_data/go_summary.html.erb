@@ -13,6 +13,38 @@
     }
 </style>
 
+<%  default_filter = params[:filter] ? params[:filter] : DEFAULT_FILTER
+    default_filter_value = params[:filter_value] ? params[:filter_value] : DEFAULT_FILTER_VALUE
+    default_base_treatment = (params[:base_treatment])? params[:base_treatment] : DEFAULT_BASE_TREATMENT
+    default_cluster_order = ['1','2','3','4']
+    default_cluster_order.delete(default_base_treatment)
+    default_ontology_root = params[:ontology_root] ? params[:ontology_root] : DEFAULT_ONTOLOGY_ROOT
+%>
+
+<%= form_tag({:controller => "de_data",:action => "go_summary"}, {:method => "get"}) do %>
+    <%= hidden_field_tag(:experiment, params[:experiment])%>
+    <%= hidden_field_tag(:analysis_id, params[:analysis_id])%>
+
+    <table style="border:solid 3px #000000;">
+      <tr style="background-color:white;">
+        <th><%= label_tag(:base_treatment, "Base treatment") %></th>
+        <th><%= label_tag(:filter, "Filter") %></th>
+        <th><%= label_tag(:filter_value,"Filter value (0 to 1)") %></th>
+        <th><%= label_tag(:ontology_root,"Ontology Root") %></th>
+        <td><%= link_to("Table",params.merge({:controller => 'de_data', :action => 'index',:page => 1}))%></td>
+      </tr><tr style="background-color:lightgray;" >
+      <td style="background-color:white;"><%= select_tag(:base_treatment, options_for_select([["0uE","1"],["10uE","2"],["100uE","3"], ["500uE","4"]], default_base_treatment)) %></td>
+      <td style="background-color:white;"><%= select_tag(:filter, options_for_select([["p-Val","pval"],["FDR", "fdr"]], default_filter)) %></td>
+      <td style="background-color:white;"> < <%= text_field_tag(:filter_value, default_filter_value) %></td>
+      <td style="background-color:white;"><%= select_tag(:ontology_root, options_for_select([['Biological Process','Biological Process'],['Molecular Function','Molecular Function'], ['Cellular Component','Cellular Component']], default_ontology_root)) %></td>
+      <td style="background-color:white;"><%=submit_tag("Refresh")%></td>
+    </tr>
+    </table>
+<% end %>
+
+<table name='json' id="json"></table>
+
+
 <script type="text/javascript">
 
 
@@ -41,7 +73,7 @@
 
 //attach a SVG node to the document
 //height and width defined by the row/column lengths
-            var mySVG = d3.select("table")
+            var mySVG = d3.select("table#json")
                     .append("tr")
                     .append("td")
                     .append("svg")
@@ -151,7 +183,3 @@
     });
 
 </script>
-
-<table>
-<!--svg go here-->
-</table>

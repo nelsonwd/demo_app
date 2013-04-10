@@ -11,6 +11,8 @@ MAP_MAX = 8000
 
 class DeDataController < ApplicationController
 
+  caches_page :go_jason
+
 def go_summary
   @local_url = "http://#{request.host}:#{request.port}"
   @experiment = params[:experiment]
@@ -25,6 +27,8 @@ def go_summary
   end
 
 end
+
+
 
 
 def go_json
