@@ -45,7 +45,6 @@ def go_json
 
   heat_hash = get_filtered_seq_ids_with_go_data( filtered_seq_ids, fc_table, analysis_id, base_treatment, ontology_root)
 
-
   respond_to do |format|
     format.json{
       render :json => heat_hash
@@ -462,10 +461,40 @@ end
 def get_filtered_seq_ids_with_go_data( filtered_seq_ids, fc_table, analysis_id, base_treatment, ontology_root)
 
   go_hash = {}
+  t_count_hash = {}
   result_hash = {}
 
   go = GeneOntology.includes(:go_slim_sequences => :sequence).
       where(:ontology_root => ontology_root, 'sequences.id' => filtered_seq_ids)
+  go.map do |g|
+      go_hash[g.label] = g.go_slim_sequences.map{|s|s.sequence}
+      t_count_hash[g.label] = GoSlimSequence.where(:gene_ontology_id => g.id).size.to_s
+  end
+
+  go_hash.each_pair do |go, sequences|
+    result_hash[go] = GoHeatMap.new
+    sequences.each_with_index do |sq, i|
+      fcs = fc_table.includes(:treatment).where(:sequence_id => sq.id,:de_analysis_id => analysis_id, :base_treatment_id => base_treatment).
+        order(:treatment_id)
+      result_hash[go].treatments = fcs.map{|t| t.treatment.name}
+      result_hash[go].accessions << sq.accession
+      anArray = []
+      fcs.each_with_index{|t,y| anArray <<[t.log2fc,t.pval ,?y]}
+      result_hash[go].log2fc << anArray
+    end
+    result_hash[go].total_transcripts = t_count_hash[go]
+  end
+
+  result_hash
+end
+
+def get_seq_ids_with_go_data( go_accession, fc_table, analysis_id, base_treatment)
+
+  go_hash = {}
+  result_hash = {}
+
+  go = GeneOntology.
+      where(:go_accession => go_accession).uniq
   go.map do |g|
     unless go_hash.has_key?  g.label
       go_hash[g.label] = g.go_slim_sequences.map{|s|s.sequence}
@@ -477,17 +506,18 @@ def get_filtered_seq_ids_with_go_data( filtered_seq_ids, fc_table, analysis_id, 
     result_hash[go] = GoHeatMap.new
     sequences.each_with_index do |sq, i|
       fcs = fc_table.includes(:treatment).where(:sequence_id => sq.id,:de_analysis_id => analysis_id, :base_treatment_id => base_treatment).
-        order(:treatment_id)
+          order(:treatment_id)
       result_hash[go].treatments = fcs.map{|t| t.treatment.name}
       result_hash[go].accessions << sq.accession
       anArray = []
-      fcs.each_with_index{|t,y| anArray <<[t.log2fc,i,y]}
+      fcs.each_with_index{|t,y| anArray <<[t.log2fc,t.pval ,?y]}
       result_hash[go].log2fc << anArray
     end
   end
 
   result_hash
 end
+
 
 
 def get_table(experiment_name)

@@ -64,12 +64,14 @@
     d3.json("<%= @local_url %>/go_json.json?experiment=<%=@experiment%>&analysis_id=<%=@analysis_id%>&base_treatment=<%=@base_treatment%>&filter=<%=@filter%>&filter_value=<%=@filter_value%>&ontology_root=<%=@ontology_root%>",
             function(jsonHash) {
         for (var go_term in jsonHash)  {
-            var json = jsonHash[go_term]
+            var json = jsonHash[go_term];
             var cols = json['treatments'];
             var rows = json['accessions'];
-            var minData = -1.5
-            var maxData = 1.5
+            var total_transcripts = json['total_transcripts'];
+            var minData = -1.5;
+            var maxData = 1.5 ;
             var data = json['log2fc'];
+            var total_transcripts = json['total_transcripts'];
 
 //attach a SVG node to the document
 //height and width defined by the row/column lengths
@@ -86,13 +88,30 @@
 //define a color scale using the min and max expression values
             var colorScale = d3.scale.linear()
                     .domain([minData, 0, maxData])
-                    .range(["blue", "white", "red"]);
+                    .range(["blue", "black", "orange"]);
 
 //generate the heatmap
             var heatmapRow = mySVG.selectAll(".heatmap")
                     .data(data)
                     .enter().append("g")
-                    .attr('name',function(d,i) { return rows[i]});
+                    .attr('name',function(d,i) { return rows[i]})
+                    .sort(function(a,b){
+                        var acomp = "";
+                        var bcomp = "";
+                        var max_pval = <%= default_filter_value %> ;
+                        for(var x = 0; x < a.length; x++) {
+                            if(a[x][1] < max_pval && a[x][0] > 0){acomp += 'a';}
+                            else if(a[x][1] < max_pval && a[x][0] < 0) {acomp += 'b';}
+                            else {acomp += 'c';}
+                        }
+                        for(var x = 0; x < b.length; x++ ) {
+                            if(b[x][1] < max_pval && b[x][0] > 0){bcomp += 'a';}
+                            else if(b[x][1] < max_pval && b[x][0] < 0) {bcomp += 'b';}
+                            else {bcomp += 'c';}
+                        }
+                        return acomp.localeCompare(bcomp);
+
+                    });
             var iy = 0;
             var heatmapRects = heatmapRow
                     .selectAll(".rect")
@@ -109,12 +128,19 @@
                         return (iy * h) + 50;
                     })
                     .style('fill',function(d) {
+                        var pval = d[1];
+                        var max_pval = <%= default_filter_value %> ;
                         var color = d[0];
-                        if(d[0] > maxData){
+                        if(d[0] > 0){
                             color = maxData;
-                        } else if(d[0] < minData){
+                        } else if(d[0] < 0){
                             color = minData;
                         }
+                        if(d[1] > max_pval ){
+                            color = 0;
+
+                        }
+
                         return colorScale(color);
                     });
 
@@ -128,7 +154,11 @@
                     .attr('y', 15)
                     .attr('class','label')
                     .style('text-anchor','left')
-                    .text(function(d) {return d + " : " + rows.length + " transcripts";});
+                    .text(function(d) {
+                        t = (rows.length == 1)?" transcript of ":" transcripts of ";
+
+                        return d + " : " + rows.length + t + total_transcripts;
+                    });
 
 //label columns
             var columnLabel = mySVG.selectAll(".colLabel")
